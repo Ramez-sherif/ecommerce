@@ -1,3 +1,4 @@
+import 'package:ecommerce/pages/all_products.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,17 +9,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentTab = 0;
+  int currentTab = 2;
+  // TODO: Replace this with the screens after implementing
   final List<Widget> screens = [
     const Text('Profile'),
     const Text('Search'),
-    const Text('Home'),
+    const AllProductsPage(),
     const Text('Favorites'),
     const Text('Cart'),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = const Text('Home');
+  Widget currentScreen = const AllProductsPage();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _updateScreen(2, const Text('Home'));
+            _updateScreen(2, const AllProductsPage());
           },
           child: Icon(
             Icons.home,
