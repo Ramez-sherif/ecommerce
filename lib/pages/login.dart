@@ -82,7 +82,7 @@ class LoginPage extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
+                    children: const [
                       Text(
                         'Forgot Password?',
                         style: TextStyle(
@@ -151,7 +151,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
+                  children: const [
                     CircleAvatar(
                       radius: 30,
                       backgroundImage: AssetImage('assets/google.png'),

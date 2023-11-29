@@ -6,6 +6,7 @@ class ProductDetailsWidget extends StatefulWidget {
 
   final bool isFavorite;
   final Function toggleFavorite;
+  @override
   State<ProductDetailsWidget> createState() => _productDetailsWidgetState();
 }
 

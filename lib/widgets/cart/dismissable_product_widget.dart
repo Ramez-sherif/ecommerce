@@ -18,11 +18,13 @@ class DismissableProductWidget extends StatelessWidget {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 20.0),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: const LinearGradient(
-                    colors: [Color.fromARGB(255, 254, 193, 189), Colors.white],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight)),
+              borderRadius: BorderRadius.circular(20),
+              gradient: const LinearGradient(
+                colors: [Color.fromARGB(255, 254, 193, 189), Colors.white],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
             child: const Icon(
               Icons.delete,
               color: Color.fromARGB(255, 255, 0, 0),
@@ -33,11 +35,13 @@ class DismissableProductWidget extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 9),
             padding: const EdgeInsets.only(right: 20.0),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: const LinearGradient(
-                    colors: [Color.fromARGB(255, 254, 193, 189), Colors.white],
-                    begin: Alignment.centerRight,
-                    end: Alignment.centerLeft)),
+              borderRadius: BorderRadius.circular(20),
+              gradient: const LinearGradient(
+                colors: [Color.fromARGB(255, 254, 193, 189), Colors.white],
+                begin: Alignment.centerRight,
+                end: Alignment.centerLeft,
+              ),
+            ),
             child: const Icon(
               Icons.delete,
               color: Color.fromARGB(255, 255, 0, 0),
@@ -58,9 +62,6 @@ class DismissableProductWidget extends StatelessWidget {
             description: products[index]['description'],
             price: products[index]['price'].toDouble(),
           ),
-        ),
-        const SizedBox(
-          height: 2,
         ),
       ],
     );

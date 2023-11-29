@@ -1,15 +1,14 @@
+import 'package:ecommerce/pages/payment.dart';
 import 'package:ecommerce/widgets/cart/dismissable_product_widget.dart';
-import 'package:ecommerce/widgets/cart/make_payment_widget.dart';
 import 'package:ecommerce/widgets/cart/payment_box_widget.dart';
-import 'package:ecommerce/widgets/cart/product_widget.dart';
-import 'package:ecommerce/widgets/cart/rectClipper.dart';
 import 'package:flutter/material.dart';
 
 List<dynamic> products = [];
 
 class CartView extends StatelessWidget {
-  CartView({Key? key}) {
+  CartView({Key? key}) : super(key: key) {
     products = [];
+
     dynamic p1 = {
       'description': "Book1",
       'imagePath': "Image1.jpeg",
@@ -34,23 +33,43 @@ class CartView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text("Cart", textAlign: TextAlign.center)),
+        title: Text("Cart"),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
               itemCount: products.length,
               itemBuilder: (context, index) {
                 return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DismissableProductWidget(
-                        products: products, index: index));
+                  padding: const EdgeInsets.all(8.0),
+                  child: DismissableProductWidget(
+                    products: products,
+                    index: index,
+                  ),
+                );
               },
             ),
-          ),
-          const PaymentBoxWidget()
-        ],
+            Container(
+              margin: const EdgeInsets.only(bottom: 100),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PaymentPage(),
+                    ),
+                  );
+                },
+                child: const PaymentBoxWidget(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
