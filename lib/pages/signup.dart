@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ecommerce/pages/home.dart';
-import 'package:ecommerce/pages/signup.dart';
+import 'package:ecommerce/pages/login.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatelessWidget {
+  const SignupPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -79,19 +79,27 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
+                // confirm password
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  child: TextField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: 'Confirm Password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ],
+                      // make shadow
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      // add prefix icon
+                      prefixIcon: Icon(Icons.lock),
+                      // add shadow
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 40),
@@ -103,7 +111,7 @@ class LoginPage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomePage(),
+                          builder: (context) => LoginPage(),
                         ),
                       );
                     },
@@ -116,7 +124,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Login',
+                      'Signup',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -133,7 +141,7 @@ class LoginPage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SignupPage(),
+                          builder: (context) => LoginPage(),
                         ),
                       );
                     },
@@ -146,7 +154,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Sign Up',
+                      'Already have an account? Login',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -155,7 +163,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text('Or sign in with social account'),
+                Text('Or sign up with social account'),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
