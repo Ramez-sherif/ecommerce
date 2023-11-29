@@ -20,44 +20,38 @@ class PaymentBoxWidget extends StatelessWidget{
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: Colors.green),
-                    height: 250, // Adjust the height of the bottom rectangle
+                    height: 300, // Adjust the height of the bottom rectangle
                     width: MediaQuery.of(context).size.width - 30,
-                    child: const Padding(
-                      padding: EdgeInsets.only(
-                          right: 20, left: 20, top: 20, bottom: 30),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Del. Amount:",
-                                  style: TextStyle(fontSize: 18)),
-                              Text("400\$", style: TextStyle(fontSize: 18))
-                            ],
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Total Amount:",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Text("400\$", style: TextStyle(fontSize: 18))
-                            ],
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          MakePaymentWidget()
-                        ],
-                      ),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SizedBox(height: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Del. Amount:",
+                                    style: TextStyle(fontSize: 18)),
+                                Text("400\$", style: TextStyle(fontSize: 18))
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Total Amount:",
+                                  style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                                ),
+                                Text("400\$", style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold))
+                              ],
+                            ),
+                            MakePaymentWidget()
+                          ],
+                        ),
+                    ),
                     ),
                   ),
-                ),
               ),
             ),
           );
