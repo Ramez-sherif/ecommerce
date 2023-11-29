@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AddToCartButtonWidget extends StatefulWidget {
-  const AddToCartButtonWidget({super.key,required this.counter});
-final int counter;
+  const AddToCartButtonWidget({super.key, required this.counter});
+  final int counter;
   @override
   State<AddToCartButtonWidget> createState() => _AddToCartButtonWidgetState();
 }
@@ -25,12 +25,17 @@ class _AddToCartButtonWidgetState extends State<AddToCartButtonWidget> {
             color: Colors.black // Change the color of the icon as needed
             ),
       ),
-      label:  Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      label: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          const Text("Add to cart", style: TextStyle(fontSize: 18,color: Colors.white)),
-          const SizedBox(width: 160),
-          Text("\$${widget.counter * 50}", style: const TextStyle(fontSize: 18,color: Colors.white))
+          const Text(
+            "Add to cart",
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          Text(
+            "\$${widget.counter * 50}",
+            style: const TextStyle(fontSize: 18, color: Colors.white),
+          ),
         ],
       ),
       style: ElevatedButton.styleFrom(
