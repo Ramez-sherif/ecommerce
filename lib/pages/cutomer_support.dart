@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomerSupportForm extends StatefulWidget {
+  const CustomerSupportForm({super.key});
+
   @override
   _CustomerSupportFormState createState() => _CustomerSupportFormState();
 }
@@ -22,18 +24,19 @@ class _CustomerSupportFormState extends State<CustomerSupportForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Customer Support',style: TextStyle(color: Colors.black),),
-        backgroundColor: Colors.transparent,
+          title: const Text(
+            'Customer Support',
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             color: Colors.black,
             onPressed: () {
-              Navigator.pop(
-                  context); // Navigate back when back button is pressed
+              Navigator.pop(context);
             },
           )),
-      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -54,7 +57,7 @@ class _CustomerSupportFormState extends State<CustomerSupportForm> {
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
-                  if (value!.isEmpty || !value!.contains('@')) {
+                  if (value!.isEmpty || !value.contains('@')) {
                     return 'Please enter a valid email address';
                   }
                   return null;
@@ -118,7 +121,6 @@ class _CustomerSupportFormState extends State<CustomerSupportForm> {
   }
 
   void _submitForm() {
-  
     String name = _nameController.text;
     String email = _emailController.text;
     String subject = _subjectController.text;
@@ -128,6 +130,7 @@ class _CustomerSupportFormState extends State<CustomerSupportForm> {
     formData['email'] = email;
     formData['subject'] = subject;
     formData['message'] = message;
+    // ignore: avoid_print
     print(formData);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -135,12 +138,9 @@ class _CustomerSupportFormState extends State<CustomerSupportForm> {
       ),
     );
 
-
     _nameController.clear();
     _emailController.clear();
     _subjectController.clear();
     _messageController.clear();
-
-    
   }
 }
