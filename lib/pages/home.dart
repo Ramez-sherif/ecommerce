@@ -1,4 +1,5 @@
 import 'package:ecommerce/pages/all_products.dart';
+import 'package:ecommerce/pages/cart_view.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     const Text('Search'),
     const AllProductsPage(),
     const Text('Favorites'),
-    const Text('Cart'),
+    CartView(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
