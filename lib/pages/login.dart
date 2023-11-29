@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
               children: [
                 SizedBox(height: 30),
                 Text(
-                  'E-Commerce',
+                  'Egyzona',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -27,7 +27,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Welcome to our store',
+                  'Welcome to Egyzona',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.grey,

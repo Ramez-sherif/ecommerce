@@ -16,7 +16,7 @@ class SignupPage extends StatelessWidget {
               children: [
                 const SizedBox(height: 30),
                 const Text(
-                  'E-Commerce',
+                  'Egyzona',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -24,7 +24,7 @@ class SignupPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Welcome to our store',
+                  'Welcome to Egyzona',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.grey,
