@@ -1,3 +1,4 @@
+import 'package:ecommerce/pages/login.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/home.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
