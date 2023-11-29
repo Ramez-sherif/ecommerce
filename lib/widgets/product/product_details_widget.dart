@@ -31,7 +31,11 @@ class _productDetailsWidgetState extends State<ProductDetailsWidget> {
                 style: TextStyle(fontSize: 35.0, fontWeight: FontWeight.bold)),
             const Row(
               children: [
-                Icon(Icons.star, color: Colors.yellow,size: 40,),
+                Icon(
+                  Icons.star,
+                  color: Colors.yellow,
+                  size: 40,
+                ),
                 SizedBox(width: 4.0),
                 Text('4.5', style: TextStyle(fontSize: 20.0)),
               ],
