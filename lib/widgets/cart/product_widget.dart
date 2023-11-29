@@ -50,7 +50,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
                   "assets/${widget.imagePath}",
-                  width:100,
+                  width: 100,
                   height: 100,
                 ),
                
