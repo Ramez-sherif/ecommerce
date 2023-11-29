@@ -36,7 +36,11 @@ class _ProductWidgetState extends State<ProductWidget> {
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        color: Colors.transparent,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.transparent,
+        ),
+        
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -45,7 +49,7 @@ class _ProductWidgetState extends State<ProductWidget> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  widget.imagePath,
+                  "assets/${widget.imagePath}",
                   width:100,
                   height: 100,
                 ),
@@ -73,7 +77,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                           color: Color.fromARGB(248, 194, 194, 194)
+                           color: const Color.fromARGB(248, 194, 194, 194)
                           ),
                           child: Row(children: <Widget>[
                               GestureDetector(
