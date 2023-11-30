@@ -1,16 +1,19 @@
-# ecommerce
+# EgyZona Ecommerce System
+<p align="center">
+  <img src="[https://media.giphy.com/media/h2NRnIIEw6tv9emZSc/giphy.gif](https://github.com/Ramez-sherif/ecommerce/blob/main/assets/splash.png)" width="380" height="380" >
+</p>
 
+[![Contributors][contributors-shield]][[contributors-url](https://github.com/Ramez-sherif/ecommerce/graphs/contributors)]
 A new Flutter project.
 
-## Getting Started
+## What is EgyZona?
 
-This project is a starting point for a Flutter application.
+EgyZona is an Egyptian Ecommerce application done using flutter that aims to support egyptian products 
 
-A few resources to get you started if this is your first Flutter project:
+## :computer: Technologies
+<div align="center"> 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/flutter.svg" alt="spring" height="50" /> 
+<img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/firebase.svg" alt="java" height="50" /> 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+</div>  
