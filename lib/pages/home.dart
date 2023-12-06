@@ -1,4 +1,8 @@
 import 'package:ecommerce/pages/all_products.dart';
+import 'package:ecommerce/pages/cart_view.dart';
+import 'package:ecommerce/pages/favorites.dart';
+import 'package:ecommerce/pages/profile.dart';
+import 'package:ecommerce/pages/settings.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,13 +14,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentTab = 2;
-  // TODO: Replace this with the screens after implementing
   final List<Widget> screens = [
-    const Text('Profile'),
-    const Text('Search'),
+    const ProfilePage(),
+    const SettingsPage(),
     const AllProductsPage(),
-    const Text('Favorites'),
-    const Text('Cart'),
+    const FavoritesPage(),
+    CartView(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -54,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   children: [
                     _createItemBar(Icons.person, 0, 'Profile'),
-                    _createItemBar(Icons.search, 1, 'Search'),
+                    _createItemBar(Icons.settings, 1, 'Settings'),
                   ],
                 ),
                 Row(
