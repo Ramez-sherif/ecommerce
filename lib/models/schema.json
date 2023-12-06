@@ -1,0 +1,126 @@
+{
+  "users": [
+    {
+      "id": {
+        "name": "name - String",
+        "email": "email - String",
+        "password": "password - String",
+        "address": "address - String",
+        "phone": "phone - String",
+        "role": "role_id - int"
+      }
+    }
+  ],
+
+  "user_roles": [
+    {
+      "id": {
+        "name": "name - String"
+      }
+    }
+  ],
+
+  "products": [
+    {
+      "id": {
+        "name": "name - String",
+        "price": "price - double",
+        "description": "description - String",
+        "imageURL": "image - String",
+        "rating": "rating - double",
+        "category_id": "category - int",
+        "quantity": "quantity - int"
+      }
+    }
+  ],
+
+  "categories": [
+    {
+      "id": {
+        "name": "name",
+        "description": "description"
+      }
+    },
+    {
+      "id": {
+        "name": "name",
+        "description": "description"
+      }
+    }
+  ],
+
+  "user_carts": [
+    {
+      "user_id": [
+        {
+          "product_id": "product_id - int",
+          "quantity": "quantity - int"
+        },
+        {
+          "product_id": "product_id - int",
+          "quantity": "quantity - int"
+        }
+      ]
+    },
+    {
+      "user_id": [
+        {
+          "product_id": "product_id",
+          "quantity": "quantity"
+        },
+        {
+          "product_id": "product_id",
+          "quantity": "quantity"
+        }
+      ]
+    }
+  ],
+
+  "user_favorites": [
+    {
+      "user_id_1": ["product_id", "product_id"],
+      "user_id_2": ["product_id", "product_id"]
+    }
+  ],
+
+  "orders": [
+    {
+      "id": {
+        "user_id": "user_id - int",
+        "total_price": "total_price - double",
+        "status": "status - String",
+        "created_at": "created_at - String",
+        "products": [
+          {
+            "product_id": "product_id - int",
+            "quantity": "quantity - int"
+          },
+          {
+            "product_id": "product_id - int",
+            "quantity": "quantity - int"
+          }
+        ]
+      }
+    }
+  ],
+
+  "order_statuses": [
+    {
+      "id_1": {
+        "name": "name - String"
+      },
+      "id_2": {
+        "name": "name - String"
+      }
+    }
+  ],
+
+  "fcm_tokens": [
+    {
+      "id": {
+        "user_id": "user_id - int",
+        "token": "token - String"
+      }
+    }
+  ]
+}
