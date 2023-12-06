@@ -1,16 +1,24 @@
-# ecommerce
+# EgyZona Ecommerce System
+<p align="center">
+  <img src="https://github.com/Ramez-sherif/ecommerce/blob/main/assets/splash.png"  height="310" >
+</p>
 
-A new Flutter project.
+# New Flutter App
+[![Contributors][contributors-shield]][contributors-url]
 
-## Getting Started
+[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
+[contributors-url]: [https://github.com/Nancy4Hany/WorkBridge/graphs/contributors](https://github.com/Ramez-sherif/ecommerce/graphs/contributors)
 
-This project is a starting point for a Flutter application.
+## What is EgyZona?
 
-A few resources to get you started if this is your first Flutter project:
+EgyZona is an Egyptian Ecommerce application done using flutter that aims to support egyptian products 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## :computer: Technologies
+<div align="center"> 
+<div style="display: flex; justify-content: flex-end;">
+    <img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/flutterio-icon.svg" alt="flutter" height="50" />
+    <img style="margin: 10px" src="https://github.com/Ramez-sherif/ecommerce/assets/29319041/ba5e5392-0f8d-40c9-ae05-9465de48cf66" alt="firebase" height="50" />
+</div>
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+</div>  
