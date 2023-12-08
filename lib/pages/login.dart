@@ -3,12 +3,35 @@
 import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/pages/signup.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController email = TextEditingController();
+    final TextEditingController password = TextEditingController();
+
+    Future<UserCredential> signInWithGoogle() async {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    }
+
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
@@ -155,25 +178,54 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      signInWithGoogle();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      'Login with google',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
                 Text('Or sign in with social account'),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: const [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage('assets/google.png'),
-                      backgroundColor: Colors.white,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        signInWithGoogle();
+                      },
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: AssetImage('assets/google.png'),
+                        backgroundColor: Colors.yellow,
+                      ),
                     ),
                     CircleAvatar(
                       radius: 30,
                       backgroundImage: AssetImage('assets/facebook.png'),
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.deepOrange,
                     ),
                     CircleAvatar(
                       radius: 30,
                       backgroundImage: AssetImage('assets/apple.png'),
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.green,
                     ),
                   ],
                 ),
