@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'package:ecommerce/widgets/all_products/categories_list.dart';
 import 'package:ecommerce/widgets/all_products/products_grid.dart';
 import 'package:ecommerce/widgets/all_products/top_bar.dart';
