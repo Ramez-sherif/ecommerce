@@ -1,3 +1,4 @@
+import 'package:ecommerce/pages/login.dart';
 import 'package:ecommerce/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
