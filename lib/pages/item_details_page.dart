@@ -50,20 +50,22 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-            title: const Text(
-              'Item Details',
-              style: TextStyle(color: Colors.black, fontSize: 25),
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              color: Colors.black,
-              onPressed: () {
-                Navigator.pop(
-                    context); // Navigate back when back button is pressed
-              },
-            )),
+          // title: Text(
+          //   widget.product.name.capitalize(),
+          //   style: const TextStyle(color: Colors.black, fontSize: 25),
+          //   softWrap: true,
+          // ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.pop(
+                  context); // Navigate back when back button is pressed
+            },
+          ),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
@@ -71,7 +73,10 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ProductDetailsWidget(
-                    isFavorite: isFavorite, toggleFavorite: toggleFavorite),
+                  isFavorite: isFavorite,
+                  toggleFavorite: toggleFavorite,
+                  product: widget.product,
+                ),
                 const SizedBox(height: 16.0),
                 ProductQuantityWidget(
                   incrementCounter: incrementCounter,
