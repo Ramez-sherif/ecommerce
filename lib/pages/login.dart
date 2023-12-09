@@ -14,9 +14,10 @@ class LoginPage extends StatelessWidget {
     final TextEditingController email = TextEditingController();
     final TextEditingController password = TextEditingController();
 
-    Future<UserCredential> signInWithGoogle() async {
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    Future signInWithGoogle() async {
+      try{
+ final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if(googleUser==null){return;}
 
       // Obtain the auth details from the request
       final GoogleSignInAuthentication? googleAuth =
@@ -29,7 +30,20 @@ class LoginPage extends StatelessWidget {
       );
 
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential);
+         Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
+      }catch(e){
+             print("An unexpected error occurred: $e"); 
+      }
+      // Trigger the authentication flow
+     
+      //Navigator.of(context).pushAndRemoveUntil("HomePage", (route) => false);
+   
     }
 
     return SafeArea(
@@ -203,7 +217,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 Text('Or sign in with social account'),
-                SizedBox(height: 20),
+               /* SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -228,7 +242,7 @@ class LoginPage extends StatelessWidget {
                       backgroundColor: Colors.green,
                     ),
                   ],
-                ),
+                ),*/
               ],
             ),
           ),
