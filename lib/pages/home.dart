@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
     const ProfilePage(),
     const SettingsPage(),
     const AllProductsPage(),
-    const FavoritesPage(),
+    FavoritesPage(),
     CartView(),
   ];
 

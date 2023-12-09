@@ -1,10 +1,12 @@
+import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/widgets/product/add_to_cart_button_widget.dart';
 import 'package:ecommerce/widgets/product/product_details_widget.dart';
 import 'package:ecommerce/widgets/product/product_quantity_widget.dart';
 import 'package:flutter/material.dart';
 
 class ItemDetailsPage extends StatefulWidget {
-  const ItemDetailsPage({super.key});
+  final ProductModel product;
+  const ItemDetailsPage({super.key, required this.product});
 
   @override
   State<ItemDetailsPage> createState() => _ItemDetailsPageState();
