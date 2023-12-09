@@ -1,3 +1,4 @@
+import "package:ecommerce/models/category.dart";
 import "package:ecommerce/models/product.dart";
 import "package:ecommerce/widgets/cart/cart_product_widget.dart";
 import "package:flutter/material.dart";
@@ -5,14 +6,14 @@ import "package:flutter/material.dart";
 class DismissableProductWidget extends StatelessWidget {
   const DismissableProductWidget(
       {super.key, required this.products, required this.index});
-  final List<MockProductModel> products;
+  final List<ProductModel> products;
   final int index;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Dismissible(
-          key: Key(products[index].productDescription),
+          key: Key(products[index].description),
           direction: DismissDirection.horizontal,
           background: Container(
             margin: const EdgeInsets.symmetric(vertical: 9),
@@ -52,19 +53,22 @@ class DismissableProductWidget extends StatelessWidget {
             //delete from database
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('${products[index].productDescription} dismissed'),
+                content: Text('${products[index].description} dismissed'),
               ),
             );
 
             products.removeAt(index);
           },
           child: CartProductWidget(
-            productModel: MockProductModel(
+            productModel: ProductModel(
               id: products[index].id,
-              productName: products[index].productName,
-              imageUrl: products[index].imageUrl,
-              productDescription: products[index].productDescription,
-              productPrice: products[index].productPrice.toDouble(),
+              name: products[index].name,
+              image_URL: products[index].image_URL,
+              description: products[index].description,
+              price: products[index].price.toDouble(),
+              rating: 3, 
+              quantity: 20,
+              category: CategoryModel(id: '2', name: '', description: '',)
             ),
           ),
         ),
