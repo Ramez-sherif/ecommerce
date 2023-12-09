@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
     const SettingsPage(),
     const AllProductsPage(),
     const FavoritesPage(),
-    CartView(),
+    CartPage(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
