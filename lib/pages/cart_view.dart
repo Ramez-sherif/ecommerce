@@ -1,29 +1,34 @@
+import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/pages/payment.dart';
 import 'package:ecommerce/widgets/cart/dismissable_product_widget.dart';
 import 'package:ecommerce/widgets/cart/payment_box_widget.dart';
 import 'package:flutter/material.dart';
 
-List<dynamic> products = [];
+List<MockProductModel> products = [];
 
-class CartView extends StatelessWidget {
-  CartView({Key? key}) : super(key: key) {
+class CartPage extends StatelessWidget {
+  CartPage({Key? key}) : super(key: key) {
     products = [];
 
-    dynamic p1 = {
-      'description': "Book1",
-      'imagePath': "Image1.jpeg",
-      'price': 123,
-    };
-    dynamic p2 = {
-      'description': "Book2",
-      'imagePath': "Image2.jpeg",
-      'price': 123,
-    };
-    dynamic p3 = {
-      'description': "Book3",
-      'imagePath': "Image3.png",
-      'price': 123,
-    };
+    MockProductModel p1 = MockProductModel(
+        id: "1",
+        productName: "Apple",
+        imageUrl: "Image2.jpeg",
+        productPrice: 123,
+        productDescription: "Tasty Green Apple");
+    MockProductModel p2 = MockProductModel(
+        id: "2",
+        productName: "Sky",
+        imageUrl: "Image1.jpeg",
+        productPrice: 123,
+        productDescription: "Sky and trees");
+    MockProductModel p3 = MockProductModel(
+        id: "3",
+        productName: "Fireworks",
+        imageUrl: "Image3.png",
+        productPrice: 123,
+        productDescription: "Colorful Fireworks");
+
     products.add(p1);
     products.add(p2);
     products.add(p3);

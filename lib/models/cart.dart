@@ -5,7 +5,7 @@ class CartModel{
     const CartModel({required this.id,required this.products,required this.userId});
     final String id;
     final User userId;
-    final List<ProductModel> products;
+    final List<MockProductModel> products;
 
     Map<String, dynamic> toMap() {
     return {

@@ -1,17 +1,18 @@
-import "package:ecommerce/widgets/cart/product_widget.dart";
+import "package:ecommerce/models/product.dart";
+import "package:ecommerce/widgets/cart/cart_product_widget.dart";
 import "package:flutter/material.dart";
 
 class DismissableProductWidget extends StatelessWidget {
   const DismissableProductWidget(
       {super.key, required this.products, required this.index});
-  final List<dynamic> products;
+  final List<MockProductModel> products;
   final int index;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Dismissible(
-          key: Key(products[index]['description']),
+          key: Key(products[index].productDescription),
           direction: DismissDirection.horizontal,
           background: Container(
             margin: const EdgeInsets.symmetric(vertical: 9),
@@ -51,16 +52,20 @@ class DismissableProductWidget extends StatelessWidget {
             //delete from database
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('${products[index]['description']} dismissed'),
+                content: Text('${products[index].productDescription} dismissed'),
               ),
             );
 
             products.removeAt(index);
           },
-          child: ProductWidget(
-            imagePath: products[index]['imagePath'],
-            description: products[index]['description'],
-            price: products[index]['price'].toDouble(),
+          child: CartProductWidget(
+            productModel: MockProductModel(
+              id: products[index].id,
+              productName: products[index].productName,
+              imageUrl: products[index].imageUrl,
+              productDescription: products[index].productDescription,
+              productPrice: products[index].productPrice.toDouble(),
+            ),
           ),
         ),
       ],

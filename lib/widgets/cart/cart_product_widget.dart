@@ -1,21 +1,19 @@
+import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/widgets/cart/quantity_icon_widget.dart';
 import 'package:flutter/material.dart';
 
-class ProductWidget extends StatefulWidget {
-  final String imagePath;
-  final String description;
-  final double price;
+class CartProductWidget extends StatefulWidget {
+  final MockProductModel productModel;
 
-  const ProductWidget(
+  const CartProductWidget(
       {super.key,
-      required this.imagePath,
-      required this.description,
-      required this.price});
+      required this.productModel});
 
   @override
-  State<ProductWidget> createState() => _ProductWidgetState();
+  State<CartProductWidget> createState() => _ProductWidgetState();
 }
 
-class _ProductWidgetState extends State<ProductWidget> {
+class _ProductWidgetState extends State<CartProductWidget> {
   int quantity = 0;
 
   void incrementQuantity() {
@@ -49,7 +47,7 @@ class _ProductWidgetState extends State<ProductWidget> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  "assets/${widget.imagePath}",
+                  widget.productModel.imageUrl,
                   width: 100,
                   height: 100,
                 ),
@@ -61,7 +59,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      widget.description,
+                      widget.productModel.productName,
                       style: const TextStyle(fontSize: 15.0),
                     ),
                     const SizedBox(height: 25.0),
@@ -69,7 +67,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '\$${widget.price.toStringAsFixed(2)}',
+                          '\$${widget.productModel.productPrice.toStringAsFixed(2)}',
                           style: const TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.bold),
                         ),
@@ -80,42 +78,14 @@ class _ProductWidgetState extends State<ProductWidget> {
                               color: const Color.fromARGB(248, 194, 194, 194)),
                           child: Row(
                             children: <Widget>[
-                              GestureDetector(
-                                onTap: decrementQuantity,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.remove,
-                                    color: Colors.green,
-                                    size: 15,
-                                  ),
-                                ),
-                              ),
+                               QuantityIcon(onChangedQuantity:decrementQuantity,iconColor: Colors.green,backgroundColor: Colors.white,icon: Icons.remove),
                               const SizedBox(width: 20.0),
                               Text(
                                 quantity.toString(),
                                 style: const TextStyle(fontSize: 18.0),
                               ),
                               const SizedBox(width: 20.0),
-                              GestureDetector(
-                                onTap: incrementQuantity,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    size: 15,
-                                  ),
-                                ),
-                              ),
+                             QuantityIcon(onChangedQuantity:incrementQuantity,iconColor: Colors.white,backgroundColor: Colors.green,icon: Icons.add)
                             ],
                           ),
                         ),
