@@ -3,7 +3,7 @@ import 'package:ecommerce/widgets/cart/quantity_icon_widget.dart';
 import 'package:flutter/material.dart';
 
 class CartProductWidget extends StatefulWidget {
-  final MockProductModel productModel;
+  final ProductModel productModel;
 
   const CartProductWidget(
       {super.key,
@@ -47,7 +47,7 @@ class _ProductWidgetState extends State<CartProductWidget> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  widget.productModel.imageUrl,
+                  widget.productModel.image_URL,
                   width: 100,
                   height: 100,
                 ),
@@ -59,7 +59,7 @@ class _ProductWidgetState extends State<CartProductWidget> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      widget.productModel.productName,
+                      widget.productModel.name,
                       style: const TextStyle(fontSize: 15.0),
                     ),
                     const SizedBox(height: 25.0),
@@ -67,7 +67,7 @@ class _ProductWidgetState extends State<CartProductWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '\$${widget.productModel.productPrice.toStringAsFixed(2)}',
+                          '\$${widget.productModel.price.toStringAsFixed(2)}',
                           style: const TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.bold),
                         ),

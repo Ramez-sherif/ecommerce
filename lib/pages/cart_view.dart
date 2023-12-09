@@ -1,33 +1,43 @@
+import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/pages/payment.dart';
 import 'package:ecommerce/widgets/cart/dismissable_product_widget.dart';
 import 'package:ecommerce/widgets/cart/payment_box_widget.dart';
 import 'package:flutter/material.dart';
 
-List<MockProductModel> products = [];
+List<ProductModel> products = [];
 
 class CartPage extends StatelessWidget {
   CartPage({Key? key}) : super(key: key) {
     products = [];
 
-    MockProductModel p1 = MockProductModel(
+    ProductModel p1 = ProductModel(
         id: "1",
-        productName: "Apple",
-        imageUrl: "Image2.jpeg",
-        productPrice: 123,
-        productDescription: "Tasty Green Apple");
-    MockProductModel p2 = MockProductModel(
+        name: "Apple",
+        image_URL: "Image2.jpeg",
+        price: 123,
+        description: "Tasty Green Apple",
+        rating: 1,
+        quantity: 1,
+        category: CategoryModel(id: "1", name: "", description: "description"));
+    ProductModel p2 = ProductModel(
         id: "2",
-        productName: "Sky",
-        imageUrl: "Image1.jpeg",
-        productPrice: 123,
-        productDescription: "Sky and trees");
-    MockProductModel p3 = MockProductModel(
+        name: "Sky",
+        image_URL: "Image1.jpeg",
+        price: 123,
+        description: "Sky and trees",
+        rating: 5,
+        quantity: 1,
+        category: CategoryModel(id: "1", name: "", description: "description"));
+    ProductModel p3 = ProductModel(
         id: "3",
-        productName: "Fireworks",
-        imageUrl: "Image3.png",
-        productPrice: 123,
-        productDescription: "Colorful Fireworks");
+        name: "Fireworks",
+        image_URL: "Image3.png",
+        price: 123,
+        description: "Colorful Fireworks",
+        rating: 5,
+        quantity: 1,
+        category: CategoryModel(id: "1", name: "", description: "description"));
 
     products.add(p1);
     products.add(p2);
