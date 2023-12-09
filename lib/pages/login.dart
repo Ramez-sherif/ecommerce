@@ -2,50 +2,21 @@
 
 import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/pages/signup.dart';
+import 'package:ecommerce/services/signinService.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController email = TextEditingController();
-    final TextEditingController password = TextEditingController();
-
-    Future signInWithGoogle() async {
-      try{
- final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if(googleUser==null){return;}
-
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
-
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      // Once signed in, return the UserCredential
-      await FirebaseAuth.instance.signInWithCredential(credential);
-         Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
-      }catch(e){
-             print("An unexpected error occurred: $e"); 
-      }
-      // Trigger the authentication flow
-     
-      //Navigator.of(context).pushAndRemoveUntil("HomePage", (route) => false);
-   
-    }
-
+    final TextEditingController userEmail = TextEditingController();
+    final TextEditingController userPassword = TextEditingController();
+    final signInService signinService = signInService();
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
@@ -74,6 +45,7 @@ class LoginPage extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   child: TextField(
+                    controller: userEmail,
                     decoration: InputDecoration(
                       hintText: 'Username , Email & Phone Number',
                       border: OutlineInputBorder(
@@ -96,6 +68,7 @@ class LoginPage extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   child: TextField(
+                    controller: userPassword,
                     obscureText: true,
                     decoration: InputDecoration(
                       hintText: 'Password',
@@ -136,13 +109,37 @@ class LoginPage extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(),
-                        ),
-                      );
+                    onPressed: () async {
+                      try {
+                        signinService.signInWithEmail(
+                            userEmail.text, userPassword.text);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(),
+                          ),
+                        );
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          print('No user found for that email.');
+                          AwesomeDialog(
+                            context: context,
+                            animType: AnimType.rightSlide,
+                            dialogType: DialogType.error,
+                            title: 'Error',
+                            desc: 'No user found for that email.',
+                          ).show();
+                        } else if (e.code == 'wrong-password') {
+                          print('Wrong password provided for that user.');
+                          AwesomeDialog(
+                            context: context,
+                            animType: AnimType.rightSlide,
+                            dialogType: DialogType.error,
+                            title: 'Error',
+                            desc: 'Wrong password provided for that user.',
+                          ).show();
+                        }
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
@@ -167,7 +164,7 @@ class LoginPage extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => SignupPage(),
@@ -196,8 +193,16 @@ class LoginPage extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      signInWithGoogle();
+                    onPressed: () async {
+                      bool response = await signinService.signInWithGoogle();
+                      if (response) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(),
+                          ),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
@@ -217,7 +222,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 Text('Or sign in with social account'),
-               /* SizedBox(height: 20),
+                /* SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
