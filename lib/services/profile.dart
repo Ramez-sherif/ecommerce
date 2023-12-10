@@ -7,13 +7,18 @@ class ProfileService {
     });
   }
 
- Future<void> updateGeoLocation(String userId, String newGeoLocation) async {
+  Future<void> updateGeoLocation(String userId, String newGeoLocation) async {
     await FirebaseFirestore.instance.collection('users').doc(userId).update({
       'geoLocation': newGeoLocation,
     });
   }
-}
 
-// password update - connected with the authetication ... 
-// orders are sub-collection 
-// frontend orders 
+  // Add a method to update the password connected with authentication
+  Future<void> updatePassword(String userId, String newPassword) async {
+    // You can implement authentication-related logic here
+    // For example, you might want to use Firebase Authentication APIs
+    // to update the user's password.
+    // This method should handle the authentication-specific password update logic.
+  }
+
+}
