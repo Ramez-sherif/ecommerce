@@ -1,42 +1,101 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/cart.dart';
-String collectionName = "carts";
+import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/models/user.dart';
+import 'package:ecommerce/services/collections_config.dart';
+import 'package:ecommerce/services/product.dart';
+
 class CartService {
   static var db = FirebaseFirestore.instance;
 
-  static Future getCartById(CartModel cart) async {
-    // await db.collection("asd").doc(p.id).get();
-    await db.collection(collectionName).doc(cart.id).get().then(
-      (querySnapshot) {
-        print("Successfully completed");
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
+  // static Future getCartById(CartModel cart) async {
+  //   await db.collection(CollectionConfig.cartItems).doc(cart.id).get().then(
+  //     (querySnapshot) {
+  //       print("Successfully completed");
+  //     },
+  //     onError: (e) => print("Error completing: $e"),
+  //   );
+  // }
+
+  //working well
+  static Future updateProductQuantity(
+      String productId, String userId, int newQuantity) async {
+    var querySnapshot = await db
+        .collection(CollectionConfig.cartItems)
+        .where("product_id",
+            isEqualTo: productId) //check for the product in cart_items
+        .where("user_id",
+            isEqualTo: userId) //check for the user id in cart_items
+        .limit(1) //get only the first occurance
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      var firstDocument = querySnapshot.docs.first;
+      var documentRefrence = firstDocument.reference; //refrence the document
+
+      await documentRefrence.update({
+        "quantity": newQuantity
+      }); //update the quantity of the product to the new quantity
+    } else {
+      print("Product or cart Not Found");
+    }
   }
 
-  static Future addCart(CartModel cart) async {
+  //working good
+  static Future addProductToCart(
+      String productId, String userId, int quantity) async {
+    //get User By Id
+    //User user = User(id: userId);
     await db
-        .collection(collectionName)
+        .collection(CollectionConfig.cartItems)
         .doc()
-        .set(cart.toMap())
+        .set({'user_id': userId, 'product_id': productId, 'quantity': quantity})
         .then((value) => print("Done"))
         .onError((e, _) => print("Error writing document: $e"));
   }
 
-  static Future testsUpdate(CartModel cart) async {
-    await db.collection(collectionName).doc(cart.id).update(cart.toMap());
+  //working good
+  static Future<Map<ProductModel, int>> getCart(String userId) async {
+    //get User By Id
+    //User user = User(id: userId);
+    List<ProductModel> allProducts = await ProductService.getAllProducts();
+    final Map<ProductModel, int> products = {};
+    await db
+        .collection(CollectionConfig.cartItems)
+        .where("user_id", isEqualTo: userId)
+        .get()
+        .then((querySnapShot) {
+      for (var docSnapShot in querySnapShot.docs) {
+        products[allProducts.firstWhere(
+                (element) => element.id == docSnapShot["product_id"])] =
+            docSnapShot["quantity"];
+      }
+    }).onError((error, stackTrace) {
+      print("Error getting document: $error");
+    });
+  //return cartModel with products and user id in it 
+  //update it after merging with user class model
+    return products;
   }
 
-  static Future testsDelete(CartModel cart) async {
-    await db
-        .collection(collectionName)
-        .doc(cart.id)
-        .delete()
-        .then(
-          (doc) => print("Document deleted"),
-          onError: (e) => print("Error updating document $e"),
-        )
-        .onError(
-            (error, stackTrace) => print("Error deleting document: $error"));
+  static Future deleteCart(CartModel cart) async {
+    for (var product in cart.products.entries) {
+      var querySnapshot = await db
+          .collection(CollectionConfig.cartItems)
+          .where("product_id", isEqualTo: product.key.id)
+          .where("user_id", isEqualTo: cart.userId)
+          .limit(1)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        var firstDocument = querySnapshot.docs.first;
+        var documentRefrence = firstDocument.reference; //refrence the document
+
+        await documentRefrence
+            .delete(); //update the quantity of the product to the new quantity
+      } else {
+        print(
+            "Unknown exeption: Couldn't delete cart, cart or item couldnt be found");
+      }
+    }
   }
 }
