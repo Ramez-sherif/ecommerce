@@ -1,6 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ecommerce/models/response.dart';
 import 'package:ecommerce/pages/home.dart';
+import 'package:ecommerce/pages/initial.dart';
 import 'package:ecommerce/pages/login.dart';
+import 'package:ecommerce/services/signup.dart';
+import 'package:ecommerce/services/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,13 +24,14 @@ class _SignupPageState extends State<SignupPage> {
     final TextEditingController userPassword = TextEditingController();
 
     GlobalKey<FormState> formState = GlobalKey<FormState>();
+
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
           width: double.infinity,
           child: SingleChildScrollView(
             child: Form(
-               key: formState,  
+              key: formState,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -64,10 +71,8 @@ class _SignupPageState extends State<SignupPage> {
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                      
                       ),
                     ),
-                    
                   ),
                   const SizedBox(height: 10),
                   Container(
@@ -94,7 +99,6 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // confirm password
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10),
                     child: TextField(
@@ -124,45 +128,53 @@ class _SignupPageState extends State<SignupPage> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (formState.currentState!.validate()) {
-                          try {
-                            final credential = await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
-                              email: userEmail.text,
-                              password: userPassword.text,
+                          // if the form is valid
+                          ResponseModel response = await SignupService.signup(
+                            userEmail.text,
+                            userPassword.text,
+                          );
+
+                          if (response.status) {
+                            // if the signup is successful
+                            // set the user role
+                            await UserService.setUserRole(
+                              response.data as User,
+                              'user',
                             );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HomePage(),
-                              ),
-                            );
-                          } on FirebaseAuthException catch (e) {
-                            if (e.code == 'weak-password') {
-                              print('The password provided is too weak.');
-                              AwesomeDialog(
-                                context: context,
-                                animType: AnimType.rightSlide,
-                                dialogType: DialogType.error,
-                                title: 'Error',
-                                desc: 'The password provided is too weak.',
-                              ).show();
-                            } else if (e.code == 'email-already-in-use') {
-                              print(
-                                  'The account already exists for that email.');
-                              AwesomeDialog(
-                                context: context,
-                                animType: AnimType.rightSlide,
-                                dialogType: DialogType.error,
-                                title: 'Error',
-                                desc:
-                                    'The account already exists for that email.',
-                              ).show();
-                            }
-                          } catch (e) {
-                            print(e);
+                            AwesomeDialog(
+                              context: context,
+                              animType: AnimType.rightSlide,
+                              dialogType: DialogType.success,
+                              title: 'Success',
+                              desc: response.message,
+                              btnOkOnPress: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const InitialPage(),
+                                  ),
+                                );
+                              },
+                            ).show();
+                          } else {
+                            // if the signup is not successful
+                            AwesomeDialog(
+                              context: context,
+                              animType: AnimType.rightSlide,
+                              dialogType: DialogType.error,
+                              title: 'Error',
+                              desc: response.message,
+                            ).show();
                           }
-                        }else{
-                          print("not valid");
+                        } else {
+                          // if the form is not valid
+                          AwesomeDialog(
+                            context: context,
+                            animType: AnimType.rightSlide,
+                            dialogType: DialogType.error,
+                            title: 'Error',
+                            desc: 'Please enter valid data',
+                          ).show();
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -211,29 +223,6 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text('Or sign up with social account'),
-                  const SizedBox(height: 20),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage('assets/google.png'),
-                        backgroundColor: Colors.white,
-                      ),
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage('assets/facebook.png'),
-                        backgroundColor: Colors.white,
-                      ),
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage('assets/apple.png'),
-                        backgroundColor: Colors.white,
-                      ),
-                    ],
                   ),
                 ],
               ),
