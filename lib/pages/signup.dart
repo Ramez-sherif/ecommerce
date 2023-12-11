@@ -2,13 +2,14 @@
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ecommerce/models/response.dart';
-import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/pages/initial.dart';
 import 'package:ecommerce/pages/login.dart';
+import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/signup.dart';
 import 'package:ecommerce/services/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -17,7 +18,16 @@ class SignupPage extends StatefulWidget {
   State<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupPageState extends State<SignupPage> with WidgetsBindingObserver {
+  late final UserProvider userProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   @override
   Widget build(BuildContext context) {
     final TextEditingController userEmail = TextEditingController();
@@ -141,6 +151,9 @@ class _SignupPageState extends State<SignupPage> {
                               response.data as User,
                               'user',
                             );
+
+                            userProvider.user = response.data as User;
+
                             AwesomeDialog(
                               context: context,
                               animType: AnimType.rightSlide,

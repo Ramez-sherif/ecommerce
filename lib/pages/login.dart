@@ -2,14 +2,30 @@
 import 'package:ecommerce/models/response.dart';
 import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/pages/signup.dart';
+import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/signin.dart';
 import 'package:ecommerce/services/user.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
+  late final UserProvider userProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +82,7 @@ class LoginPage extends StatelessWidget {
         ResponseModel response = await SignInService.signInWithGoogle();
         if (response.status) {
           User user = response.data;
+          userProvider.user = user;
           String role = await UserService.getUserRole(user.uid);
           if (role == 'admin') {
             // go to admin page
@@ -152,7 +169,10 @@ class LoginPage extends StatelessWidget {
 
           if (response.status) {
             User user = response.data;
+            userProvider.user = user;
+            print("done login");
             String role = await UserService.getUserRole(user.uid);
+
             if (role == 'admin') {
               // go to admin page
             } else {
