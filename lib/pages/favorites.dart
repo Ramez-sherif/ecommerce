@@ -1,8 +1,10 @@
+import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/widgets/favorites/favorites_list.dart';
 import 'package:flutter/material.dart';
 
 class FavoritesPage extends StatelessWidget {
-  const FavoritesPage({Key? key}) : super(key: key);
+  FavoritesPage({Key? key}) : super(key: key);
+  final List<ProductModel> favoriteItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +13,12 @@ class FavoritesPage extends StatelessWidget {
         title: const Text('Favorites'),
         centerTitle: true,
       ),
-      body: const Column(
-        children: [FavoritesList()],
+      body: Column(
+        children: [
+          FavoritesList(
+            favoriteItems: favoriteItems,
+          )
+        ],
       ),
     );
   }
