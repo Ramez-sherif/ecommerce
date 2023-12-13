@@ -11,7 +11,7 @@ List<ProductModel> products = [];
 
 class CartPage extends StatelessWidget {
   CartPage({super.key});
-
+  double totalPrice = 0;
   @override
   Widget build(BuildContext context) {
     //CartModel cartmodel = await CartService.getCart("1");
@@ -65,7 +65,7 @@ class CartPage extends StatelessWidget {
                             ),
                           );
                         },
-                        child:  PaymentBoxWidget(cart: model),
+                        child:  PaymentBoxWidget(cart: model,price :totalPrice),
                       ),
                     )
                   ],

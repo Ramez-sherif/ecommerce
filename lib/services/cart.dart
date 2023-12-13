@@ -10,7 +10,7 @@ class CartService {
   static double getTotalPrice(CartModel model) {
     double totalPrice = 0.0;
     for (var entry in model.products.entries) {
-      totalPrice += entry.key.price;
+      totalPrice = totalPrice + (entry.key.price * entry.value);
     }
     return totalPrice;
   }

@@ -6,8 +6,8 @@ import 'package:ecommerce/widgets/cart/rectClipper.dart';
 import 'package:flutter/material.dart';
 
 class PaymentBoxWidget extends StatelessWidget {
-  const PaymentBoxWidget({super.key,required this.cart});
-
+  const PaymentBoxWidget({super.key,required this.cart,required this.price});
+final double price;
 final CartModel cart;
   @override
   Widget build(BuildContext context) {

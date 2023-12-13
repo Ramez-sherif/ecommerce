@@ -58,7 +58,7 @@ class DismissableProductWidget extends StatelessWidget {
               ),
             );
             //uncomment to remove from database
-           //await CartService.removeProductFromCart(product, "1");
+           await CartService.removeProductFromCart(product, "1");
           },
           child: CartProductWidget(
             productModel: ProductModel(

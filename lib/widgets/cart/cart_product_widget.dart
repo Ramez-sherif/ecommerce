@@ -15,8 +15,10 @@ class CartProductWidget extends StatefulWidget {
 
 class _ProductWidgetState extends State<CartProductWidget> {
   void incrementQuantity() {
-    setState(() {
+   setState(() {
       widget.quantity++;
+      CartService.updateProductQuantity(
+          widget.productModel.id, "1", widget.quantity);
     });
   }
 
