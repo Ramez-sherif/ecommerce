@@ -1,31 +1,31 @@
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/services/cart.dart';
 import 'package:ecommerce/widgets/cart/quantity_icon_widget.dart';
 import 'package:flutter/material.dart';
 
 class CartProductWidget extends StatefulWidget {
+  CartProductWidget(
+      {super.key, required this.productModel, required this.quantity});
+      
   final ProductModel productModel;
-
-  const CartProductWidget(
-      {super.key,
-      required this.productModel});
-
+  int quantity;
   @override
   State<CartProductWidget> createState() => _ProductWidgetState();
 }
 
 class _ProductWidgetState extends State<CartProductWidget> {
-  int quantity = 0;
-
   void incrementQuantity() {
     setState(() {
-      quantity++;
+      widget.quantity++;
     });
   }
 
   void decrementQuantity() {
-    if (quantity > 0) {
+    if (widget.quantity > 0) {
       setState(() {
-        quantity--;
+        widget.quantity--;
+        CartService.updateProductQuantity(
+            widget.productModel.id, "1", widget.quantity);
       });
     }
   }
@@ -46,7 +46,7 @@ class _ProductWidgetState extends State<CartProductWidget> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
+                child: Image.network(
                   widget.productModel.image_URL,
                   width: 100,
                   height: 100,
@@ -78,14 +78,22 @@ class _ProductWidgetState extends State<CartProductWidget> {
                               color: const Color.fromARGB(248, 194, 194, 194)),
                           child: Row(
                             children: <Widget>[
-                               QuantityIcon(onChangedQuantity:decrementQuantity,iconColor: Colors.green,backgroundColor: Colors.white,icon: Icons.remove),
+                              QuantityIcon(
+                                  onChangedQuantity: decrementQuantity,
+                                  iconColor: Colors.green,
+                                  backgroundColor: Colors.white,
+                                  icon: Icons.remove),
                               const SizedBox(width: 20.0),
                               Text(
-                                quantity.toString(),
+                                widget.quantity.toString(),
                                 style: const TextStyle(fontSize: 18.0),
                               ),
                               const SizedBox(width: 20.0),
-                             QuantityIcon(onChangedQuantity:incrementQuantity,iconColor: Colors.white,backgroundColor: Colors.green,icon: Icons.add)
+                              QuantityIcon(
+                                  onChangedQuantity: incrementQuantity,
+                                  iconColor: Colors.white,
+                                  backgroundColor: Colors.green,
+                                  icon: Icons.add)
                             ],
                           ),
                         ),

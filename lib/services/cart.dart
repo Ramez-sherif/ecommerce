@@ -1,23 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/cart.dart';
 import 'package:ecommerce/models/product.dart';
-import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/services/collections_config.dart';
 import 'package:ecommerce/services/product.dart';
 
 class CartService {
   static var db = FirebaseFirestore.instance;
 
-  // static Future getCartById(CartModel cart) async {
-  //   await db.collection(CollectionConfig.cartItems).doc(cart.id).get().then(
-  //     (querySnapshot) {
-  //       print("Successfully completed");
-  //     },
-  //     onError: (e) => print("Error completing: $e"),
-  //   );
-  // }
+  static double getTotalPrice(CartModel model) {
+    double totalPrice = 0.0;
+    for (var entry in model.products.entries) {
+      totalPrice += entry.key.price;
+    }
+    return totalPrice;
+  }
 
   //working well
+  //should return cartModel with
   static Future updateProductQuantity(
       String productId, String userId, int newQuantity) async {
     var querySnapshot = await db
@@ -41,6 +40,14 @@ class CartService {
     }
   }
 
+  static Future updateCart(CartModel model) async {
+    for (var cart_item in model.products.entries) {
+      await updateProductQuantity(
+          cart_item.key.id, model.userId, cart_item.value);
+    }
+    
+  }
+
   //working good
   static Future addProductToCart(
       String productId, String userId, int quantity) async {
@@ -54,12 +61,33 @@ class CartService {
         .onError((e, _) => print("Error writing document: $e"));
   }
 
+  static Future removeProductFromCart(
+      ProductModel product, String userId) async {
+    var querySnapshot = await db
+        .collection(CollectionConfig.cartItems)
+        .where("user_id", isEqualTo: userId)
+        .where("product_id", isEqualTo: product.id)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      var firstDocument = querySnapshot.docs.first;
+      var documentRefrence = firstDocument.reference; //refrence the document
+
+      await documentRefrence
+          .delete(); //update the quantity of the product to the new quantity
+    } else {
+      print("Error: Product couldn't be deleted");
+    }
+  }
+
   //working good
-  static Future<Map<ProductModel, int>> getCart(String userId) async {
+  static Future<CartModel> getCart(String userId) async {
     //get User By Id
     //User user = User(id: userId);
     List<ProductModel> allProducts = await ProductService.getAllProducts();
     final Map<ProductModel, int> products = {};
+
     await db
         .collection(CollectionConfig.cartItems)
         .where("user_id", isEqualTo: userId)
@@ -73,9 +101,12 @@ class CartService {
     }).onError((error, stackTrace) {
       print("Error getting document: $error");
     });
-  //return cartModel with products and user id in it 
-  //update it after merging with user class model
-    return products;
+    print(products.toString());
+    //return cartModel with products and user id in it
+    //update it after merging with user class model
+    CartModel cartModel = CartModel(userId: userId, products: products);
+
+    return cartModel;
   }
 
   static Future deleteCart(CartModel cart) async {
