@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/product.dart';
-import 'package:ecommerce/models/user.dart';
-import 'package:ecommerce/services/cart.dart';
 
 class CartModel {
   const CartModel({required this.userId, required this.products});

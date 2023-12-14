@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/cart.dart';
 import 'package:ecommerce/models/product.dart';
@@ -45,7 +47,6 @@ class CartService {
       await updateProductQuantity(
           cart_item.key.id, model.userId, cart_item.value);
     }
-    
   }
 
   //working good
