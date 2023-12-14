@@ -1,33 +1,33 @@
+import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/services/cart.dart';
+import 'package:ecommerce/widgets/cart/quantity_icon_widget.dart';
 import 'package:flutter/material.dart';
 
-class ProductWidget extends StatefulWidget {
-  final String imagePath;
-  final String description;
-  final double price;
-
-  const ProductWidget(
-      {super.key,
-      required this.imagePath,
-      required this.description,
-      required this.price});
-
+class CartProductWidget extends StatefulWidget {
+  CartProductWidget(
+      {super.key, required this.productModel, required this.quantity});
+      
+  final ProductModel productModel;
+  int quantity;
   @override
-  State<ProductWidget> createState() => _ProductWidgetState();
+  State<CartProductWidget> createState() => _ProductWidgetState();
 }
 
-class _ProductWidgetState extends State<ProductWidget> {
-  int quantity = 0;
-
+class _ProductWidgetState extends State<CartProductWidget> {
   void incrementQuantity() {
-    setState(() {
-      quantity++;
+   setState(() {
+      widget.quantity++;
+      CartService.updateProductQuantity(
+          widget.productModel.id, "1", widget.quantity);
     });
   }
 
   void decrementQuantity() {
-    if (quantity > 0) {
+    if (widget.quantity > 0) {
       setState(() {
-        quantity--;
+        widget.quantity--;
+        CartService.updateProductQuantity(
+            widget.productModel.id, "1", widget.quantity);
       });
     }
   }
@@ -48,8 +48,8 @@ class _ProductWidgetState extends State<ProductWidget> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  "assets/${widget.imagePath}",
+                child: Image.network(
+                  widget.productModel.image_URL,
                   width: 100,
                   height: 100,
                 ),
@@ -61,7 +61,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      widget.description,
+                      widget.productModel.name,
                       style: const TextStyle(fontSize: 15.0),
                     ),
                     const SizedBox(height: 25.0),
@@ -69,7 +69,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '\$${widget.price.toStringAsFixed(2)}',
+                          '\$${widget.productModel.price.toStringAsFixed(2)}',
                           style: const TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.bold),
                         ),
@@ -80,42 +80,22 @@ class _ProductWidgetState extends State<ProductWidget> {
                               color: const Color.fromARGB(248, 194, 194, 194)),
                           child: Row(
                             children: <Widget>[
-                              GestureDetector(
-                                onTap: decrementQuantity,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.remove,
-                                    color: Colors.green,
-                                    size: 15,
-                                  ),
-                                ),
-                              ),
+                              QuantityIcon(
+                                  onChangedQuantity: decrementQuantity,
+                                  iconColor: Colors.green,
+                                  backgroundColor: Colors.white,
+                                  icon: Icons.remove),
                               const SizedBox(width: 20.0),
                               Text(
-                                quantity.toString(),
+                                widget.quantity.toString(),
                                 style: const TextStyle(fontSize: 18.0),
                               ),
                               const SizedBox(width: 20.0),
-                              GestureDetector(
-                                onTap: incrementQuantity,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    size: 15,
-                                  ),
-                                ),
-                              ),
+                              QuantityIcon(
+                                  onChangedQuantity: incrementQuantity,
+                                  iconColor: Colors.white,
+                                  backgroundColor: Colors.green,
+                                  icon: Icons.add)
                             ],
                           ),
                         ),

@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     const SettingsPage(),
     const AllProductsPage(),
     FavoritesPage(),
-    CartView(),
+    CartPage(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
