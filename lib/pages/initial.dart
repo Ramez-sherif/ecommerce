@@ -19,7 +19,7 @@ class _InitialPageState extends State<InitialPage> with WidgetsBindingObserver {
   late final UserProvider userProvider;
   @override
   void initState() {
-    userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider = Provider.of<UserProvider>(context, listen: true);
     WidgetsBinding.instance.addObserver(this);
 
     FirebaseAuth.instance.authStateChanges().listen((User? user) {

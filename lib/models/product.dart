@@ -52,4 +52,16 @@ class ProductModel {
     return 'ProductModel(image_URL: $image_URL, rating: $rating, quantity: $quantity, category: ${category.toString()})';
   }
 
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': name,
+      'description': description,
+      'image_URL': image_URL,
+      'rating': rating,
+      'quantity': quantity,
+      'category_id': category.id,
+      'price': price,
+    };
+  }
 }

@@ -1,6 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, non_constant_identifier_names
 import 'package:ecommerce/providers/products.dart';
-import 'package:ecommerce/services/product.dart';
 import 'package:ecommerce/widgets/all_products/categories_list.dart';
 import 'package:ecommerce/widgets/all_products/products_grid.dart';
 import 'package:ecommerce/widgets/all_products/top_bar.dart';
@@ -21,14 +19,13 @@ class _AllProductsPageState extends State<AllProductsPage>
   @override
   void initState() {
     super.initState();
-    productsProvider = Provider.of<ProductsProvider>(context, listen: false);
+    productsProvider = Provider.of<ProductsProvider>(context, listen: true);
     WidgetsBinding.instance.addObserver(this);
   }
 
   Future getAllProducts() async {
     if (productsProvider.homeAllProducts.isEmpty) {
-      final products = await ProductService.getAllProducts();
-      productsProvider.homeAllProducts = products;
+      await productsProvider.setHomeAllProducts();
     }
   }
 
@@ -54,13 +51,13 @@ class _AllProductsPageState extends State<AllProductsPage>
   }
 
   Widget buildBody() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AllProductsTopBarWidget(),
-        const CategoriesList(),
-        const SizedBox(height: 10),
-        ProductsGrid(products: productsProvider.homeAllProducts),
+        AllProductsTopBarWidget(),
+        CategoriesList(),
+        SizedBox(height: 10),
+        ProductsGrid(),
       ],
     );
   }

@@ -24,7 +24,7 @@ class _SignupPageState extends State<SignupPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider = Provider.of<UserProvider>(context, listen: true);
     WidgetsBinding.instance.addObserver(this);
   }
 

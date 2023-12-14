@@ -3,25 +3,37 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/pages/item_details_page.dart';
+import 'package:ecommerce/providers/products.dart';
 import 'package:ecommerce/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductsGrid extends StatelessWidget {
-  final List<ProductModel> products;
-  const ProductsGrid({Key? key, required this.products}) : super(key: key);
+  const ProductsGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    ProductsProvider productsProvider = Provider.of<ProductsProvider>(
+      context,
+      listen: true,
+    );
+
     return Expanded(
-      child: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        mainAxisSpacing: 15,
-        crossAxisSpacing: 15,
-        physics: const BouncingScrollPhysics(),
-        children: List.generate(
-          products.length,
-          (index) => _buildProductItem(context, products[index]),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await productsProvider.setHomeAllProducts();
+        },
+        child: GridView.count(
+          crossAxisCount: 2,
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          mainAxisSpacing: 15,
+          crossAxisSpacing: 15,
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: List.generate(
+            productsProvider.homeAllProducts.length,
+            (index) => _buildProductItem(
+                context, productsProvider.homeAllProducts[index]),
+          ),
         ),
       ),
     );
@@ -65,66 +77,29 @@ class ProductsGrid extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     Container(
-              //       decoration: const BoxDecoration(
-              //         color: Colors.white,
-              //         shape: BoxShape.circle,
-              //       ),
-              //       child: IconButton(
-              //         onPressed: () {},
-              //         icon: const Icon(
-              //           Icons.favorite,
-              //           color: Colors.red,
-              //         ),
-              //       ),
-              //     )
-              //   ],
-              // ),
-              // const SizedBox(height: 10),
-              // Stack(
-              //   children: [
-              //     getProductImage(product.image_URL),
-              //     // add top right corner icon button
-              //     Positioned(
-              //       top: 2,
-              //       right: 2,
-              //       child: Container(
-              //         decoration: BoxDecoration(
-              //           color: Colors.grey[200]!.withOpacity(0.6),
-              //           shape: BoxShape.circle,
-              //         ),
-              //         child: IconButton(
-              //           onPressed: () {},
-              //           icon: const Icon(
-              //             Icons.favorite,
-              //             color: Colors.red,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
               // Product image
-              getProductImage(product.image_URL),
+              Expanded(
+                flex: 3,
+                child: getProductImage(product.image_URL),
+              ),
               // product name and price
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${product.name.capitalize()} \n\$${product.price}',
-                    style: textStyle,
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.favorite,
-                      color: Colors.red,
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${product.name.capitalize()} \n\$${product.price}',
+                      style: textStyle,
                     ),
-                  ),
-                ],
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
