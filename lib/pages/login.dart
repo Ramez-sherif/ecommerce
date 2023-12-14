@@ -170,7 +170,6 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
           if (response.status) {
             User user = response.data;
             userProvider.user = user;
-            print("done login");
             String role = await UserService.getUserRole(user.uid);
 
             if (role == 'admin') {

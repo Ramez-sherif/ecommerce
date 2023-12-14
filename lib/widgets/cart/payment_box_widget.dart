@@ -1,6 +1,6 @@
 import 'package:ecommerce/pages/payment.dart';
 import 'package:ecommerce/widgets/cart/make_payment_widget.dart';
-import 'package:ecommerce/widgets/cart/rectClipper.dart';
+import 'package:ecommerce/widgets/cart/rect_clipper.dart';
 import 'package:flutter/material.dart';
 
 class PaymentBoxWidget extends StatelessWidget {

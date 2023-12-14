@@ -47,13 +47,14 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
              Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: ()async {
                   await FirebaseAuth.instance.signOut();
+                  // ignore: use_build_context_synchronously
                   Navigator.push(
                     context,
                     MaterialPageRoute(
