@@ -8,4 +8,10 @@ class UserProvider extends ChangeNotifier {
     this.user = user;
     notifyListeners();
   }
+
+  Future removeUser() async {
+    user.delete();
+    await FirebaseAuth.instance.signOut();
+    notifyListeners();
+  }
 }

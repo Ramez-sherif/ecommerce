@@ -1,13 +1,16 @@
 import 'package:ecommerce/pages/cutomer_support.dart';
 import 'package:ecommerce/pages/login.dart';
+import 'package:ecommerce/providers/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -47,13 +50,15 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20,),
-             Container(
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: ()async {
-                  await FirebaseAuth.instance.signOut();
+                onPressed: () async {
+                  await userProvider.removeUser();
                   // ignore: use_build_context_synchronously
                   Navigator.push(
                     context,
