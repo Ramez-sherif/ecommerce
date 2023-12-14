@@ -1,7 +1,6 @@
 import 'package:ecommerce/pages/cutomer_support.dart';
 import 'package:ecommerce/pages/login.dart';
 import 'package:ecommerce/providers/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
