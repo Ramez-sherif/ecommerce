@@ -17,16 +17,7 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
-  late final UserProvider userProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    userProvider = Provider.of<UserProvider>(context, listen: true);
-    WidgetsBinding.instance.addObserver(this);
-  }
-
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController userEmail = TextEditingController();
@@ -82,7 +73,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
         ResponseModel response = await SignInService.signInWithGoogle();
         if (response.status) {
           User user = response.data;
-          userProvider.user = user;
+          context.read<UserProvider>().setUser(user);
           String role = await UserService.getUserRole(user.uid);
           if (role == 'admin') {
             // go to admin page
@@ -169,14 +160,14 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
           if (response.status) {
             User user = response.data;
-            userProvider.user = user;
+            context.read<UserProvider>().setUser(user);
             String role = await UserService.getUserRole(user.uid);
+            print("role: $role");
 
             if (role == 'admin') {
               // go to admin page
             } else {
-              Navigator.pushReplacement(
-                context,
+              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const HomePage(),
                 ),

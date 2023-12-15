@@ -13,42 +13,58 @@ class InitialPage extends StatefulWidget {
   _InitialPageState createState() => _InitialPageState();
 }
 
-class _InitialPageState extends State<InitialPage> with WidgetsBindingObserver {
-  bool loading = true;
+class _InitialPageState extends State<InitialPage> {
+  late Future<bool> _loginCheck;
   bool isLoggedIn = false;
-  late final UserProvider userProvider;
+
   @override
   void initState() {
-    userProvider = Provider.of<UserProvider>(context, listen: true);
-    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+    _loginCheck = _checkLogin();
+  }
 
+  Future<bool> _checkLogin() async {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
-        setState(() {
-          loading = false;
-          isLoggedIn = false;
-        });
+        isLoggedIn = false;
+        print('User is currently signed out!');
       } else {
-        userProvider.setUser(user);
-        setState(() {
-          loading = false;
-          isLoggedIn = true;
-        });
+        print('User is signed in!');
+        context.read<UserProvider>().setUser(user);
+        isLoggedIn = true;
       }
     });
-    super.initState();
+    return isLoggedIn;
   }
 
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? const Scaffold(
+    return FutureBuilder<bool>(
+      future: _loginCheck,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
-          )
-        : isLoggedIn
-            ? const HomePage()
-            : const LoginPage();
+          );
+        } else {
+          if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                child: Text('Error: ${snapshot.error}'),
+              ),
+            );
+          } else {
+            print('isLoggedIn: $isLoggedIn');
+            if (isLoggedIn) {
+              return const HomePage();
+            } else {
+              return const LoginPage();
+            }
+          }
+        }
+      },
+    );
   }
 }

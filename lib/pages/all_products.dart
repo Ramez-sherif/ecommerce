@@ -12,20 +12,11 @@ class AllProductsPage extends StatefulWidget {
   State<AllProductsPage> createState() => _AllProductsPageState();
 }
 
-class _AllProductsPageState extends State<AllProductsPage>
-    with WidgetsBindingObserver {
-  late final ProductsProvider productsProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    productsProvider = Provider.of<ProductsProvider>(context, listen: true);
-    WidgetsBinding.instance.addObserver(this);
-  }
+class _AllProductsPageState extends State<AllProductsPage>{
 
   Future getAllProducts() async {
-    if (productsProvider.homeAllProducts.isEmpty) {
-      await productsProvider.setHomeAllProducts();
+    if (context.read<ProductsProvider>().homeAllProducts.isEmpty) {
+      await context.watch<ProductsProvider>().setHomeAllProducts();
     }
   }
 

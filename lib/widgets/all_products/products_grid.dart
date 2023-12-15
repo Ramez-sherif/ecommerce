@@ -13,15 +13,10 @@ class ProductsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProductsProvider productsProvider = Provider.of<ProductsProvider>(
-      context,
-      listen: true,
-    );
-
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async {
-          await productsProvider.setHomeAllProducts();
+          await context.read<ProductsProvider>().setHomeAllProducts();
         },
         child: GridView.count(
           crossAxisCount: 2,
@@ -30,9 +25,11 @@ class ProductsGrid extends StatelessWidget {
           crossAxisSpacing: 15,
           physics: const AlwaysScrollableScrollPhysics(),
           children: List.generate(
-            productsProvider.homeAllProducts.length,
+            context.watch<ProductsProvider>().homeAllProducts.length,
             (index) => _buildProductItem(
-                context, productsProvider.homeAllProducts[index]),
+              context,
+              context.watch<ProductsProvider>().homeAllProducts[index],
+            ),
           ),
         ),
       ),
