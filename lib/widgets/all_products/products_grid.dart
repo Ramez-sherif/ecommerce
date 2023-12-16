@@ -95,13 +95,6 @@ class ProductsGrid extends StatelessWidget {
                       '\$${product.price}',
                       style: textStyle,
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      ),
-                    ),
                   ],
                 ),
               ),
