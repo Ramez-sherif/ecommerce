@@ -71,21 +71,38 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
       onTap: () async {
         ResponseModel response = await SignInService.signInWithGoogle();
+
         if (response.status) {
+          // Login successful
           User user = response.data;
           context.read<UserProvider>().setUser(user);
-          String role = await UserService.getUserRole(user.uid);
-          if (role == 'admin') {
-            // go to admin page
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomePage(),
-              ),
-            );
+          await UserService.setUserRole(
+            response.data as User,
+            'user',
+          );
+
+          try {
+            String role = await UserService.getUserRole(user.uid);
+
+            if (role == 'admin') {
+              // Navigate to the admin page
+              // Add your code here to navigate to the admin page
+            } else {
+              // Navigate to the home page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomePage(),
+                ),
+              );
+            }
+          } catch (e) {
+            // ignore: avoid_print
+            print("Error getting user role: $e");
+            // Handle the error, you may want to log it or show an appropriate message
           }
         } else {
+          // Show an error dialog
           AwesomeDialog(
             context: context,
             animType: AnimType.rightSlide,

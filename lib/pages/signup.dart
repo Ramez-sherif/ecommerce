@@ -18,16 +18,7 @@ class SignupPage extends StatefulWidget {
   State<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> with WidgetsBindingObserver {
-  late final UserProvider userProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    userProvider = Provider.of<UserProvider>(context, listen: true);
-    WidgetsBinding.instance.addObserver(this);
-  }
-
+class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController userEmail = TextEditingController();
@@ -152,7 +143,8 @@ class _SignupPageState extends State<SignupPage> with WidgetsBindingObserver {
                               'user',
                             );
 
-                            userProvider.user = response.data as User;
+                            User user = response.data as User;
+                            context.read<UserProvider>().setUser(user);
 
                             AwesomeDialog(
                               context: context,

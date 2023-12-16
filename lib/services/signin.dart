@@ -45,31 +45,50 @@ class SignInService {
   static Future<ResponseModel> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
       if (googleUser == null) {
+        // User canceled the login
         return ResponseModel(
           status: false,
           message: "Login Cancelled",
         );
       }
 
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      // Prompt the user to choose an account if there are multiple accounts
+      if (await GoogleSignIn().signInSilently() != null) {
+        await GoogleSignIn().signOut();
+      }
+
+      final GoogleSignInAccount? selectedAccount =
+          await GoogleSignIn().signIn();
+
+      if (selectedAccount == null) {
+        // User canceled the login
+        return ResponseModel(
+          status: false,
+          message: "Login Cancelled",
+        );
+      }
+
+      // Obtain the auth details from the selected account
+      final GoogleSignInAuthentication? googleAuth =
+          await selectedAccount.authentication;
 
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
       );
 
       // Once signed in, return the UserCredential
       UserCredential user = await FirebaseAuth.instance.signInWithCredential(
         credential,
       );
+
       return ResponseModel(
         status: true,
         message: "Login Successful",
-        data: user.user,
+        data: user.user, // Return the User object
       );
     } catch (e) {
       return ResponseModel(

@@ -9,9 +9,19 @@ class UserService {
   /// It takes the user object as [User] and the role as parameters.
   ///
   static Future setUserRole(User user, String role) async {
-    await db.collection('users').doc(user.uid).set({
-      'role': role,
-    });
+    await db.collection('users').doc(user.uid).get().then((value) => {
+          if (value.exists)
+            {
+              // user already exists
+              // do nothing
+            }
+          else
+            {
+              db.collection('users').doc(user.uid).set({
+                'role': role,
+              })
+            }
+        });
   }
 
   /// This method is used to get the user role from the database.
@@ -22,6 +32,4 @@ class UserService {
     var data = await db.collection('users').doc(uid).get();
     return data['role'];
   }
-
-  
 }
