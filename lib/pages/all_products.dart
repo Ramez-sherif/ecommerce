@@ -42,13 +42,18 @@ class _AllProductsPageState extends State<AllProductsPage> {
   }
 
   Widget buildBody() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AllProductsTopBarWidget(),
-        CategoriesList(),
-        SizedBox(height: 10),
-        ProductsGrid(),
+        const AllProductsTopBarWidget(),
+        const CategoriesList(),
+        const SizedBox(height: 10),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 80),
+            child: const ProductsGrid(),
+          ),
+        ),
       ],
     );
   }

@@ -50,19 +50,13 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          // title: Text(
-          //   widget.product.name.capitalize(),
-          //   style: const TextStyle(color: Colors.black, fontSize: 25),
-          //   softWrap: true,
-          // ),
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             color: Colors.black,
             onPressed: () {
-              Navigator.pop(
-                  context); // Navigate back when back button is pressed
+              Navigator.pop(context);
             },
           ),
         ),
@@ -86,6 +80,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                 const SizedBox(height: 10.0),
                 AddToCartButtonWidget(
                   counter: myCounter,
+                  product: widget.product,
                 ),
               ],
             ),

@@ -1,8 +1,9 @@
-import "package:ecommerce/models/category.dart";
 import "package:ecommerce/models/product.dart";
-import "package:ecommerce/services/cart.dart";
+import "package:ecommerce/providers/home.dart";
+import "package:ecommerce/providers/user.dart";
 import "package:ecommerce/widgets/cart/cart_product_widget.dart";
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
 class DismissableProductWidget extends StatelessWidget {
   const DismissableProductWidget({
@@ -54,30 +55,18 @@ class DismissableProductWidget extends StatelessWidget {
             ),
           ),
           onDismissed: (direction) async {
-            //delete from database
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('${product.name} deleted'),
               ),
             );
-            //uncomment to remove from database
-            await CartService.removeProductFromCart(product, "1");
+            String userId = context.read<UserProvider>().user.uid;
+            await context
+                .read<HomeProvider>()
+                .removeProductFromCart(product, userId);
           },
           child: CartProductWidget(
-            productModel: ProductModel(
-              id: product.id,
-              name: product.name,
-              image_URL: product.image_URL,
-              description: product.description,
-              price: product.price.toDouble(),
-              rating: product.rating,
-              quantity: 20,
-              category: CategoryModel(
-                id: product.category.id,
-                name: product.category.name,
-                description: product.category.description,
-              ),
-            ),
+            productModel: product,
             quantity: quantity,
           ),
         ),

@@ -13,23 +13,21 @@ class ProductsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          await context.read<HomeProvider>().setHomeAllProducts();
-        },
-        child: GridView.count(
-          crossAxisCount: 2,
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-          mainAxisSpacing: 15,
-          crossAxisSpacing: 15,
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: List.generate(
-            context.watch<HomeProvider>().homeAllProducts.length,
-            (index) => _buildProductItem(
-              context,
-              context.watch<HomeProvider>().homeAllProducts[index],
-            ),
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<HomeProvider>().setHomeAllProducts();
+      },
+      child: GridView.count(
+        crossAxisCount: 2,
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        mainAxisSpacing: 15,
+        crossAxisSpacing: 15,
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: List.generate(
+          context.watch<HomeProvider>().homeAllProducts.length,
+          (index) => _buildProductItem(
+            context,
+            context.watch<HomeProvider>().homeAllProducts[index],
           ),
         ),
       ),
@@ -84,8 +82,17 @@ class ProductsGrid extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Flexible(
+                      child: Text(
+                        product.name.capitalize(),
+                        style: textStyle,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        softWrap: true,
+                      ),
+                    ),
                     Text(
-                      '${product.name.capitalize()} \n\$${product.price}',
+                      '\$${product.price}',
                       style: textStyle,
                     ),
                     IconButton(

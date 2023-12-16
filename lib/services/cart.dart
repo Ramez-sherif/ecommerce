@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/cart.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/collections_config.dart';
-import 'package:ecommerce/services/product.dart';
 
 class CartService {
   static var db = FirebaseFirestore.instance;
@@ -51,9 +50,10 @@ class CartService {
 
   //working good
   static Future addProductToCart(
-      String productId, String userId, int quantity) async {
-    //get User By Id
-    //User user = User(id: userId);
+    String productId,
+    String userId,
+    int quantity,
+  ) async {
     await db
         .collection(CollectionConfig.cartItems)
         .doc()
@@ -83,10 +83,7 @@ class CartService {
   }
 
   //working good
-  static Future<CartModel> getCart(String userId) async {
-    //get User By Id
-    //User user = User(id: userId);
-    List<ProductModel> allProducts = await ProductService.getAllProducts();
+  static Future<CartModel> getCart(String userId, List<ProductModel> allProducts) async {
     final Map<ProductModel, int> products = {};
 
     await db

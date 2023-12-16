@@ -1,8 +1,19 @@
+import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/providers/user.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddToCartButtonWidget extends StatefulWidget {
-  const AddToCartButtonWidget({super.key, required this.counter});
   final int counter;
+  final ProductModel product;
+
+  const AddToCartButtonWidget({
+    super.key,
+    required this.counter,
+    required this.product,
+  });
+
   @override
   State<AddToCartButtonWidget> createState() => _AddToCartButtonWidgetState();
 }
@@ -12,18 +23,25 @@ class _AddToCartButtonWidgetState extends State<AddToCartButtonWidget> {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: () {
-        // Add to cart functionality
+        context.read<HomeProvider>().addProductToCart(
+              widget.product,
+              context.read<UserProvider>().user.uid,
+              widget.counter,
+            );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${widget.product.name} added to cart'),
+          ),
+        );
       },
       icon: Container(
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: Color.fromARGB(
-              255, 41, 154, 55), // Change the color of the circle as needed
+          color: Color.fromARGB(255, 41, 154, 55),
         ),
-        padding: const EdgeInsets.all(10.0), // Adjust padding as needed
-        child: const Icon(Icons.shopping_basket_sharp,
-            color: Colors.black // Change the color of the icon as needed
-            ),
+        padding: const EdgeInsets.all(10.0),
+        child: const Icon(Icons.shopping_basket_sharp, color: Colors.black),
       ),
       label: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,21 +51,18 @@ class _AddToCartButtonWidgetState extends State<AddToCartButtonWidget> {
             style: TextStyle(fontSize: 18, color: Colors.white),
           ),
           Text(
-            "\$${widget.counter * 50}",
+            "\$${widget.counter * widget.product.price}",
             style: const TextStyle(fontSize: 18, color: Colors.white),
           ),
         ],
       ),
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(50.0), // Set border radius as needed
+          borderRadius: BorderRadius.circular(50.0),
         ),
-        padding: const EdgeInsets.symmetric(
-            vertical: 10.0, horizontal: 10.0), // Adjust overall button padding
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         alignment: Alignment.topLeft,
-        backgroundColor:
-            Colors.black, // Aligns the icon and label to the center
+        backgroundColor: Colors.black,
       ),
     );
   }

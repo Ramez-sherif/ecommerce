@@ -6,9 +6,9 @@ import 'package:ecommerce/widgets/cart/rect_clipper.dart';
 import 'package:flutter/material.dart';
 
 class PaymentBoxWidget extends StatelessWidget {
-  const PaymentBoxWidget({super.key,required this.cart,required this.price});
-final double price;
-final CartModel cart;
+  const PaymentBoxWidget({super.key, required this.cart, required this.price});
+  final double price;
+  final CartModel cart;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,15 +32,7 @@ final CartModel cart;
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   const SizedBox(height: 30),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Del. Amount:", style: TextStyle(fontSize: 18)),
-                      Text("0", style: TextStyle(fontSize: 18))
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                   Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
@@ -49,7 +41,8 @@ final CartModel cart;
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text("${CartService.getTotalPrice(cart)}",
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold))
                     ],
                   ),
                   const SizedBox(height: 10),

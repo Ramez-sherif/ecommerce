@@ -38,10 +38,15 @@ class _productDetailsWidgetState extends State<ProductDetailsWidget> {
                 widget.toggleFavorite();
               },
             ),
-            Text(
-              widget.product.name.capitalize(),
-              style:
-                  const TextStyle(fontSize: 35.0, fontWeight: FontWeight.bold),
+            Flexible(
+              child: Text(
+                widget.product.name.capitalize(),
+                style: const TextStyle(
+                    fontSize: 35.0, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: true,
+              ),
             ),
             Row(
               children: [
