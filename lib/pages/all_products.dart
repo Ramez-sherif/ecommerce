@@ -12,11 +12,10 @@ class AllProductsPage extends StatefulWidget {
   State<AllProductsPage> createState() => _AllProductsPageState();
 }
 
-class _AllProductsPageState extends State<AllProductsPage>{
-
+class _AllProductsPageState extends State<AllProductsPage> {
   Future getAllProducts() async {
     if (context.read<HomeProvider>().homeAllProducts.isEmpty) {
-      await context.watch<HomeProvider>().setHomeAllProducts();
+      await context.read<HomeProvider>().setHomeAllProducts();
     }
   }
 
@@ -30,8 +29,9 @@ class _AllProductsPageState extends State<AllProductsPage>{
             return Center(
               child: Text('Error: ${snapshot.error}'),
             );
+          } else {
+            return buildBody();
           }
-          return buildBody();
         } else {
           return const Center(
             child: CircularProgressIndicator(),

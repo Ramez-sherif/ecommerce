@@ -96,8 +96,8 @@ class CartService {
         .then((querySnapShot) {
       for (var docSnapShot in querySnapShot.docs) {
         products[allProducts.firstWhere(
-                (element) => element.id == docSnapShot["product_id"])] =
-            docSnapShot["quantity"];
+          (element) => element.id == docSnapShot["product_id"],
+        )] = docSnapShot["quantity"];
       }
     }).onError((error, stackTrace) {
       print("Error getting document: $error");

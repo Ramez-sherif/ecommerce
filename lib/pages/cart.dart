@@ -1,31 +1,40 @@
-import 'package:ecommerce/models/cart.dart';
-import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/pages/payment.dart';
-import 'package:ecommerce/services/cart.dart';
+import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/widgets/cart/dismissable_product_widget.dart';
 import 'package:ecommerce/widgets/cart/payment_box_widget.dart';
 import 'package:flutter/material.dart';
-
-List<ProductModel> products = [];
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class CartPage extends StatelessWidget {
-  CartPage({super.key});
+class CartPage extends StatefulWidget {
+  const CartPage({super.key});
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
   double totalPrice = 0;
+
+  Future getCart() async {
+    String userId = context.read<UserProvider>().user.uid;
+
+    if (context.read<HomeProvider>().cartProducts == null) {
+      await context.read<HomeProvider>().setCartProducts(userId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<CartModel>(
-      future: CartService.getCart("1"),
+    return FutureBuilder(
+      future: getCart(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          CartModel model = const CartModel(userId: "1", products: {});
-          if (snapshot.data != null) {
-            model = snapshot.data!;
-          }
           return Scaffold(
             appBar: AppBar(
               title: const Text("Cart"),
@@ -33,40 +42,54 @@ class CartPage extends StatelessWidget {
               automaticallyImplyLeading: false,
             ),
             body: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: model.products.length,
-                    itemBuilder: (context, index) {
-                      final entry = model.products.entries.toList()[index];
-                      final key = entry.key;
-                      final value = entry.value;
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DismissableProductWidget(
-                          product: key,
-                          quantity: value,
-                        ),
-                      );
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      String userId = context.read<UserProvider>().user.uid;
+                      await context
+                          .read<HomeProvider>()
+                          .setCartProducts(userId);
                     },
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 100),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PaymentPage(),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: context
+                          .watch<HomeProvider>()
+                          .cartProducts!
+                          .products
+                          .length,
+                      itemBuilder: (context, index) {
+                        final entry = context
+                            .watch<HomeProvider>()
+                            .cartProducts!
+                            .products
+                            .entries
+                            .toList()[index];
+                        final key = entry.key;
+                        final value = entry.value;
+                        return Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: DismissableProductWidget(
+                            product: key,
+                            quantity: value,
                           ),
                         );
                       },
-                      child: PaymentBoxWidget(
-                        cart: model,
-                        price: totalPrice,
-                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PaymentPage(),
+                        ),
+                      );
+                    },
+                    child: PaymentBoxWidget(
+                      cart: context.watch<HomeProvider>().cartProducts!,
+                      price: totalPrice,
                     ),
                   )
                 ],

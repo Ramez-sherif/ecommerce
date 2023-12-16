@@ -5,8 +5,11 @@ import "package:ecommerce/widgets/cart/cart_product_widget.dart";
 import "package:flutter/material.dart";
 
 class DismissableProductWidget extends StatelessWidget {
-  const DismissableProductWidget(
-      {super.key, required this.product, required this.quantity});
+  const DismissableProductWidget({
+    super.key,
+    required this.product,
+    required this.quantity,
+  });
   final ProductModel product;
   final int quantity;
   @override
@@ -58,7 +61,7 @@ class DismissableProductWidget extends StatelessWidget {
               ),
             );
             //uncomment to remove from database
-           await CartService.removeProductFromCart(product, "1");
+            await CartService.removeProductFromCart(product, "1");
           },
           child: CartProductWidget(
             productModel: ProductModel(
@@ -67,11 +70,15 @@ class DismissableProductWidget extends StatelessWidget {
               image_URL: product.image_URL,
               description: product.description,
               price: product.price.toDouble(),
-              rating: product.rating, 
+              rating: product.rating,
               quantity: 20,
-              category: CategoryModel(id: product.category.id, name: product.category.name, description: product.category.description)
+              category: CategoryModel(
+                id: product.category.id,
+                name: product.category.name,
+                description: product.category.description,
+              ),
             ),
-            quantity: quantity
+            quantity: quantity,
           ),
         ),
       ],
