@@ -16,6 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _newValueController = TextEditingController(); 
   String  _phoneNumber = "90"; 
+  String _location = "abasseya"; 
 
   bool _passwordError = false;
   @override
@@ -39,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildProfileItem("Email", "johndoe@example.com"),
                 _buildProfileItemWithEditButtonPhone("Phone Number", _phoneNumber),
 
-                _buildProfileItemWithEditButtonLoc("Location", "**** **** **** 1234 - New York"),
+                _buildProfileItemWithEditButtonLoc("Location", _location),
                 _buildSectionDivider(),
                 _buildSectionTitle("Orders Tracking"),
              _buildFullWidthButton("Your Orders", () {
@@ -117,6 +118,8 @@ class _ProfilePageState extends State<ProfilePage> {
               
               ElevatedButton(
                 onPressed: () {
+                   value = _location;
+                    _showEditDialogLoc(value); 
                  
                     //  profileService.updateGeoLocation(userId, newGeoLocation);
                 },
@@ -176,6 +179,47 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
+    );
+  }
+
+    void _showEditDialogLoc(String value) {
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit location"),
+          content: TextField(
+            controller: _newValueController,
+            decoration: InputDecoration(
+              hintText: "Enter new location",
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Save"),
+              onPressed: () {
+                  setState(() {
+              _location = _newValueController.text;
+                  value = _location; 
+                  print(value); 
+                   //   profileService.updatePhoneNumber(userId, value);
+                 });
+               
+             
+                
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
