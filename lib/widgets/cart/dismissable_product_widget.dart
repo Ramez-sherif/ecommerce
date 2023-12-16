@@ -1,17 +1,24 @@
-import "package:ecommerce/widgets/cart/product_widget.dart";
+import "package:ecommerce/models/product.dart";
+import "package:ecommerce/providers/home.dart";
+import "package:ecommerce/providers/user.dart";
+import "package:ecommerce/widgets/cart/cart_product_widget.dart";
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
 class DismissableProductWidget extends StatelessWidget {
-  const DismissableProductWidget(
-      {super.key, required this.products, required this.index});
-  final List<dynamic> products;
-  final int index;
+  const DismissableProductWidget({
+    super.key,
+    required this.product,
+    required this.quantity,
+  });
+  final ProductModel product;
+  final int quantity;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Dismissible(
-          key: Key(products[index]['description']),
+          key: Key(product.description),
           direction: DismissDirection.horizontal,
           background: Container(
             margin: const EdgeInsets.symmetric(vertical: 9),
@@ -47,20 +54,20 @@ class DismissableProductWidget extends StatelessWidget {
               color: Color.fromARGB(255, 255, 0, 0),
             ),
           ),
-          onDismissed: (direction) {
-            //delete from database
+          onDismissed: (direction) async {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('${products[index]['description']} dismissed'),
+                content: Text('${product.name} deleted'),
               ),
             );
-
-            products.removeAt(index);
+            String userId = context.read<UserProvider>().user.uid;
+            await context
+                .read<HomeProvider>()
+                .removeProductFromCart(product, userId);
           },
-          child: ProductWidget(
-            imagePath: products[index]['imagePath'],
-            description: products[index]['description'],
-            price: products[index]['price'].toDouble(),
+          child: CartProductWidget(
+            productModel: product,
+            quantity: quantity,
           ),
         ),
       ],

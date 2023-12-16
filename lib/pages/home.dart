@@ -1,5 +1,5 @@
 import 'package:ecommerce/pages/all_products.dart';
-import 'package:ecommerce/pages/cart_view.dart';
+import 'package:ecommerce/pages/cart.dart';
 import 'package:ecommerce/pages/favorites.dart';
 import 'package:ecommerce/pages/profile.dart';
 import 'package:ecommerce/pages/settings.dart';
@@ -12,14 +12,14 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int currentTab = 2;
   final List<Widget> screens = [
     const ProfilePage(),
     const SettingsPage(),
     const AllProductsPage(),
-    const FavoritesPage(),
-    CartView(),
+    FavoritesPage(),
+    const CartPage(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -27,6 +27,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return buildUI();
+  }
+
+  SafeArea buildUI() {
     return SafeArea(
       child: Scaffold(
         extendBody: true,
@@ -36,7 +40,7 @@ class _HomePageState extends State<HomePage> {
           child: currentScreen,
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             _updateScreen(2, const AllProductsPage());
           },
           child: Icon(

@@ -4,6 +4,7 @@ class CustomerSupportForm extends StatefulWidget {
   const CustomerSupportForm({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomerSupportFormState createState() => _CustomerSupportFormState();
 }
 

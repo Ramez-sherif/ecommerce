@@ -1,28 +1,59 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
+import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/widgets/all_products/categories_list.dart';
 import 'package:ecommerce/widgets/all_products/products_grid.dart';
 import 'package:ecommerce/widgets/all_products/top_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class AllProductsPage extends StatelessWidget {
+class AllProductsPage extends StatefulWidget {
   const AllProductsPage({Key? key}) : super(key: key);
 
   @override
+  State<AllProductsPage> createState() => _AllProductsPageState();
+}
+
+class _AllProductsPageState extends State<AllProductsPage> {
+  Future getAllProducts() async {
+    if (context.read<HomeProvider>().homeAllProducts.isEmpty) {
+      await context.read<HomeProvider>().setHomeAllProducts();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: getAllProducts(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            return buildBody();
+          }
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+
+  Widget buildBody() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const AllProductsTopBarWidget(),
         const CategoriesList(),
         const SizedBox(height: 10),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 10),
-        //   child: const Text(
-        //     'Products',
-        //   ),
-        // ),
-        const ProductsGrid(),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 80),
+            child: const ProductsGrid(),
+          ),
+        ),
       ],
     );
   }
