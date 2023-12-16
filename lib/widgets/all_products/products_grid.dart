@@ -1,176 +1,118 @@
-// import 'package:flutter/material.dart';
+// ignore_for_file: non_constant_identifier_names
 
-// class ProductsGrid extends StatelessWidget {
-//   const ProductsGrid({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Expanded(
-//       child: GridView.count(
-//         crossAxisCount: 2,
-//         physics: const BouncingScrollPhysics(),
-//         children: List.generate(
-//           10,
-//           (index) => _buildProductItem(),
-//         ),
-//       ),
-//     );
-//   }
-
-//   // ...
-
-//   Widget _buildProductItem() {
-//     return Container(
-//       width: double.infinity,
-//       margin: const EdgeInsets.symmetric(horizontal: 7, vertical: 10),
-//       padding: const EdgeInsets.all(10),
-//       decoration: BoxDecoration(
-//         color: Colors.grey[200],
-//         borderRadius: BorderRadius.circular(15),
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.grey.withOpacity(0.5),
-//             spreadRadius: 1,
-//             blurRadius: 3,
-//           ),
-//         ],
-//       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.stretch,
-//         children: [
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.end,
-//             children: [
-//               Container(
-//                 decoration: const BoxDecoration(
-//                   color: Colors.white,
-//                   shape: BoxShape.circle,
-//                 ),
-//                 child: IconButton(
-//                   onPressed: () {},
-//                   icon: const Icon(
-//                     Icons.favorite,
-//                     color: Colors.red,
-//                   ),
-//                 ),
-//               )
-//             ],
-//           ),
-//           const SizedBox(height: 10),
-//           Expanded(
-//             child: Container(
-//               child: FittedBox(
-//                 fit: BoxFit.cover,
-//                 child: Image.network(
-//                   'https://m.media-amazon.com/images/I/715fCdexyJL.__AC_SX300_SY300_QL70_ML2_.jpg',
-//                 ),
-//               ),
-//             ),
-//           ),
-//           const Text(
-//             'Product Name \n\$1500',
-//             style: TextStyle(
-//               fontSize: 16,
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/pages/item_details_page.dart';
+import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductsGrid extends StatelessWidget {
   const ProductsGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<HomeProvider>().setHomeAllProducts();
+      },
       child: GridView.count(
         crossAxisCount: 2,
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         mainAxisSpacing: 15,
         crossAxisSpacing: 15,
-        physics: const BouncingScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         children: List.generate(
-          10,
-          (index) => _buildProductItem(context),
+          context.watch<HomeProvider>().homeAllProducts.length,
+          (index) => _buildProductItem(
+            context,
+            context.watch<HomeProvider>().homeAllProducts[index],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildProductItem(BuildContext context) {
+  Widget _buildProductItem(BuildContext context, ProductModel product) {
+    var boxDecoration = BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 1,
+          blurRadius: 3,
+        ),
+      ],
+    );
+
+    const textStyle = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    );
+
     return IntrinsicHeight(
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const Scaffold(
-                body: ItemDetailsPage(),
+              builder: (context) => Scaffold(
+                body: ItemDetailsPage(
+                  product: product,
+                ),
               ),
             ),
           );
         },
         child: Container(
           padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 3,
-              ),
-            ],
-          ),
+          decoration: boxDecoration,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.favorite,
-                        color: Colors.red,
+              // Product image
+              Expanded(
+                flex: 3,
+                child: getProductImage(product.image_URL),
+              ),
+              // product name and price
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        product.name.capitalize(),
+                        style: textStyle,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        softWrap: true,
                       ),
                     ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: AspectRatio(
-                  aspectRatio: 1.0, // Adjust the aspect ratio as needed
-                  child: Image.network(
-                    'https://m.media-amazon.com/images/I/715fCdexyJL.__AC_SX300_SY300_QL70_ML2_.jpg',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const Text(
-                'Product Name \n\$1500',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                    Text(
+                      '\$${product.price}',
+                      style: textStyle,
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  CachedNetworkImage getProductImage(String image_URL) {
+    return CachedNetworkImage(
+      imageUrl: image_URL,
+      fit: BoxFit.fill,
+      placeholder: (context, url) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   }
 }

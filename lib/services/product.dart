@@ -28,4 +28,13 @@ class ProductService {
     });
     return products_list;
   }
+
+  static Future setProduct(ProductModel product) async {
+    await db
+        .collection(CollectionConfig.products)
+        .doc()
+        .set(product.toMap())
+        .then((value) => print("Product Added"))
+        .onError((error, stackTrace) => print("Failed to add product: $error"));
+  }
 }

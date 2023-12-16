@@ -1,33 +1,37 @@
+import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/pages/item_details_page.dart';
 import 'package:flutter/material.dart';
 
 class FavoritesList extends StatelessWidget {
-  const FavoritesList({Key? key}) : super(key: key);
+  const FavoritesList({Key? key, required this.favoriteItems})
+      : super(key: key);
+  final List<ProductModel> favoriteItems;
 
   @override
   Widget build(BuildContext context) {
-    // padding: const EdgeInsets.symmetric(horizontal: 5),
     return Expanded(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: List.generate(
             5,
-            (index) => _buildProductItem(context),
+            (index) => _buildProductItem(context, favoriteItems[0]),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildProductItem(BuildContext context) {
+  Widget _buildProductItem(BuildContext context, ProductModel product) {
     return IntrinsicHeight(
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const Scaffold(
-                body: ItemDetailsPage(),
+              builder: (context) => Scaffold(
+                body: ItemDetailsPage(
+                  product: product,
+                ),
               ),
             ),
           );

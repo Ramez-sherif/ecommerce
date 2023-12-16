@@ -1,11 +1,14 @@
+import 'package:ecommerce/models/cart.dart';
 import 'package:ecommerce/pages/payment.dart';
+import 'package:ecommerce/services/cart.dart';
 import 'package:ecommerce/widgets/cart/make_payment_widget.dart';
-import 'package:ecommerce/widgets/cart/rectClipper.dart';
+import 'package:ecommerce/widgets/cart/rect_clipper.dart';
 import 'package:flutter/material.dart';
 
 class PaymentBoxWidget extends StatelessWidget {
-  const PaymentBoxWidget({super.key});
-
+  const PaymentBoxWidget({super.key, required this.cart, required this.price});
+  final double price;
+  final CartModel cart;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,29 +32,17 @@ class PaymentBoxWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   const SizedBox(height: 30),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Del. Amount:", style: TextStyle(fontSize: 18)),
-                      Text("400\$", style: TextStyle(fontSize: 18))
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
+                      const Text(
                         "Total Amount:",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        "400\$",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
+                      Text("${CartService.getTotalPrice(cart)}",
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold))
                     ],
                   ),
                   const SizedBox(height: 10),

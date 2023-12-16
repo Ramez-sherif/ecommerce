@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class QuantityIcon extends StatefulWidget {
-  QuantityIcon(
-      {super.key,
-      required this.onChangedQuantity,
-      required this.iconColor,
-      required this.backgroundColor,
-      required this.icon});
+  QuantityIcon({
+    super.key,
+    required this.onChangedQuantity,
+    required this.iconColor,
+    required this.backgroundColor,
+    required this.icon,
+  });
   Function onChangedQuantity;
   final Color iconColor;
   final Color backgroundColor;
@@ -18,12 +20,11 @@ class QuantityIcon extends StatefulWidget {
 class QuantityIconState extends State<QuantityIcon> {
   @override
   Widget build(BuildContext context) {
-    
     return GestureDetector(
       onTap: () => widget.onChangedQuantity(),
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           color: widget.backgroundColor,
           shape: BoxShape.circle,
         ),
