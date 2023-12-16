@@ -1,5 +1,5 @@
 import 'package:ecommerce/pages/initial.dart';
-import 'package:ecommerce/providers/products.dart';
+import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,7 +15,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ProductsProvider()),
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),

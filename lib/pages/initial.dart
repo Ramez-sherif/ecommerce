@@ -27,8 +27,10 @@ class _InitialPageState extends State<InitialPage> {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         isLoggedIn = false;
+        // ignore: avoid_print
         print('User is currently signed out!');
       } else {
+        // ignore: avoid_print
         print('User is signed in!');
         context.read<UserProvider>().setUser(user);
         isLoggedIn = true;
@@ -56,6 +58,7 @@ class _InitialPageState extends State<InitialPage> {
               ),
             );
           } else {
+            // ignore: avoid_print
             print('isLoggedIn: $isLoggedIn');
             if (isLoggedIn) {
               return const HomePage();

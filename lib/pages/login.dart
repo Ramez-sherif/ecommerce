@@ -162,6 +162,7 @@ class _LoginPageState extends State<LoginPage> {
             User user = response.data;
             context.read<UserProvider>().setUser(user);
             String role = await UserService.getUserRole(user.uid);
+            // ignore: avoid_print
             print("role: $role");
 
             if (role == 'admin') {

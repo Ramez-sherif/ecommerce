@@ -1,4 +1,4 @@
-import 'package:ecommerce/providers/products.dart';
+import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/widgets/all_products/categories_list.dart';
 import 'package:ecommerce/widgets/all_products/products_grid.dart';
 import 'package:ecommerce/widgets/all_products/top_bar.dart';
@@ -15,8 +15,8 @@ class AllProductsPage extends StatefulWidget {
 class _AllProductsPageState extends State<AllProductsPage>{
 
   Future getAllProducts() async {
-    if (context.read<ProductsProvider>().homeAllProducts.isEmpty) {
-      await context.watch<ProductsProvider>().setHomeAllProducts();
+    if (context.read<HomeProvider>().homeAllProducts.isEmpty) {
+      await context.watch<HomeProvider>().setHomeAllProducts();
     }
   }
 

@@ -3,7 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/pages/item_details_page.dart';
-import 'package:ecommerce/providers/products.dart';
+import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +16,7 @@ class ProductsGrid extends StatelessWidget {
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async {
-          await context.read<ProductsProvider>().setHomeAllProducts();
+          await context.read<HomeProvider>().setHomeAllProducts();
         },
         child: GridView.count(
           crossAxisCount: 2,
@@ -25,10 +25,10 @@ class ProductsGrid extends StatelessWidget {
           crossAxisSpacing: 15,
           physics: const AlwaysScrollableScrollPhysics(),
           children: List.generate(
-            context.watch<ProductsProvider>().homeAllProducts.length,
+            context.watch<HomeProvider>().homeAllProducts.length,
             (index) => _buildProductItem(
               context,
-              context.watch<ProductsProvider>().homeAllProducts[index],
+              context.watch<HomeProvider>().homeAllProducts[index],
             ),
           ),
         ),

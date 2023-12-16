@@ -2,7 +2,7 @@ import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/product.dart';
 import 'package:flutter/material.dart';
 
-class ProductsProvider extends ChangeNotifier {
+class HomeProvider extends ChangeNotifier {
   List<ProductModel> homeAllProducts = [];
 
   Future setHomeAllProducts() async {

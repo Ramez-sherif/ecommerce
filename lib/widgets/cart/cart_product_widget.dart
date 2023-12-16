@@ -3,10 +3,14 @@ import 'package:ecommerce/services/cart.dart';
 import 'package:ecommerce/widgets/cart/quantity_icon_widget.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CartProductWidget extends StatefulWidget {
-  CartProductWidget(
-      {super.key, required this.productModel, required this.quantity});
-      
+  CartProductWidget({
+    super.key,
+    required this.productModel,
+    required this.quantity,
+  });
+
   final ProductModel productModel;
   int quantity;
   @override
@@ -15,7 +19,7 @@ class CartProductWidget extends StatefulWidget {
 
 class _ProductWidgetState extends State<CartProductWidget> {
   void incrementQuantity() {
-   setState(() {
+    setState(() {
       widget.quantity++;
       CartService.updateProductQuantity(
           widget.productModel.id, "1", widget.quantity);
