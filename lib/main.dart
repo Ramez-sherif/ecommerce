@@ -1,4 +1,5 @@
 import 'package:ecommerce/pages/initial.dart';
+import 'package:ecommerce/providers/favorite.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => FavoriteProvider()),
       ],
       child: const MyApp(),
     ),
