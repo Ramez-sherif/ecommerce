@@ -11,6 +11,7 @@ class AllProductsTopBarWidget extends StatefulWidget {
 }
 
 class _AllProductsTopBarWidgetState extends State<AllProductsTopBarWidget> {
+  // ignore: prefer_final_fields
   TextEditingController _searchController = TextEditingController();
 
   @override
