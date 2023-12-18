@@ -1,8 +1,17 @@
+import 'package:ecommerce/pages/login.dart';
 import 'package:ecommerce/services/profile.dart';
 import 'package:flutter/material.dart';
 import 'orders.dart';
+// ignore_for_file: file_names, camel_case_types, avoid_print, non_constant_identifier_names
 
-    final ProfileService profileService = ProfileService();
+import 'package:ecommerce/models/response.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ecommerce/services/signin.dart'; // Import the SignInService
+import 'dart:developer'; // Import the dart:developer library
+import 'orders.dart';
+
+final SignInService signInService = SignInService();
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,14 +23,14 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _currentPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _newValueController = TextEditingController(); 
-  String  _phoneNumber = "90"; 
-  String _location = "abasseya"; 
+  final TextEditingController _newValueController = TextEditingController();
+  String _phoneNumber = "90";
+  String _location = "abasseya";
 
   bool _passwordError = false;
+
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -39,19 +48,25 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildProfileItem("Username", "JohnDoe"),
                 _buildProfileItem("Email", "johndoe@example.com"),
                 _buildProfileItemWithEditButtonPhone("Phone Number", _phoneNumber),
-
                 _buildProfileItemWithEditButtonLoc("Location", _location),
                 _buildSectionDivider(),
                 _buildSectionTitle("Orders Tracking"),
-             _buildFullWidthButton("Your Orders", () {
-               Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OrderPage()),
-        );
-}),
-
+                _buildFullWidthButton("Your Orders", () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => OrderPage()),
+                  );
+                }),
                 _buildSectionDivider(),
                 _buildPasswordSection(),
+
+                // Logout button
+                ElevatedButton(
+                  onPressed: () {
+                    _handleLogout();
+                  },
+                  child: Text("Logout"),
+                ),
               ],
             ),
           ),
@@ -98,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-  
+
   Widget _buildProfileItemWithEditButtonLoc(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -115,13 +130,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   fontSize: 16,
                 ),
               ),
-              
               ElevatedButton(
                 onPressed: () {
-                   value = _location;
-                    _showEditDialogLoc(value); 
-                 
-                    //  profileService.updateGeoLocation(userId, newGeoLocation);
+                  value = _location;
+                  _showEditDialogLoc(value);
                 },
                 child: Text("Edit"),
               ),
@@ -140,7 +152,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildProfileItemWithEditButtonPhone(String label, String value) {
-  
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -158,13 +169,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                
-                 //   profileService.updatePhoneNumber(userId, newPhoneNumber);
                   value = _phoneNumber;
-                    _showEditDialog(value); 
-         
-                //  print(value);
-                
+                  _showEditDialog(value);
                 },
                 child: Text("Edit"),
               ),
@@ -182,8 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-    void _showEditDialogLoc(String value) {
-    
+  void _showEditDialogLoc(String value) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -205,15 +210,11 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               child: Text("Save"),
               onPressed: () {
-                  setState(() {
-              _location = _newValueController.text;
-                  value = _location; 
-                  print(value); 
-                   //   profileService.updatePhoneNumber(userId, value);
-                 });
-               
-             
-                
+                setState(() {
+                  _location = _newValueController.text;
+                  value = _location;
+                  print(value);
+                });
                 Navigator.of(context).pop();
               },
             ),
@@ -224,7 +225,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showEditDialog(String value) {
-    
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -246,15 +246,11 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               child: Text("Save"),
               onPressed: () {
-                  setState(() {
-              _phoneNumber = _newValueController.text;
-                  value = _phoneNumber; 
-                  print(value); 
-                   //   profileService.updatePhoneNumber(userId, value);
-                 });
-               
-             
-                
+                setState(() {
+                  _phoneNumber = _newValueController.text;
+                  value = _phoneNumber;
+                  print(value);
+                });
                 Navigator.of(context).pop();
               },
             ),
@@ -273,31 +269,30 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildFullWidthButton(String label, VoidCallback onPressed) {
-  return SizedBox(
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            return states.contains(MaterialState.pressed)
-                ? Color.fromARGB(255, 83, 31, 107)
-                : Color.fromARGB(255, 240, 215, 254);
-          },
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              return states.contains(MaterialState.pressed)
+                  ? Color.fromARGB(255, 83, 31, 107)
+                  : Color.fromARGB(255, 240, 215, 254);
+            },
+          ),
+          foregroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              return states.contains(MaterialState.pressed)
+                  ? Color.fromARGB(255, 240, 215, 254)
+                  : Color.fromARGB(255, 83, 31, 107);
+            },
+          ),
         ),
-        foregroundColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            return states.contains(MaterialState.pressed)
-                ? Color.fromARGB(255, 240, 215, 254)
-                : Color.fromARGB(255, 83, 31, 107);
-          },
-        ),
+        child: Text(label),
       ),
-      child: Text(label),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildPasswordSection() {
     return Column(
@@ -360,4 +355,15 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+
+  // Logout function
+  void _handleLogout() async {
+    await SignInService.signOut();
+    // Add additional logic after logout if needed
+      Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => LoginPage()), // Replace 'LoginPage' with the actual login page class
+  );
+  }
 }
+
