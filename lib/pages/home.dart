@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     const ProfilePage(),
     const SettingsPage(),
     const AllProductsPage(),
-    FavoritesPage(),
+    const FavoritesPage(),
     const CartPage(),
   ];
 
