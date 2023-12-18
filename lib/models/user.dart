@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce/models/order.dart' as orderModel; // Use an alias for the import
+import 'package:ecommerce/models/order.dart' as orderModel;
 
 class User {
   final String email;
@@ -9,19 +9,23 @@ class User {
   final String? password;
   final String? number;
   final String? location;
-  final String? role; // Added 'role' property
-  final List<orderModel.Order> orders; // Added 'orders' property
+  final String? role;
+  final List<orderModel.Order> orders;
 
   User({
     required this.email,
     required this.uid,
     this.username,
     this.password,
-    this.number,
-    this.location,
+    String? number,
+    String? location,
     this.role,
-    List<orderModel.Order>? orders, // Use correct type and make it nullable
-  }) : orders = orders ?? []; // Initialize 'orders' in the constructor
+    List<orderModel.Order>? orders,
+  })   : this.number = number ?? null,
+        this.location = location ?? null,
+        this.orders = orders ?? [];
+
+  String? get phoneNumber => number;
 
   Map<String, dynamic> toMap() {
     return {
@@ -36,12 +40,12 @@ class User {
     };
   }
 
-  factory User.fromMap(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+   factory User.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final data = snapshot.data()!;
     final List<Map<String, dynamic>> ordersData =
         List<Map<String, dynamic>>.from(data['orders'] ?? []);
     final List<orderModel.Order> orders = ordersData.map((orderData) {
-      return orderModel.Order.fromMap(orderData); // Use alias consistently
+      return orderModel.Order.fromMap(orderData);
     }).toList();
 
     return User(
@@ -49,8 +53,8 @@ class User {
       uid: data['uid'] as String? ?? '',
       username: data['username'] as String?,
       password: data['password'] as String?,
-      number: data['number'] as String?,
-      location: data['location'] as String?,
+      number: data['number'] as String? ?? '',
+      location: data['location'] as String? ?? '',
       role: data['role'] as String?,
       orders: orders,
     );
@@ -58,7 +62,7 @@ class User {
 
   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) => User.fromMap(
-        json.decode(source) as DocumentSnapshot<Map<String, dynamic>>,
-      );
+  // factory User.fromJson(String source) => User.fromMap(
+  //       json.decode(source) as DocumentSnapshot<Map<String, dynamic>>,
+  //     );
 }

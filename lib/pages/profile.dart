@@ -24,13 +24,16 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _currentPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _newValueController = TextEditingController();
-  String _phoneNumber = "90";
+  String _phoneNumber = SignInService.getCurrentUser()?.phoneNumber ?? '90';
   String _location = "abasseya";
 
   bool _passwordError = false;
 
   @override
   Widget build(BuildContext context) {
+    // Get the current user from SignInService
+    User? currentUser = SignInService.getCurrentUser();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -45,9 +48,9 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildSectionTitle("Personal Info"),
-                _buildProfileItem("Username", "JohnDoe"),
-                _buildProfileItem("Email", "johndoe@example.com"),
-                _buildProfileItemWithEditButtonPhone("Phone Number", _phoneNumber),
+                _buildProfileItem("Username", currentUser?.displayName ?? ""),
+                _buildProfileItem("Email", currentUser?.email ?? ""),
+                _buildProfileItemWithEditButtonPhone("Phone Number",_phoneNumber),
                 _buildProfileItemWithEditButtonLoc("Location", _location),
                 _buildSectionDivider(),
                 _buildSectionTitle("Orders Tracking"),
@@ -247,6 +250,8 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text("Save"),
               onPressed: () {
                 setState(() {
+                  //save _newValueController.text in the var:number in the DB , 
+                  //if there's no var called number create one for this document
                   _phoneNumber = _newValueController.text;
                   value = _phoneNumber;
                   print(value);

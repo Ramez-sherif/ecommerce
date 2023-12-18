@@ -132,7 +132,7 @@ class _SignupPageState extends State<SignupPage> {
                           // if the form is valid
                           ResponseModel response = await SignupService.signup(
                             userEmail.text,
-                            userPassword.text,
+                            userPassword.text
                           );
 
                           if (response.status) {

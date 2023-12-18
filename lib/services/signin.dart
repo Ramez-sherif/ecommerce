@@ -1,12 +1,12 @@
-// ignore_for_file: file_names, camel_case_types, avoid_print, non_constant_identifier_names
-
-import 'dart:developer'; // Import the dart:developer library
+import 'dart:developer';
 import 'package:ecommerce/models/response.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ecommerce/models/user.dart' as userModel; // Import the user model
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignInService {
-  static final GoogleSignIn _googleSignIn = GoogleSignIn(); // Declare _googleSignIn as a static variable
+  static final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   static Future<ResponseModel> signInWithEmail(
     String user_email,
@@ -91,6 +91,35 @@ class SignInService {
       log('User signed out successfully');
     } catch (e) {
       log('Error signing out: $e');
+    }
+  }
+
+  static User? getCurrentUser() {
+    try {
+      final User? firebaseUser = FirebaseAuth.instance.currentUser;
+      return firebaseUser;
+    } catch (e) {
+      log('Error getting current user: $e');
+      return null;
+    }
+  }
+
+  static Future<userModel.User?> getCurrentUserDetails() async {
+    try {
+      final User? firebaseUser = FirebaseAuth.instance.currentUser;
+
+      if (firebaseUser != null) {
+        final DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseUser.uid)
+            .get();
+        return userModel.User.fromFirestore(snapshot);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log('Error getting current user details: $e');
+      return null;
     }
   }
 }
