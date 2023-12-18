@@ -1,5 +1,8 @@
+import 'package:ecommerce/services/profile.dart';
 import 'package:flutter/material.dart';
 import 'orders.dart';
+
+    final ProfileService profileService = ProfileService();
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -11,9 +14,14 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _currentPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _newValueController = TextEditingController(); 
+  String  _phoneNumber = "90"; 
+  String _location = "abasseya"; 
+
   bool _passwordError = false;
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -30,8 +38,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildSectionTitle("Personal Info"),
                 _buildProfileItem("Username", "JohnDoe"),
                 _buildProfileItem("Email", "johndoe@example.com"),
-                _buildProfileItemWithEditButton("Phone Number", "123-456-7890"),
-                _buildProfileItemWithEditButton("Location", "**** **** **** 1234 - New York"),
+                _buildProfileItemWithEditButtonPhone("Phone Number", _phoneNumber),
+
+                _buildProfileItemWithEditButtonLoc("Location", _location),
                 _buildSectionDivider(),
                 _buildSectionTitle("Orders Tracking"),
              _buildFullWidthButton("Your Orders", () {
@@ -89,8 +98,49 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+  
+  Widget _buildProfileItemWithEditButtonLoc(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              
+              ElevatedButton(
+                onPressed: () {
+                   value = _location;
+                    _showEditDialogLoc(value); 
+                 
+                    //  profileService.updateGeoLocation(userId, newGeoLocation);
+                },
+                child: Text("Edit"),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _buildProfileItemWithEditButton(String label, String value) {
+  Widget _buildProfileItemWithEditButtonPhone(String label, String value) {
+  
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -108,7 +158,13 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Add functionality to edit the item
+                
+                 //   profileService.updatePhoneNumber(userId, newPhoneNumber);
+                  value = _phoneNumber;
+                    _showEditDialog(value); 
+         
+                //  print(value);
+                
                 },
                 child: Text("Edit"),
               ),
@@ -123,6 +179,88 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
+    );
+  }
+
+    void _showEditDialogLoc(String value) {
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit location"),
+          content: TextField(
+            controller: _newValueController,
+            decoration: InputDecoration(
+              hintText: "Enter new location",
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Save"),
+              onPressed: () {
+                  setState(() {
+              _location = _newValueController.text;
+                  value = _location; 
+                  print(value); 
+                   //   profileService.updatePhoneNumber(userId, value);
+                 });
+               
+             
+                
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditDialog(String value) {
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit Phone Number"),
+          content: TextField(
+            controller: _newValueController,
+            decoration: InputDecoration(
+              hintText: "Enter new phone number",
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Save"),
+              onPressed: () {
+                  setState(() {
+              _phoneNumber = _newValueController.text;
+                  value = _phoneNumber; 
+                  print(value); 
+                   //   profileService.updatePhoneNumber(userId, value);
+                 });
+               
+             
+                
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
