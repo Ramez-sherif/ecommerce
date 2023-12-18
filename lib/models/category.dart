@@ -1,27 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-Map<String, IconData> iconsMap = {
-  'watch': Icons.watch,
-  'electrical_services': Icons.electrical_services,
-  'call_end_outlined': Icons.call_end_outlined,
-  'call_made': Icons.call_made,
-  'ac_unit':Icons.ac_unit,
-  'list':Icons.list
-};
+import 'package:ecommerce/services/categories_icons.dart';
+
 class CategoryModel {
   final String id, name, description;
   IconData icon = Icons.error;
-
- 
-
+  String iconName = "";
   CategoryModel(
       {required this.id,
       required this.name,
       required this.description,
-      required iconName}) {
-    icon = iconsMap[iconName]!;
+      required this.iconName}) {
+    icon = iconsMap[iconName] == null?Icons.error:iconsMap[iconName]!;
   }
-
   factory CategoryModel.fromFirestore(
     QueryDocumentSnapshot<Map<String, dynamic>> document,
   ) {
@@ -31,8 +22,15 @@ class CategoryModel {
         description: document['description'],
         iconName: document['icon_name']);
   }
-
+  String getKeyFromIconData(IconData value) {
+    for (var entry in iconsMap.entries) {
+      if (entry.value == value) {
+        return entry.key;
+      }
+    }
+    return "";
+  }
   @override
   String toString() =>
-      'CategoryModel(id: $id, name: $name, description: $description)';
+      'CategoryModel(id: $id, name: $name, description: $description,icon_name:$iconName)';
 }
