@@ -1,4 +1,7 @@
+import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/favorite.dart';
 import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/widgets/all_products/categories_list.dart';
 import 'package:ecommerce/widgets/all_products/products_grid.dart';
 import 'package:ecommerce/widgets/all_products/top_bar.dart';
@@ -14,8 +17,19 @@ class AllProductsPage extends StatefulWidget {
 
 class _AllProductsPageState extends State<AllProductsPage> {
   Future getAllProducts() async {
-    if (context.read<HomeProvider>().homeAllProducts.isEmpty) {
+    List<ProductModel> allProducts =
+        context.read<HomeProvider>().homeAllProducts;
+    if (allProducts.isEmpty) {
       await context.read<HomeProvider>().setHomeAllProducts();
+    }
+  }
+
+  Future getAllfavorites() async {
+    if (context.read<FavoriteProvider>().favoriteItems.isEmpty) {
+      List<ProductModel> allProducts =
+          context.watch<HomeProvider>().homeAllProducts;
+      String userId = context.read<UserProvider>().user.uid;
+      await context.read<FavoriteProvider>().getFavorites(userId, allProducts);
     }
   }
 
@@ -26,10 +40,11 @@ class _AllProductsPageState extends State<AllProductsPage> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
+            return const Center(
+              child: Text(''),
             );
           } else {
+            getAllfavorites();
             return buildBody();
           }
         } else {
