@@ -1,5 +1,6 @@
 import 'package:ecommerce/pages/cutomer_support.dart';
 import 'package:ecommerce/pages/login.dart';
+import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: true);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -57,7 +57,8 @@ class SettingsPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  await userProvider.removeUser();
+                  context.read<UserProvider>().removeUser();
+                  context.read<ProfileProvider>().removeUser();
                   // ignore: use_build_context_synchronously
                   Navigator.push(
                     context,

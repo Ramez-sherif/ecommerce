@@ -28,7 +28,6 @@ class _PhoneProfileWidgettState extends State<PhoneProfileWidget> {
   updatePhoneNumber() {
     // for close keyboard
     FocusScope.of(context).unfocus();
-
     
     if (phoneController.text.isNotEmpty && isNumeric(phoneController.text)) {
       context.read<ProfileProvider>().updatePhoneNumber(phoneController.text);
