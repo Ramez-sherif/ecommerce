@@ -37,4 +37,20 @@ class ProductService {
         .then((value) => print("Product Added"))
         .onError((error, stackTrace) => print("Failed to add product: $error"));
   }
+
+  static Future<List<ProductModel>> getProductsByCategory(
+      String categoryId) async {
+    List<CategoryModel> categories = await CategoryService.getAllCategories();
+    List<ProductModel> products = [];
+    await db
+        .collection(CollectionConfig.products)
+        .where("category_id", isEqualTo: categoryId)
+        .get()
+        .then((value) {
+      for (var docSnapShot in value.docs) {
+        products.add(ProductModel.fromFirestore(docSnapShot, categories));
+      }
+    });
+    return products;
+  }
 }

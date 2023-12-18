@@ -11,18 +11,17 @@ class AllProductsPage extends StatefulWidget {
   @override
   State<AllProductsPage> createState() => _AllProductsPageState();
 }
-
 class _AllProductsPageState extends State<AllProductsPage> {
-  Future getAllProducts() async {
+  Future getAllProducts({String categoryId = "0"}) async {
     if (context.read<HomeProvider>().homeAllProducts.isEmpty) {
-      await context.read<HomeProvider>().setHomeAllProducts();
+      await context.read<HomeProvider>().setHomeAllProducts(categoryId: categoryId);
     }
   }
-
   @override
   Widget build(BuildContext context) {
+    String categoryId = "0";
     return FutureBuilder(
-      future: getAllProducts(),
+      future: getAllProducts(categoryId: categoryId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
