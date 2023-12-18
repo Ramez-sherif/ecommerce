@@ -1,19 +1,24 @@
+import 'package:ecommerce/models/user.dart';
+import 'package:ecommerce/services/profile.dart';
+import 'package:ecommerce/services/user.dart';
 import 'package:flutter/material.dart';
 
 class ProfileProvider extends ChangeNotifier {
-  String _phoneNumber = '';
-  String _geoLocation = '';
+  UserModel? userProfile;
 
-  String get phoneNumber => _phoneNumber;
-  String get geoLocation => _geoLocation;
-
-  void updatePhoneNumber(String newPhoneNumber) {
-    _phoneNumber = newPhoneNumber;
+  Future setUserProfile(String uid) async {
+    userProfile = await UserService.getUserDetails(uid);
     notifyListeners();
   }
 
-  void updateGeoLocation(String newGeoLocation) {
-    _geoLocation = newGeoLocation;
+  Future updatePhoneNumber(String newPhoneNumber) async {
+    userProfile!.number = newPhoneNumber;
+    await ProfileService.updatePhoneNumber(userProfile!.uid, newPhoneNumber);
     notifyListeners();
   }
+
+  // void updateGeoLocation(String newGeoLocation) {
+  //   _geoLocation = newGeoLocation;
+  //   notifyListeners();
+  // }
 }

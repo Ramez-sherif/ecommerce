@@ -1,26 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce/models/user.dart' as userModel;
-import 'package:ecommerce/providers/profile.dart';
+import 'package:ecommerce/models/user.dart';
+import 'package:ecommerce/services/collections_config.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProfileService {
-  static Future<void> updatePhoneNumber(BuildContext context, String userId, String newPhoneNumber) async {
-    await FirebaseFirestore.instance.collection('users').doc(userId).update({
-      'phoneNumber': newPhoneNumber,
+  static Future<void> updatePhoneNumber(
+    String userId,
+    String newPhoneNumber,
+  ) async {
+    await FirebaseFirestore.instance
+        .collection(CollectionConfig.users)
+        .doc(userId)
+        .update({
+      'number': newPhoneNumber,
     });
-
-    // Update the user provider after the Firestore update
-    Provider.of<ProfileProvider>(context, listen: false).updatePhoneNumber(newPhoneNumber);
   }
 
-  static Future<void> updateGeoLocation(BuildContext context, String userId, String newGeoLocation) async {
+  static Future<void> updateGeoLocation(
+      BuildContext context, String userId, String newGeoLocation) async {
     await FirebaseFirestore.instance.collection('users').doc(userId).update({
       'geoLocation': newGeoLocation,
     });
-
-    // Update the user provider after the Firestore update
-    Provider.of<ProfileProvider>(context, listen: false).updateGeoLocation(newGeoLocation);
   }
 
   // Add a method to update the password connected with authentication
@@ -39,11 +39,11 @@ class ProfileService {
     }
   }
 
-  Future<userModel.User> getUserDetails(String uid) async {
+  Future<UserModel> getUserDetails(String uid) async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snap =
-      await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      return userModel.User.fromFirestore(snap);
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      return UserModel.fromFirestore(snap);
     } catch (error) {
       // Handle errors appropriately (e.g., log or throw)
       print("Error fetching user details: $error");

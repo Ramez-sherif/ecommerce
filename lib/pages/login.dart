@@ -76,9 +76,8 @@ class _LoginPageState extends State<LoginPage> {
           // Login successful
           User user = response.data;
           context.read<UserProvider>().setUser(user);
-          await UserService.setUserRole(
+          await UserService.setUser(
             response.data as User,
-            'user',
           );
 
           try {

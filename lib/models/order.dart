@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'order_product.dart';
 
-class Order {
+class OrderModel {
   final DateTime created_at;
   final String status;
   final double total_price;
   final List<OrderProduct> orderProducts;
 
-  Order({
+  OrderModel({
     required this.created_at,
     required this.status,
     required this.total_price,
@@ -24,14 +24,15 @@ class Order {
     };
   }
 
-  factory Order.fromMap(Map<String, dynamic> map) {
+  factory OrderModel.fromMap(Map<String, dynamic> map) {
+    
     final List<Map<String, dynamic>> orderProductsData =
         List<Map<String, dynamic>>.from(map['orderProducts'] ?? []);
     final List<OrderProduct> orderProducts = orderProductsData.map((productData) {
       return OrderProduct.fromMap(productData);
     }).toList();
 
-    return Order(
+    return OrderModel(
       created_at: (map['created_at'] as Timestamp).toDate(),
       status: map['status'] as String,
       total_price: (map['total_price'] as num).toDouble(),

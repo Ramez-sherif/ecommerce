@@ -138,9 +138,8 @@ class _SignupPageState extends State<SignupPage> {
                           if (response.status) {
                             // if the signup is successful
                             // set the user role
-                            await UserService.setUserRole(
+                            await UserService.setUser(
                               response.data as User,
-                              'user',
                             );
 
                             User user = response.data as User;
