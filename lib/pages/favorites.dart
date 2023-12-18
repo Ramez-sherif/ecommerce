@@ -7,20 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoritesPage extends StatefulWidget {
-  FavoritesPage({Key? key}) : super(key: key);
+  const FavoritesPage({Key? key}) : super(key: key);
 
   @override
   State<FavoritesPage> createState() => _FavoritesPageState();
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
-  final List<ProductModel> favoriteItems = [];
-
   Future getAlfavorites() async {
     if (context.read<FavoriteProvider>().favoriteItems.isEmpty) {
       List<ProductModel> allProducts =
           context.watch<HomeProvider>().homeAllProducts;
-      String userId = await context.read<UserProvider>().user.uid;
+
+      String userId = context.read<UserProvider>().user.uid;
+
       await context.read<FavoriteProvider>().getFavorites(userId, allProducts);
     }
   }
@@ -53,13 +53,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
         title: const Text('Favorites'),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          FavoritesList(
-            favoriteItems: context.watch<FavoriteProvider>().favoriteItems,
-          )
-        ],
-      ),
+      body: const FavoritesList(),
     );
   }
 }
