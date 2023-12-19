@@ -182,7 +182,9 @@ class _LoginPageState extends State<LoginPage> {
             String role = await UserService.getUserRole(user.uid);
             // ignore: avoid_print
             print("role: $role");
-
+            print(user.email);
+            print(user.uid);
+           
             if (role == 'admin') {
               // go to admin page
             } else {

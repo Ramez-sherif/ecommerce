@@ -1,4 +1,8 @@
+import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/services/payment.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
@@ -29,63 +33,68 @@ class _PaymentPageState extends State<PaymentPage> {
           'Checkout',
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(25.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader('Shipping Address', 'Edit'),
-                  _buildInfoRow(shippingAddress),
-                  const SizedBox(height: 16.0),
-                  _buildSpacer(), // Spacer for the shipping section
-                  // _buildHeader('Payment Method', ''),
-                  const Text(
-                    'Payment Method',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),
+          Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader('Shipping Address', 'Edit'),
+                      _buildInfoRow(shippingAddress),
+                      const SizedBox(height: 16.0),
+                      _buildSpacer(), // Spacer for the shipping section
+                      // _buildHeader('Payment Method', ''),
+                      const Text(
+                        'Payment Method',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      SizedBox(
+                        height:
+                            cardHeight, // Set the desired height for the ListView
+                        child: ListView.builder(
+                          itemCount: 1, // Set the number of payment cards as needed
+                          itemBuilder: (context, index) {
+                            // Replace the hardcoded data with your payment card data
+                            return _buildPaymentCard(
+                              'Credit Card',
+                              Icons.credit_card,
+                              0,
+                              creditNumber,
+                            );
+                            //card number will change for eachentry
+                          },
+                        ),
+                      ),
+                      // SizedBox(height: 16.0),
+                      // Spacer between cards and total/checkout section
+                      _buildPaymentCard('Cash', Icons.money_off, -1),
+                      _buildSpacer(),
+                   
+                    ],
                   ),
-                  SizedBox(
-                    height:
-                        cardHeight, // Set the desired height for the ListView
-                    child: ListView.builder(
-                      itemCount: 1, // Set the number of payment cards as needed
-                      itemBuilder: (context, index) {
-                        // Replace the hardcoded data with your payment card data
-                        return _buildPaymentCard(
-                          'Credit Card',
-                          Icons.credit_card,
-                          0,
-                          creditNumber,
-                        );
-                        //card number will change for eachentry
-                      },
-                    ),
-                  ),
-                  // SizedBox(height: 16.0),
-                  // Spacer between cards and total/checkout section
-                  _buildPaymentCard('Cash', Icons.money_off, -1),
-                  _buildSpacer(),
-                ],
+                ),
               ),
-            ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
+                child: _buildTotalPrice(totalPrice),
+              ),
+              const SizedBox(height: 16.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: _buildCheckoutButton(), // Checkout button at the bottom
+              ),
+              const SizedBox(
+                  height: 16.0), // Optional spacer for better visual separation
+            ],
           ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
-            child: _buildTotalPrice(totalPrice),
-          ),
-          const SizedBox(height: 16.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: _buildCheckoutButton(), // Checkout button at the bottom
-          ),
-          const SizedBox(
-              height: 16.0), // Optional spacer for better visual separation
         ],
       ),
     );
@@ -206,15 +215,24 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildCheckoutButton() {
-    return const SizedBox(
+    return SizedBox(
       width: double.infinity, // Make the button take the full width
       child: Card(
         color: Colors.green, // Use a dark color for the card background
         elevation: 2.0,
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Center(
-            child: Text(
+              child: TextButton(
+            onPressed: () async {
+              await PaymentService.makePayment(context.read<UserProvider>().user.uid);
+              setState(() {
+                  context
+                    .read<HomeProvider>()
+                    .setCartProducts(context.read<UserProvider>().user.uid);
+              });
+              },
+            child: const Text(
               'Checkout',
               style: TextStyle(
                 color: Colors.white, // White text color
@@ -222,7 +240,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 fontSize: 18.0,
               ),
             ),
-          ),
+          )),
         ),
       ),
     );
