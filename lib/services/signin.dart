@@ -71,6 +71,7 @@ class SignInService {
       }
 
       // Obtain the auth details from the selected account
+      // ignore: unnecessary_nullable_for_final_variable_declarations
       final GoogleSignInAuthentication? googleAuth =
           await selectedAccount.authentication;
 
