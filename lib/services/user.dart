@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserService {
@@ -8,18 +11,15 @@ class UserService {
   ///
   /// It takes the user object as [User] and the role as parameters.
   ///
-  static Future setUserRole(User user, String role) async {
+  static Future setUser(User user) async {
+    UserModel newUser = UserModel.createEmptyUser(user.uid, user.email!);
+
     await db.collection('users').doc(user.uid).get().then((value) => {
-          if (value.exists)
+          if (!value.exists)
             {
-              // user already exists
-              // do nothing
-            }
-          else
-            {
-              db.collection('users').doc(user.uid).set({
-                'role': role,
-              })
+              db.collection('users').doc(user.uid).set(
+                    newUser.toMap(),
+                  )
             }
         });
   }
@@ -31,5 +31,17 @@ class UserService {
   static Future<String> getUserRole(String uid) async {
     var data = await db.collection('users').doc(uid).get();
     return data['role'];
+  }
+
+  static Future<UserModel> getUserDetails(String uid) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      return UserModel.fromFirestore(snapshot);
+    } catch (e) {
+      log('Error getting current user details: $e');
+      return UserModel.createEmptyUser('', '');
+    }
   }
 }

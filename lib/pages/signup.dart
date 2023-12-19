@@ -133,15 +133,14 @@ class _SignupPageState extends State<SignupPage> {
                           // if the form is valid
                           ResponseModel response = await SignupService.signup(
                             userEmail.text,
-                            userPassword.text,
+                            userPassword.text
                           );
 
                           if (response.status) {
                             // if the signup is successful
                             // set the user role
-                            await UserService.setUserRole(
+                            await UserService.setUser(
                               response.data as User,
-                              'user',
                             );
 
                             User user = response.data as User;
