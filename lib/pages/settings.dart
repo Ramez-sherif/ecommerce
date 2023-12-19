@@ -66,7 +66,7 @@ class SettingsPage extends StatelessWidget {
                   context.read<UserProvider>().removeUser();
                   context.read<ProfileProvider>().removeUser();
                   // ignore: use_build_context_synchronously
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const LoginPage(),

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedService {
   static Future<void> setFcmToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    print("Saving fcmToken: $token");
+    print("Saving fcmToken in SharedPreferences: $token");
     await prefs.setString('fcmToken', token);
   }
 
