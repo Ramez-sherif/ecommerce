@@ -49,10 +49,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   Scaffold buildBody() {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: const Text('Favorites'),
-        centerTitle: true,
-      ),
+          title: const Text('Favorites'),
+          centerTitle: true,
+          backgroundColor: Colors.transparent),
       body: const FavoritesList(),
     );
   }

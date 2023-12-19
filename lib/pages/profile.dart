@@ -9,17 +9,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   bool _passwordError = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           title: const Text('Profile'),
           centerTitle: true,
           automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -31,16 +34,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildProfileItem("Username", "JohnDoe"),
                 _buildProfileItem("Email", "johndoe@example.com"),
                 _buildProfileItemWithEditButton("Phone Number", "123-456-7890"),
-                _buildProfileItemWithEditButton("Location", "**** **** **** 1234 - New York"),
+                _buildProfileItemWithEditButton(
+                    "Location", "**** **** **** 1234 - New York"),
                 _buildSectionDivider(),
                 _buildSectionTitle("Orders Tracking"),
-             _buildFullWidthButton("Your Orders", () {
-               Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OrderPage()),
-        );
-}),
-
+                _buildFullWidthButton("Your Orders", () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => OrderPage()),
+                  );
+                }),
                 _buildSectionDivider(),
                 _buildPasswordSection(),
               ],
@@ -56,10 +59,10 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 18,
-          color: Color.fromARGB(255, 83, 31, 107),
+          fontSize: 25,
+          color: Colors.green,
         ),
       ),
     );
@@ -110,6 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   // Add functionality to edit the item
                 },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                 child: Text("Edit"),
               ),
             ],
@@ -128,38 +132,37 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildSectionDivider() {
     return Divider(
-      color: Colors.grey,
+      color: Theme.of(context).colorScheme.secondary,
       thickness: 1,
       height: 16,
     );
   }
 
   Widget _buildFullWidthButton(String label, VoidCallback onPressed) {
-  return SizedBox(
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            return states.contains(MaterialState.pressed)
-                ? Color.fromARGB(255, 83, 31, 107)
-                : Color.fromARGB(255, 240, 215, 254);
-          },
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              return states.contains(MaterialState.pressed)
+                  ? Color.fromARGB(255, 83, 31, 107)
+                  : Color.fromARGB(255, 240, 215, 254);
+            },
+          ),
+          foregroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              return states.contains(MaterialState.pressed)
+                  ? Color.fromARGB(255, 240, 215, 254)
+                  : Color.fromARGB(255, 83, 31, 107);
+            },
+          ),
         ),
-        foregroundColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            return states.contains(MaterialState.pressed)
-                ? Color.fromARGB(255, 240, 215, 254)
-                : Color.fromARGB(255, 83, 31, 107);
-          },
-        ),
+        child: Text(label),
       ),
-      child: Text(label),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildPasswordSection() {
     return Column(
@@ -170,8 +173,8 @@ class _ProfilePageState extends State<ProfilePage> {
           "Change Password",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 18,
-            color: Color.fromARGB(255, 83, 31, 107),
+            fontSize: 25,
+            color: Colors.green,
           ),
         ),
         const SizedBox(height: 8),
@@ -204,7 +207,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _changePassword() {
     // Add logic to check if the current password is correct
-    bool isCurrentPasswordCorrect = true; // Replace with your authentication logic
+    bool isCurrentPasswordCorrect =
+        true; // Replace with your authentication logic
 
     if (isCurrentPasswordCorrect && _newPasswordController.text.isNotEmpty) {
       // Password change successful
