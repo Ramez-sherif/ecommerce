@@ -17,6 +17,12 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+    Future updateGeoLocation(String newGeoLocation) async {
+    userProfile!.location = newGeoLocation;
+    await ProfileService.updateGeoLocation(userProfile!.uid, newGeoLocation);
+    notifyListeners();
+  }
+
   Future removeUser() async {
     userProfile = null;
     notifyListeners();

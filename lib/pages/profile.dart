@@ -1,6 +1,7 @@
 import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/widgets/profile/location.dart';
 import 'package:ecommerce/widgets/profile/phone.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -78,7 +79,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildSectionDivider(),
                 buildSubTitle("Phone Number"),
                 const PhoneProfileWidget(),
-
+                 _buildSectionDivider(),
+                buildSubTitle("Location"),
+                const LocationProfileWidget(),
                 // _buildProfileItemWithEditButtonLoc(
                 //   "Location",
                 //   context.watch<ProfileProvider>().userProfile!.location,
@@ -151,118 +154,118 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileItemWithEditButtonLoc(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  value =
-                      context.watch<ProfileProvider>().userProfile!.location;
-                  _showEditDialogLoc(value);
-                },
-                child: const Text("Edit"),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildProfileItemWithEditButtonLoc(String label, String value) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text(
+  //               label,
+  //               style: const TextStyle(
+  //                 fontWeight: FontWeight.bold,
+  //                 fontSize: 16,
+  //               ),
+  //             ),
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 value =
+  //                     context.watch<ProfileProvider>().userProfile!.location;
+  //                 _showEditDialogLoc(value);
+  //               },
+  //               child: const Text("Edit"),
+  //             ),
+  //           ],
+  //         ),
+  //         const SizedBox(height: 8),
+  //         Text(
+  //           value,
+  //           style: const TextStyle(
+  //             fontSize: 16,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  void _showEditDialogLoc(String value) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Edit location"),
-          content: TextField(
-            controller: _newValueController,
-            decoration: const InputDecoration(
-              hintText: "Enter new location",
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text("Save"),
-              onPressed: () {
-                setState(() {
-                  context.watch<ProfileProvider>().userProfile!.location =
-                      _newValueController.text;
-                  value =
-                      context.watch<ProfileProvider>().userProfile!.location;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showEditDialogLoc(String value) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text("Edit location"),
+  //         content: TextField(
+  //           controller: _newValueController,
+  //           decoration: const InputDecoration(
+  //             hintText: "Enter new location",
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: const Text("Cancel"),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: const Text("Save"),
+  //             onPressed: () {
+  //               setState(() {
+  //                 context.watch<ProfileProvider>().userProfile!.location =
+  //                     _newValueController.text;
+  //                 value =
+  //                     context.watch<ProfileProvider>().userProfile!.location;
+  //               });
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  void _showEditDialog(String value) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Edit Phone Number"),
-          content: TextField(
-            controller: _newValueController,
-            decoration: const InputDecoration(
-              hintText: "Enter new phone number",
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text("Save"),
-              onPressed: () {
-                setState(() {
-                  //save _newValueController.text in the var:number in the DB ,
-                  //if there's no var called number create one for this document
-                  context.read<ProfileProvider>().userProfile!.number =
-                      _newValueController.text;
-                  value = context.watch<ProfileProvider>().userProfile!.number;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showEditDialog(String value) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text("Edit Phone Number"),
+  //         content: TextField(
+  //           controller: _newValueController,
+  //           decoration: const InputDecoration(
+  //             hintText: "Enter new phone number",
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: const Text("Cancel"),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: const Text("Save"),
+  //             onPressed: () {
+  //               setState(() {
+  //                 //save _newValueController.text in the var:number in the DB ,
+  //                 //if there's no var called number create one for this document
+  //                 context.read<ProfileProvider>().userProfile!.number =
+  //                     _newValueController.text;
+  //                 value = context.watch<ProfileProvider>().userProfile!.number;
+  //               });
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _buildSectionDivider() {
     return const Divider(

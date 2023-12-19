@@ -4,10 +4,7 @@ import 'package:ecommerce/services/collections_config.dart';
 import 'package:flutter/material.dart';
 
 class ProfileService {
-  static Future<void> updatePhoneNumber(
-    String userId,
-    String newPhoneNumber,
-  ) async {
+  static Future<void> updatePhoneNumber(String userId, String newPhoneNumber,) async {
     await FirebaseFirestore.instance
         .collection(CollectionConfig.users)
         .doc(userId)
@@ -16,10 +13,12 @@ class ProfileService {
     });
   }
 
-  static Future<void> updateGeoLocation(
-      BuildContext context, String userId, String newGeoLocation) async {
-    await FirebaseFirestore.instance.collection('users').doc(userId).update({
-      'geoLocation': newGeoLocation,
+  static Future<void> updateGeoLocation(String userId, String newGeoLocation) async {
+    await FirebaseFirestore.instance
+        .collection(CollectionConfig.users)
+        .doc(userId)
+        .update({
+      'location': newGeoLocation,
     });
   }
 
