@@ -15,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
   // ignore: prefer_final_fields
   TextEditingController _newValueController = TextEditingController();
 
@@ -27,6 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
       await context.read<ProfileProvider>().setUserProfile(userId);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +55,12 @@ class _ProfilePageState extends State<ProfilePage> {
   SafeArea buildBody(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           title: const Text('Profile'),
           centerTitle: true,
           automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -65,6 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildSectionTitle("Personal Info"),
+
 
                 _buildProfileItem(
                   "Username",
@@ -75,6 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   "Email",
                   context.watch<ProfileProvider>().userProfile!.email,
                 ),
+
 
                 _buildSectionDivider(),
                 buildSubTitle("Phone Number"),
@@ -128,8 +134,8 @@ class _ProfilePageState extends State<ProfilePage> {
         title,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 18,
-          color: Color.fromARGB(255, 83, 31, 107),
+          fontSize: 25,
+          color: Colors.green,
         ),
       ),
     );
@@ -154,6 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+<
   // Widget _buildProfileItemWithEditButtonLoc(String label, String value) {
   //   return Padding(
   //     padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -267,9 +274,11 @@ class _ProfilePageState extends State<ProfilePage> {
   //   );
   // }
 
+
+
   Widget _buildSectionDivider() {
-    return const Divider(
-      color: Colors.grey,
+    return Divider(
+      color: Theme.of(context).colorScheme.secondary,
       thickness: 1,
       height: 16,
     );
@@ -284,9 +293,45 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               return states.contains(MaterialState.pressed)
-                  ? const Color.fromARGB(255, 83, 31, 107)
-                  : const Color.fromARGB(255, 240, 215, 254);
+
+                  ? Color.fromARGB(255, 83, 31, 107)
+                  : Color.fromARGB(255, 240, 215, 254);
             },
+          ),
+          foregroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              return states.contains(MaterialState.pressed)
+                  ? Color.fromARGB(255, 240, 215, 254)
+                  : Color.fromARGB(255, 83, 31, 107);
+            },
+          ),
+        ),
+        child: Text(label),
+      ),
+    );
+  }
+
+  Widget _buildPasswordSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text(
+          "Change Password",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 25,
+            color: Colors.green,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _currentPasswordController,
+          obscureText: true,
+          decoration: InputDecoration(
+            labelText: "Current Password",
+            errorText: _passwordError ? "Incorrect password" : null,
+
           ),
           foregroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
@@ -300,4 +345,5 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
 }

@@ -1,6 +1,10 @@
 import 'package:ecommerce/pages/cutomer_support.dart';
 import 'package:ecommerce/pages/login.dart';
+
 import 'package:ecommerce/providers/profile.dart';
+
+import 'package:ecommerce/providers/theme.dart';
+
 import 'package:ecommerce/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +16,9 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           title: const Text('Settings'),
           centerTitle: true,
           automaticallyImplyLeading: false,
@@ -77,6 +83,33 @@ class SettingsPage extends StatelessWidget {
                 ),
                 child: const Text(
                   'logout',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.read<ThemeProvider>().changeTheme();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  ' Change Theme',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

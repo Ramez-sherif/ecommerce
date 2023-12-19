@@ -83,7 +83,8 @@ class CartService {
   }
 
   //working good
-  static Future<CartModel> getCart(String userId, List<ProductModel> allProducts) async {
+  static Future<CartModel> getCart(
+      String userId, List<ProductModel> allProducts) async {
     final Map<ProductModel, int> products = {};
 
     await db
@@ -100,8 +101,6 @@ class CartService {
       print("Error getting document: $error");
     });
     print(products.toString());
-    //return cartModel with products and user id in it
-    //update it after merging with user class model
     CartModel cartModel = CartModel(userId: userId, products: products);
 
     return cartModel;

@@ -6,11 +6,18 @@ import 'package:flutter/material.dart';
 
 class HomeProvider extends ChangeNotifier {
   List<ProductModel> homeAllProducts = [];
+  List<ProductModel> allProducts = [];
   CartModel? cartProducts;
 
-  Future setHomeAllProducts() async {
-    final products = await ProductService.getAllProducts();
+  Future setHomeAllProducts({String categoryId = "0"}) async {
+    List<ProductModel> products;
+    if (categoryId == "0") {
+      products = await ProductService.getAllProducts();
+    } else {
+      products = await ProductService.getProductsByCategory(categoryId);
+    }
     homeAllProducts = products;
+    allProducts = products;
     notifyListeners();
   }
 
@@ -36,6 +43,25 @@ class HomeProvider extends ChangeNotifier {
       ProductModel product, String userId, int quantity) async {
     await CartService.updateProductQuantity(product.id, userId, quantity);
     cartProducts!.products[product] = quantity;
+    notifyListeners();
+  }
+
+  void searchProducts(String query) {
+    List<ProductModel> products;
+    if (query.isNotEmpty) {
+      products = allProducts
+          .where(
+            (product) =>
+                product.name.toLowerCase().contains(query.toLowerCase()) ||
+                product.category.name
+                    .toLowerCase()
+                    .contains(query.toLowerCase()),
+          )
+          .toList();
+    } else {
+      products = allProducts;
+    }
+    homeAllProducts = products;
     notifyListeners();
   }
 }
