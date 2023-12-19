@@ -23,6 +23,9 @@ class HomeProvider extends ChangeNotifier {
 
   Future setCartProducts(String userId) async {
     cartProducts = await CartService.getCart(userId, homeAllProducts);
+    if(cartProducts == null){
+      cartProducts = CartModel(userId: userId, products: {});
+    }
     notifyListeners();
   }
 
@@ -34,7 +37,7 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future removeProductFromCart(ProductModel product, String userId) async {
-    await CartService.removeProductFromCart(product, userId);
+    await CartService.removeProductFromCart(product.id, userId);
     cartProducts!.products.remove(product);
     notifyListeners();
   }

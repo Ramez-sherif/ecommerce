@@ -62,12 +62,11 @@ class CartService {
         .onError((e, _) => print("Error writing document: $e"));
   }
 
-  static Future removeProductFromCart(
-      ProductModel product, String userId) async {
+  static Future removeProductFromCart(String productId, String userId) async {
     var querySnapshot = await db
         .collection(CollectionConfig.cartItems)
         .where("user_id", isEqualTo: userId)
-        .where("product_id", isEqualTo: product.id)
+        .where("product_id", isEqualTo: productId)
         .limit(1)
         .get();
 

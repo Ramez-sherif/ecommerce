@@ -1,4 +1,8 @@
+import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/services/payment.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
@@ -206,15 +210,24 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildCheckoutButton() {
-    return const SizedBox(
+    return SizedBox(
       width: double.infinity, // Make the button take the full width
       child: Card(
         color: Colors.green, // Use a dark color for the card background
         elevation: 2.0,
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Center(
-            child: Text(
+              child: TextButton(
+            onPressed: () async {
+              await PaymentService.makePayment(context.read<UserProvider>().user.uid);
+              setState(() {
+                  context
+                    .read<HomeProvider>()
+                    .setCartProducts(context.read<UserProvider>().user.uid);
+              });
+              },
+            child: const Text(
               'Checkout',
               style: TextStyle(
                 color: Colors.white, // White text color
@@ -222,7 +235,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 fontSize: 18.0,
               ),
             ),
-          ),
+          )),
         ),
       ),
     );

@@ -38,6 +38,16 @@ class ProductService {
         .onError((error, stackTrace) => print("Failed to add product: $error"));
   }
 
+  static Future updateProduct(Map<String,dynamic> product) async {
+    await db
+        .collection(CollectionConfig.products)
+        .doc()
+        .update(product)
+        .then((value) => print("Product Updated"))
+        .onError(
+            (error, stackTrace) => print("Failed to Update product: $error"));
+  }
+
   static Future<List<ProductModel>> getProductsByCategory(
       String categoryId) async {
     List<CategoryModel> categories = await CategoryService.getAllCategories();
