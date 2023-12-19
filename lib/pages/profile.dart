@@ -160,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-<
+
   // Widget _buildProfileItemWithEditButtonLoc(String label, String value) {
   //   return Padding(
   //     padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -311,39 +311,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildPasswordSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 16),
-        Text(
-          "Change Password",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 25,
-            color: Colors.green,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: _currentPasswordController,
-          obscureText: true,
-          decoration: InputDecoration(
-            labelText: "Current Password",
-            errorText: _passwordError ? "Incorrect password" : null,
 
-          ),
-          foregroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              return states.contains(MaterialState.pressed)
-                  ? const Color.fromARGB(255, 240, 215, 254)
-                  : const Color.fromARGB(255, 83, 31, 107);
-            },
-          ),
-        ),
-        child: Text(label),
-      ),
-    );
-  }
 
 }
