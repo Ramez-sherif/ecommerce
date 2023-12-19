@@ -14,7 +14,7 @@ class PaymentBoxWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2),
-        color: Colors.white,
+        color: Colors.transparent,
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),

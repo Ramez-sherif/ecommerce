@@ -1,43 +1,61 @@
+
+import 'package:ecommerce/models/category.dart';
+import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/services/category.dart';
 import 'package:flutter/material.dart';
-
-class CategoriesList extends StatelessWidget {
-  const CategoriesList({Key? key}) : super(key: key);
-
-  // make a list of categories
-  List<Widget> _buildCategories() {
-    return [
-      _buildCategoryItem(Icons.sports_soccer),
-      _buildCategoryItem(Icons.car_rental),
-      _buildCategoryItem(Icons.sports_basketball),
-      _buildCategoryItem(Icons.sports_football),
-      _buildCategoryItem(Icons.sports_baseball),
-      _buildCategoryItem(Icons.sports_tennis),
-      _buildCategoryItem(Icons.sports_volleyball),
-      _buildCategoryItem(Icons.sports_rugby),
-      _buildCategoryItem(Icons.sports_motorsports),
-      _buildCategoryItem(Icons.sports_handball),
-      _buildCategoryItem(Icons.sports_hockey),
-      _buildCategoryItem(Icons.sports_cricket),
-      _buildCategoryItem(Icons.sports_esports),
-      _buildCategoryItem(Icons.sports_golf),
-    ];
-  }
+import 'package:provider/provider.dart';
+class CategoriesList extends StatefulWidget{
+const CategoriesList({Key? key}) : super(key: key);
 
   @override
+  State<CategoriesList> createState() => _CategoriesListState();
+}
+class _CategoriesListState extends  State<CategoriesList>  {
+  
+  // make a list of categories
+  Future<List<Widget>> getBuildCategories() async {
+    List<CategoryModel> categories = await CategoryService.getAllCategories();
+    List<Widget> buildCategories = [_buildCategoryItem(CategoryModel(id: "0", name: "All", description: "AllProducts", iconName: "list"))];
+    for (var category in categories) {
+      buildCategories.add(_buildCategoryItem(category));
+    }
+    return buildCategories;
+  }
+  Future setHomeProductsByCategory(String categoryId) async{
+      await context.read<HomeProvider>().setHomeAllProducts(categoryId: categoryId);
+  }
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        child: Row(
-          children: _buildCategories(),
-        ),
-      ),
+    return FutureBuilder(
+      future: getBuildCategories(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            List<Widget> categories = snapshot.data!;
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                child: Row(
+                  children: categories,
+                ),
+              ),
+            );
+          }
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
-
-  Widget _buildCategoryItem(IconData icon) {
+  Widget _buildCategoryItem(CategoryModel category) {
     return Column(
       children: [
         Container(
@@ -45,7 +63,7 @@ class CategoriesList extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.grey[200],
+            color: Colors.grey[300],
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
@@ -56,18 +74,22 @@ class CategoriesList extends StatelessWidget {
           ),
           child: Center(
             child: IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                await context
+                    .read<HomeProvider>()
+                    .setHomeAllProducts(categoryId: category.id);
+              },
               icon: Icon(
-                icon,
+                category.icon,
                 color: Colors.black,
                 size: 40,
               ),
             ),
           ),
         ),
-        const Text(
-          'Category',
-          style: TextStyle(
+         Text(
+          category.name,
+          style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.bold,
           ),

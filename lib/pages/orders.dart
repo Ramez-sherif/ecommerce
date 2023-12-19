@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
 
@@ -32,8 +31,10 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: Text('Order List'),
+        backgroundColor: Colors.transparent,
       ),
       body: Column(
         children: [
@@ -96,47 +97,48 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-Widget _buildStatusIndicator(OrderStatus status) {
-  Color color;
-  String statusText;
+  Widget _buildStatusIndicator(OrderStatus status) {
+    Color color;
+    String statusText;
 
-  switch (status) {
-    case OrderStatus.shipped:
-      color = Colors.blue;
-      statusText = 'Shipped';
-      break;
-    case OrderStatus.delivered:
-      color = Colors.green;
-      statusText = 'Delivered';
-      break;
-    case OrderStatus.incomplete:
-      color = Colors.red;
-      statusText = 'Incomplete';
-      break;
-    default:
-      color = Colors.grey;
-      statusText = 'Unknown';
+    switch (status) {
+      case OrderStatus.shipped:
+        color = Colors.blue;
+        statusText = 'Shipped';
+        break;
+      case OrderStatus.delivered:
+        color = Colors.green;
+        statusText = 'Delivered';
+        break;
+      case OrderStatus.incomplete:
+        color = Colors.red;
+        statusText = 'Incomplete';
+        break;
+      default:
+        color = Colors.grey;
+        statusText = 'Unknown';
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius:
+            BorderRadius.circular(8), // Adjust the border radius as needed
+      ),
+      padding: EdgeInsets.all(8), // Adjust the padding as needed
+      child: Text(
+        statusText,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
   }
-
-  return Container(
-    decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
-    ),
-    padding: EdgeInsets.all(8), // Adjust the padding as needed
-    child: Text(
-      statusText,
-      style: TextStyle(color: Colors.white),
-    ),
-  );
-}
-
 
   void _updateFilteredOrders() {
     if (selectedStatus == OrderStatus.all) {
       filteredOrders = List.from(orders);
     } else {
-      filteredOrders = orders.where((order) => order.status == selectedStatus).toList();
+      filteredOrders =
+          orders.where((order) => order.status == selectedStatus).toList();
     }
   }
 }

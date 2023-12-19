@@ -32,7 +32,7 @@ class ProductModel {
     CategoryModel product_category = categories.firstWhere(
       (element) => element.id == product_category_id,
       orElse: () =>
-          CategoryModel(id: '', name: 'Unknown Category', description: ''),
+          CategoryModel(id: '', name: 'Unknown Category', description: '',iconName: "Icons.do_not_disturb"),
     );
 
     return ProductModel(

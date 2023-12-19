@@ -47,7 +47,7 @@ class _AllProductsTopBarWidgetState extends State<AllProductsTopBarWidget> {
   Widget _searchBar() {
     var inputDecoration = InputDecoration(
       filled: true,
-      fillColor: Colors.grey[200],
+      fillColor: Theme.of(context).colorScheme.primary,
       hintText: 'Search',
       hintStyle: TextStyle(color: Colors.grey[400]),
       prefixIcon: const Icon(Icons.search),
@@ -59,11 +59,11 @@ class _AllProductsTopBarWidgetState extends State<AllProductsTopBarWidget> {
         borderRadius: BorderRadius.circular(15),
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey[400]!),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
         borderRadius: BorderRadius.circular(15),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey[400]!),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
         borderRadius: BorderRadius.circular(15),
       ),
     );
@@ -77,8 +77,8 @@ class _AllProductsTopBarWidgetState extends State<AllProductsTopBarWidget> {
   Widget _notificationButton() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[200],
-        border: Border.all(color: Colors.grey[400]!),
+        color: Theme.of(context).colorScheme.primary,
+        border: Border.all(color: Theme.of(context).colorScheme.secondary),
         // borderRadius: BorderRadius.circular(50),
         shape: BoxShape.circle,
       ),

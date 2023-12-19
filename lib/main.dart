@@ -1,8 +1,12 @@
 import 'package:ecommerce/pages/initial.dart';
 import 'package:ecommerce/providers/favorite.dart';
 import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/providers/theme.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/colud_messaging.dart';
+import 'package:ecommerce/themes/dark_theme.dart';
+import 'package:ecommerce/themes/light_theme.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +17,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   await CloudMessaging().initNotification();
 
   runApp(
@@ -22,6 +26,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: const MyApp(),
     ),
@@ -40,9 +45,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ecommerce App',
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
+      themeMode: context.watch<ThemeProvider>().themeMode,
+      theme: lightTheme,
+      darkTheme: darkTheme,
       home: const InitialPage(),
       debugShowCheckedModeBanner: false,
     );
