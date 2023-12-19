@@ -1,6 +1,7 @@
 import 'package:ecommerce/pages/initial.dart';
 import 'package:ecommerce/providers/favorite.dart';
 import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/theme.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/colud_messaging.dart';
@@ -25,8 +26,12 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
+
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+
       ],
       child: const MyApp(),
     ),
@@ -45,9 +50,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ecommerce App',
+
       themeMode: context.watch<ThemeProvider>().themeMode,
       theme: lightTheme,
       darkTheme: darkTheme,
+
       home: const InitialPage(),
       debugShowCheckedModeBanner: false,
     );
