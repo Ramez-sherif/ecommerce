@@ -52,11 +52,11 @@ class FavoritesList extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Theme.of(context).colorScheme.secondary,
                 spreadRadius: 1,
                 blurRadius: 3,
               ),

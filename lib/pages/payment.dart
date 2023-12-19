@@ -21,7 +21,9 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         centerTitle: true,
         title: const Text(
           'Checkout',
@@ -109,7 +111,7 @@ class _PaymentPageState extends State<PaymentPage> {
           child: Text(
             action,
             style: const TextStyle(
-              color: Colors.grey, // Set the text color to grey
+              color: Colors.green, // Set the text color to grey
             ),
           ),
         ),
@@ -136,15 +138,15 @@ class _PaymentPageState extends State<PaymentPage> {
 
   Widget _buildPaymentCard(String title, IconData icon, int index,
       [String number = '']) {
-    Color cardColor = Colors.grey[200]!; // Default color
+    Color cardColor = Color.fromARGB(255, 39, 106, 151); // Default color
 
     if (index == -1) {
       // Cash
-      cardColor = Colors.grey[200]!; // Grey color for cash
+      cardColor = Color.fromARGB(255, 39, 106, 151); // Grey color for cash
     } else if (index == 0) {
       // Credit Card
-      cardColor = const Color.fromARGB(
-          255, 235, 247, 255); // Light blue-grey color for credit card
+      cardColor = Color.fromARGB(
+          255, 39, 106, 151); // Light blue-grey color for credit card
     }
 
     return SizedBox(
@@ -155,8 +157,13 @@ class _PaymentPageState extends State<PaymentPage> {
             cardColor, // Set the background color based on the payment method
         child: ListTile(
           leading: CircleAvatar(
-            backgroundColor: Colors.white, // White circle for the icon
-            child: Icon(icon, color: Colors.green), // Green icon
+            backgroundColor: Theme.of(context)
+                .colorScheme
+                .secondary, // White circle for the icon
+            child: Icon(
+              icon,
+              color: Colors.green,
+            ), // Green icon
           ),
           title: Text(title),
           subtitle: Text(number),
@@ -202,7 +209,7 @@ class _PaymentPageState extends State<PaymentPage> {
     return const SizedBox(
       width: double.infinity, // Make the button take the full width
       child: Card(
-        color: Colors.blueGrey, // Use a dark color for the card background
+        color: Colors.green, // Use a dark color for the card background
         elevation: 2.0,
         child: Padding(
           padding: EdgeInsets.all(16.0),

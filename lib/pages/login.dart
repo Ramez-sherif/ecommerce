@@ -25,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor:
+            Theme.of(context).colorScheme.background, //!Login page color
         body: SizedBox(
           width: double.infinity,
           child: SingleChildScrollView(
@@ -233,7 +235,9 @@ class _LoginPageState extends State<LoginPage> {
           ),
           // make shadow
           filled: true,
-          fillColor: Colors.grey[300],
+          fillColor: Theme.of(context)
+              .colorScheme
+              .secondary, //!222222222222222222222222
           // add prefix icon
           prefixIcon: const Icon(Icons.lock),
           // add shadow
@@ -258,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           // make shadow
           filled: true,
-          fillColor: Colors.grey[300],
+          fillColor: Theme.of(context).colorScheme.secondary,
           // add prefix icon
           prefixIcon: const Icon(Icons.person),
           // add shadow

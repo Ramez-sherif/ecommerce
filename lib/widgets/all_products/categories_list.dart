@@ -63,7 +63,7 @@ class _CategoriesListState extends  State<CategoriesList>  {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.grey[200],
+            color: Colors.grey[300],
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
