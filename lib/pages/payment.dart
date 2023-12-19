@@ -1,4 +1,6 @@
+import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/payment.dart';
 import 'package:flutter/material.dart';
@@ -225,12 +227,14 @@ class _PaymentPageState extends State<PaymentPage> {
           child: Center(
               child: TextButton(
             onPressed: () async {
-              await PaymentService.makePayment(context.read<UserProvider>().user.uid);
-              setState(() {
-                  context
-                    .read<HomeProvider>()
-                    .setCartProducts(context.read<UserProvider>().user.uid);
-              });
+              String uid = context.read<UserProvider>().user.uid;
+               PaymentService.makePayment(uid);
+               context.read<HomeProvider>().cartProducts = null;
+               context.read<ProfileProvider>().allOrders = [];
+               Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                builder: (context) => const HomePage(),
+              ));
               },
             child: const Text(
               'Checkout',

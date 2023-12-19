@@ -6,5 +6,6 @@ class CollectionConfig {
   static const String userFavorite = 'user_favorites';
   static const String orderItems = 'order_item';
   static const String orders = 'orders';
+  static const String status = 'status';
 }
 
