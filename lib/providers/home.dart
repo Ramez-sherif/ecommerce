@@ -9,8 +9,13 @@ class HomeProvider extends ChangeNotifier {
   List<ProductModel> allProducts = [];
   CartModel? cartProducts;
 
-  Future setHomeAllProducts() async {
-    final products = await ProductService.getAllProducts();
+  Future setHomeAllProducts({String categoryId = "0"}) async {
+    List<ProductModel> products;
+    if (categoryId == "0") {
+      products = await ProductService.getAllProducts();
+    } else {
+      products = await ProductService.getProductsByCategory(categoryId);
+    }
     homeAllProducts = products;
     allProducts = products;
     notifyListeners();
