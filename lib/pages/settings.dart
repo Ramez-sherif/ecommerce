@@ -62,7 +62,7 @@ class SettingsPage extends StatelessWidget {
                 onPressed: () async {
                   await userProvider.removeUser();
                   // ignore: use_build_context_synchronously
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const LoginPage(),
