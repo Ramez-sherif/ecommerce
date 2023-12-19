@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:ecommerce/models/response.dart';
+import 'package:ecommerce/pages/admin/home.dart';
 import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/pages/signup.dart';
 import 'package:ecommerce/providers/user.dart';
@@ -78,17 +79,20 @@ class _LoginPageState extends State<LoginPage> {
           // Login successful
           User user = response.data;
           context.read<UserProvider>().setUser(user);
-          await UserService.setUserRole(
+          await UserService.setUser(
             response.data as User,
-            'user',
           );
 
           try {
             String role = await UserService.getUserRole(user.uid);
 
             if (role == 'admin') {
-              // Navigate to the admin page
-              // Add your code here to navigate to the admin page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeAdminPage(),
+                ),
+              );
             } else {
               // Navigate to the home page
               Navigator.push(
@@ -183,9 +187,16 @@ class _LoginPageState extends State<LoginPage> {
             String role = await UserService.getUserRole(user.uid);
             // ignore: avoid_print
             print("role: $role");
-
+            print(user.email);
+            print(user.uid);
+           
             if (role == 'admin') {
-              // go to admin page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeAdminPage(),
+                ),
+              );
             } else {
               Navigator.of(context).push(
                 MaterialPageRoute(

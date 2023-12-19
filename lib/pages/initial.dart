@@ -1,6 +1,10 @@
+import 'dart:developer';
+
+import 'package:ecommerce/pages/admin/home.dart';
 import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/pages/login.dart';
 import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/services/fcm.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,40 +13,29 @@ class InitialPage extends StatefulWidget {
   const InitialPage({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _InitialPageState createState() => _InitialPageState();
+  State<InitialPage> createState() => _InitialPageState();
 }
 
 class _InitialPageState extends State<InitialPage> {
-  late Future<bool> _loginCheck;
   bool isLoggedIn = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _loginCheck = _checkLogin();
-  }
-
-  Future<bool> _checkLogin() async {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        isLoggedIn = false;
-        // ignore: avoid_print
-        print('User is currently signed out!');
-      } else {
-        // ignore: avoid_print
-        print('User is signed in!');
-        context.read<UserProvider>().setUser(user);
-        isLoggedIn = true;
-      }
-    });
-    return isLoggedIn;
+  Future checkLogin() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      isLoggedIn = false;
+      log('User is currently signed out!');
+    } else {
+      log('User is signed in!');
+      isLoggedIn = true;
+      await context.read<UserProvider>().setUser(user);
+      await FCMService.setFCMToken(user.uid);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: _loginCheck,
+    return FutureBuilder(
+      future: checkLogin(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -61,7 +54,11 @@ class _InitialPageState extends State<InitialPage> {
             // ignore: avoid_print
             print('isLoggedIn: $isLoggedIn');
             if (isLoggedIn) {
-              return const HomePage();
+              if (context.watch<UserProvider>().user_role == 'admin') {
+                return const HomeAdminPage();
+              } else {
+                return const HomePage();
+              }
             } else {
               return const LoginPage();
             }
