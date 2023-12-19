@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/pages/product_review_page.dart';
 import 'package:ecommerce/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -50,14 +51,24 @@ class _productDetailsWidgetState extends State<ProductDetailsWidget> {
             ),
             Row(
               children: [
-                const Icon(
-                  Icons.star,
+                IconButton(
+                  icon: Icon(Icons.star),
                   color: Colors.yellow,
-                  size: 40,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductReviewPage(
+                          product: widget.product,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(width: 4.0),
                 Text(
-                  widget.product.rating.toString(),
+                  widget.product.rating
+                      .toString(), //! 11111111111111111111111111111111111111
                   style: const TextStyle(fontSize: 20.0),
                 ),
               ],

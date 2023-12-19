@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.ecommerce"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
     ndkVersion "25.1.8937393"
 
     dexOptions {
@@ -49,8 +49,8 @@ android {
         applicationId "com.example.ecommerce"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 21
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -67,6 +67,13 @@ android {
 
 flutter {
     source '../..'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.squareup.okhttp:okhttp:2.7.5'
+        force 'com.squareup.okio:okio:1.17.5'
+    }
 }
 
 dependencies {
