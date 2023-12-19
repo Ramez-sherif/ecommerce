@@ -1,5 +1,6 @@
 import 'package:ecommerce/providers/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -29,12 +30,12 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
     super.dispose();
   }
 
-  void updateGeoLocation() {
+  void updateGeoLocation() async {
     // Close keyboard
     FocusScope.of(context).unfocus();
 
     if (locationController.text.isNotEmpty) {
-      context
+      await context
           .read<ProfileProvider>()
           .updateGeoLocation(locationController.text);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -58,19 +59,19 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       await Geolocator.openLocationSettings();
-      return Future.error('Location services are disabled.');
+      throw Exception('Location services are disabled.');
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+        throw Exception('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
+      throw Exception(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
@@ -97,7 +98,7 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
       locationController.text = address;
 
       // Update the user's location in the provider
-      context.read<ProfileProvider>().updateGeoLocation(locationController.text);
+      await context.read<ProfileProvider>().updateGeoLocation(locationController.text);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -135,61 +136,79 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            flex: 6,
-            child: TextField(
-              keyboardType: TextInputType.text,
-              decoration: inputDecoration,
-              controller: locationController,
-            ),
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: IconButton(
-                    onPressed: updateGeoLocation,
-                    icon: const Icon(Icons.edit),
-                  ),
+          Row(
+            children: [
+              Expanded(
+                flex: 6,
+                child: TextField(
+                  keyboardType: TextInputType.text,
+                  decoration: inputDecoration,
+                  controller: locationController,
                 ),
-                Expanded(
-                  child: FutureBuilder<Position>(
-                    future: _getGeoLocationPosition(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.hasError) {
-                          // Handle error
-                          return IconButton(
-                            onPressed: () {
-                              // Show a message that there was an error getting the location
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Error getting location: ${snapshot.error}'),
-                                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: IconButton(
+                        onPressed: () async {
+                          updateGeoLocation();
+                        },
+                        icon: const Icon(Icons.edit),
+                      ),
+                    ),
+                    Expanded(
+                      child: FutureBuilder<Position>(
+                        future: _getGeoLocationPosition(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            if (snapshot.hasError) {
+                            
+                              return IconButton(
+                                onPressed: () {
+                           
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Error getting location'),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.my_location),
                               );
-                            },
-                            icon: const Icon(Icons.my_location),
-                          );
-                        } else {
-                          // Location permission accepted
-                          return IconButton(
-                            onPressed: () {
-                              // Call getCurrentLocation with the obtained position
-                              getCurrentLocation(snapshot.data!);
-                            },
-                            icon: const Icon(Icons.my_location),
-                          );
-                        }
-                      } else {
-                        // Loading state
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  ),
+                            } else {
+                             
+                              return IconButton(
+                                onPressed: () async {
+                                 
+                                  await getCurrentLocation(snapshot.data!);
+                                },
+                                icon: const Icon(Icons.my_location),
+                              );
+                            }
+                          } else {
+                            // Loading state
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 200, 
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(37.7749, -122.4194), 
+                zoom: 12,
+              ),
+              // onMapCreated: (GoogleMapController controller) {
+
+              // },
             ),
           ),
         ],
