@@ -28,7 +28,9 @@ class _ProductScanningState extends State<ProductScanning> {
   String text = "";
 
   Future<void> pickImageFromCamera(
-      List<ProductModel> homeAllProducts, ImageSource source) async {
+    List<ProductModel> homeAllProducts,
+    ImageSource source,
+  ) async {
     final XFile? image = await _imagePicker.pickImage(source: source);
     if (image == null) {
       return;
@@ -116,18 +118,6 @@ class _ProductScanningState extends State<ProductScanning> {
                                 ImageSource.camera,
                               ),
                             ),
-                            // make exist button
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text(
-                                'Cancel',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -143,7 +133,10 @@ class _ProductScanningState extends State<ProductScanning> {
   }
 
   void identifyImage(
-      InputImage inputImage, List<ProductModel> homeAllProducts) async {
+    InputImage inputImage,
+    List<ProductModel> homeAllProducts,
+  ) async {
+    Navigator.of(context).pop();
     final List<ImageLabel> image = await imageLabeler.processImage(inputImage);
     if (image.isEmpty) {
       setState(() {
