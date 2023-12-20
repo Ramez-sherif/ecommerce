@@ -28,7 +28,7 @@ class _PhoneProfileWidgettState extends State<PhoneProfileWidget> {
   updatePhoneNumber() {
     // for close keyboard
     FocusScope.of(context).unfocus();
-    
+
     if (phoneController.text.isNotEmpty && isNumeric(phoneController.text)) {
       context.read<ProfileProvider>().updatePhoneNumber(phoneController.text);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,18 +53,25 @@ class _PhoneProfileWidgettState extends State<PhoneProfileWidget> {
   Widget build(BuildContext context) {
     var inputDecoration = InputDecoration(
       filled: true,
-      fillColor: Colors.grey[200],
+      fillColor: Theme.of(context).colorScheme.secondary,
       hintText: 'Phone Number',
-      hintStyle: TextStyle(color: Colors.grey[400]),
+      hintStyle: TextStyle(
+        // from text_theme.dart
+        color: Theme.of(context).colorScheme.background,
+      ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey[400]!),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.background,
+        ),
         borderRadius: BorderRadius.circular(15),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey[400]!),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.background,
+        ),
         borderRadius: BorderRadius.circular(15),
       ),
     );

@@ -16,7 +16,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   // ignore: prefer_final_fields
   TextEditingController _newValueController = TextEditingController();
 
@@ -29,7 +28,6 @@ class _ProfilePageState extends State<ProfilePage> {
       await context.read<ProfileProvider>().setUserProfile(userId);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +69,6 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 _buildSectionTitle("Personal Info"),
 
-
                 _buildProfileItem(
                   "Username",
                   context.watch<ProfileProvider>().userProfile!.username,
@@ -82,11 +79,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   context.watch<ProfileProvider>().userProfile!.email,
                 ),
 
-
                 _buildSectionDivider(),
                 buildSubTitle("Phone Number"),
                 const PhoneProfileWidget(),
-                 _buildSectionDivider(),
+                _buildSectionDivider(),
                 buildSubTitle("Location"),
                 const LocationProfileWidget(),
                 // _buildProfileItemWithEditButtonLoc(
@@ -160,7 +156,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
 
   // Widget _buildProfileItemWithEditButtonLoc(String label, String value) {
   //   return Padding(
@@ -275,8 +270,6 @@ class _ProfilePageState extends State<ProfilePage> {
   //   );
   // }
 
-
-
   Widget _buildSectionDivider() {
     return Divider(
       color: Theme.of(context).colorScheme.secondary,
@@ -294,16 +287,15 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               return states.contains(MaterialState.pressed)
-
-                  ? Color.fromARGB(255, 83, 31, 107)
-                  : Color.fromARGB(255, 240, 215, 254);
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.primary;
             },
           ),
           foregroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               return states.contains(MaterialState.pressed)
-                  ? Color.fromARGB(255, 240, 215, 254)
-                  : Color.fromARGB(255, 83, 31, 107);
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.secondary;
             },
           ),
         ),
@@ -311,7 +303,4 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-
-
 }

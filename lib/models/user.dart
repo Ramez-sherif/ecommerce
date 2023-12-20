@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce/models/order.dart';
 
 class UserModel {
   final String uid;

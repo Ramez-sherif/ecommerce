@@ -98,7 +98,9 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
       locationController.text = address;
 
       // Update the user's location in the provider
-      await context.read<ProfileProvider>().updateGeoLocation(locationController.text);
+      await context
+          .read<ProfileProvider>()
+          .updateGeoLocation(locationController.text);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -118,18 +120,18 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
   Widget build(BuildContext context) {
     var inputDecoration = InputDecoration(
       filled: true,
-      fillColor: Colors.grey[200],
+      fillColor: Theme.of(context).colorScheme.secondary,
       hintText: 'Location',
-      hintStyle: TextStyle(color: Colors.grey[400]),
+      hintStyle: TextStyle(color: Theme.of(context).colorScheme.background),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey[400]!),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.background),
         borderRadius: BorderRadius.circular(15),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey[400]!),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.background),
         borderRadius: BorderRadius.circular(15),
       ),
     );
@@ -163,12 +165,11 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
                       child: FutureBuilder<Position>(
                         future: _getGeoLocationPosition(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
                             if (snapshot.hasError) {
-                            
                               return IconButton(
                                 onPressed: () {
-                           
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('Error getting location'),
@@ -178,10 +179,8 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
                                 icon: const Icon(Icons.my_location),
                               );
                             } else {
-                             
                               return IconButton(
                                 onPressed: () async {
-                                 
                                   await getCurrentLocation(snapshot.data!);
                                 },
                                 icon: const Icon(Icons.my_location),
@@ -200,10 +199,10 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
             ],
           ),
           SizedBox(
-            height: 200, 
+            height: 200,
             child: GoogleMap(
               initialCameraPosition: CameraPosition(
-                target: LatLng(37.7749, -122.4194), 
+                target: LatLng(37.7749, -122.4194),
                 zoom: 12,
               ),
               // onMapCreated: (GoogleMapController controller) {

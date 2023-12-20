@@ -2,7 +2,6 @@ import 'package:ecommerce/models/orders.dart';
 import 'package:ecommerce/pages/order_details.dart';
 import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
-import 'package:ecommerce/services/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
