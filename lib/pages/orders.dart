@@ -1,144 +1,137 @@
+import 'package:ecommerce/models/orders.dart';
+import 'package:ecommerce/pages/order_details.dart';
+import 'package:ecommerce/providers/profile.dart';
+import 'package:ecommerce/providers/user.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
 
   @override
-  _OrderPageState createState() => _OrderPageState();
+  State<OrderPage> createState() => _OrderPageState();
 }
 
 class _OrderPageState extends State<OrderPage> {
   // Sample order data
-  List<Order> orders = [
-    Order(1, 'Product A', '2023-01-01', OrderStatus.shipped),
-    Order(2, 'Product B', '2023-02-15', OrderStatus.delivered),
-    Order(3, 'Product C', '2023-03-20', OrderStatus.incomplete),
-  ];
-
-  // Filtered orders based on selected status
-  List<Order> filteredOrders = [];
-
-  // Currently selected order status
-  OrderStatus selectedStatus = OrderStatus.all;
-
-  @override
-  void initState() {
-    super.initState();
-    // Initially, show all orders
-    filteredOrders = List.from(orders);
+Future getAllOrders() async {
+    if (context.read<ProfileProvider>().allOrders.isEmpty) {
+      String userId = context.read<UserProvider>().user.uid;
+      await context.read<ProfileProvider>().setAllOrders(userId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Order List'),
-      ),
-      body: Column(
-        children: [
-          _buildFilterDropdown(),
-          Divider(),
-          _buildOrderList(),
-        ],
-      ),
-    );
-  }
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBar(
+          title: const Text('Order List'),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+        ),
+        body: FutureBuilder(
+          future: getAllOrders(), // Your asynchronous function call
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Display a loading indicator while waiting for the Future
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              // Display an error message if the Future fails
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              List<OrdersModel> allOrders = context.watch<ProfileProvider>().allOrders;
 
-  Widget _buildFilterDropdown() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Filter by Status:'),
-          SizedBox(width: 10),
-          DropdownButton<OrderStatus>(
-            value: selectedStatus,
-            items: OrderStatus.values.map((status) {
-              return DropdownMenuItem<OrderStatus>(
-                value: status,
-                child: Text(statusToString(status)),
+              // Display the data using ListView.builder once the Future completes
+              return RefreshIndicator(
+                onRefresh: () async {
+                   await context.read<ProfileProvider>().setAllOrders(context.read<UserProvider>().user.uid);
+                   },
+                child: ListView.builder(
+                  itemCount: allOrders.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 13,horizontal: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                          color: Theme.of(context).colorScheme.primary),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => OrderDetailsPage(allProducts:allOrders[index].products)));
+                        },
+                        child: ListTile(
+                          leading: const CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                "https://img.freepik.com/premium-vector/people-delivery-products_318923-61.jpg"),
+                          ),
+                         
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Order ID: ${allOrders[index].orderId}'),
+                              Text(
+                                  "Date: ${allOrders[index].date.day}/${allOrders[index].date.month}/${allOrders[index].date.year}"),
+                                  Text("Time:${allOrders[index].date.hour}:${allOrders[index].date.minute}")
+                            ],
+                          ),
+                          trailing: _buildStatusIndicator(2),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                selectedStatus = value!;
-                _updateFilteredOrders();
-              });
-            },
-          ),
-        ],
-      ),
-    );
+            }
+          }, // FutureBuilder ends here
+        )
+        // Column(
+        //   children: [
+        //     // _buildFilterDropdown(),
+        //     // Divider(),
+        //     _buildOrderList(),
+        //   ],
+        // ),
+        );
   }
 
-  Widget _buildOrderList() {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: filteredOrders.length,
-        itemBuilder: (context, index) {
-          final order = filteredOrders[index];
-          return _buildOrderItem(order);
-        },
-      ),
-    );
-  }
 
-  Widget _buildOrderItem(Order order) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: AssetImage('assets/${order.productImage}.png'),
-      ),
-      title: Text(order.productName),
-      subtitle: Text('Order ID: ${order.orderId} - Date: ${order.date}'),
-      trailing: _buildStatusIndicator(order.status),
-    );
-  }
+  Widget _buildStatusIndicator(int status) {
+    Color color;
+    String statusText;
 
-Widget _buildStatusIndicator(OrderStatus status) {
-  Color color;
-  String statusText;
-
-  switch (status) {
-    case OrderStatus.shipped:
-      color = Colors.blue;
-      statusText = 'Shipped';
-      break;
-    case OrderStatus.delivered:
-      color = Colors.green;
-      statusText = 'Delivered';
-      break;
-    case OrderStatus.incomplete:
-      color = Colors.red;
-      statusText = 'Incomplete';
-      break;
-    default:
-      color = Colors.grey;
-      statusText = 'Unknown';
-  }
-
-  return Container(
-    decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
-    ),
-    padding: EdgeInsets.all(8), // Adjust the padding as needed
-    child: Text(
-      statusText,
-      style: TextStyle(color: Colors.white),
-    ),
-  );
-}
-
-
-  void _updateFilteredOrders() {
-    if (selectedStatus == OrderStatus.all) {
-      filteredOrders = List.from(orders);
-    } else {
-      filteredOrders = orders.where((order) => order.status == selectedStatus).toList();
+    switch (status) {
+      case 1:
+        color = Colors.blue;
+        statusText = 'Shipped';
+        break;
+      case 2:
+        color = Colors.green;
+        statusText = 'Delivered';
+        break;
+      case 3:
+        color = Colors.red;
+        statusText = 'Incomplete';
+        break;
+      default:
+        color = Colors.grey;
+        statusText = 'Unknown';
     }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius:
+            BorderRadius.circular(8), // Adjust the border radius as needed
+      ),
+      padding: EdgeInsets.all(8), // Adjust the padding as needed
+      child: Text(
+        statusText,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
   }
+
 }
 
 enum OrderStatus { shipped, delivered, incomplete, all }

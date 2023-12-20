@@ -16,11 +16,11 @@ class AllProductsPage extends StatefulWidget {
 }
 
 class _AllProductsPageState extends State<AllProductsPage> {
-  Future getAllProducts() async {
-    List<ProductModel> allProducts =
-        context.read<HomeProvider>().homeAllProducts;
-    if (allProducts.isEmpty) {
-      await context.read<HomeProvider>().setHomeAllProducts();
+  Future getAllProducts({required String categoryId}) async {
+    if (context.read<HomeProvider>().homeAllProducts.isEmpty) {
+      await context
+          .read<HomeProvider>()
+          .setHomeAllProducts(categoryId: categoryId);
     }
   }
 
@@ -33,10 +33,18 @@ class _AllProductsPageState extends State<AllProductsPage> {
     }
   }
 
+  Future getCart() async {
+    String userId = context.read<UserProvider>().user.uid;
+
+    if (context.read<HomeProvider>().cartProducts == null) {
+      await context.read<HomeProvider>().setCartProducts(userId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getAllProducts(),
+      future: getAllProducts(categoryId: "0"),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
@@ -45,6 +53,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
             );
           } else {
             getAllfavorites();
+            getCart();
             return buildBody();
           }
         } else {

@@ -14,7 +14,7 @@ class PaymentBoxWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2),
-        color: Colors.white,
+        color: Colors.transparent,
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -40,7 +40,7 @@ class PaymentBoxWidget extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      Text("${CartService.getTotalPrice(cart)}",
+                      Text("${CartService.getTotalPrice(cart.products)}",
                           style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold))
                     ],

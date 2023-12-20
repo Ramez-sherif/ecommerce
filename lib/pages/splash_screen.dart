@@ -8,7 +8,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SplashView(
-      backgroundColor: const Color.fromARGB(255, 231, 231, 231),
+      backgroundColor: Theme.of(context).colorScheme.background,
       logo: Column(
         children: [
           Image.asset('assets/splash.png', height: 250.0),

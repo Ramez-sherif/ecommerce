@@ -28,6 +28,7 @@ class _SignupPageState extends State<SignupPage> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: SizedBox(
           width: double.infinity,
           child: SingleChildScrollView(
@@ -64,7 +65,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         // make shadow
                         filled: true,
-                        fillColor: Colors.grey[300],
+                        fillColor: Theme.of(context).colorScheme.secondary,
                         // add prefix icon
                         prefixIcon: const Icon(Icons.person),
                         // add shadow
@@ -88,7 +89,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         // make shadow
                         filled: true,
-                        fillColor: Colors.grey[300],
+                        fillColor: Theme.of(context).colorScheme.secondary,
                         // add prefix icon
                         prefixIcon: const Icon(Icons.lock),
                         // add shadow
@@ -111,7 +112,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         // make shadow
                         filled: true,
-                        fillColor: Colors.grey[300],
+                        fillColor: Theme.of(context).colorScheme.secondary,
                         // add prefix icon
                         prefixIcon: const Icon(Icons.lock),
                         // add shadow
@@ -132,15 +133,14 @@ class _SignupPageState extends State<SignupPage> {
                           // if the form is valid
                           ResponseModel response = await SignupService.signup(
                             userEmail.text,
-                            userPassword.text,
+                            userPassword.text
                           );
 
                           if (response.status) {
                             // if the signup is successful
                             // set the user role
-                            await UserService.setUserRole(
+                            await UserService.setUser(
                               response.data as User,
-                              'user',
                             );
 
                             User user = response.data as User;

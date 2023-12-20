@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   SafeArea buildUI() {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         extendBody: true,
         resizeToAvoidBottomInset: false,
         body: PageStorage(
@@ -51,6 +52,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
         bottomNavigationBar: BottomAppBar(
+          color: Theme.of(context).colorScheme.primary,
           shape: const CircularNotchedRectangle(),
           notchMargin: 12,
           child: SizedBox(

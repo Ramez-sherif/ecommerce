@@ -1,4 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
@@ -36,5 +38,31 @@ class ProductService {
         .set(product.toMap())
         .then((value) => print("Product Added"))
         .onError((error, stackTrace) => print("Failed to add product: $error"));
+  }
+
+  static Future updateProduct(Map<String, dynamic> product, String id) async {
+    await db
+        .collection(CollectionConfig.products)
+        .doc(id)
+        .set(product, SetOptions(merge: true))
+        .then((value) => print("Product Updated"))
+        .onError(
+            (error, stackTrace) => log("Failed to Update product: $error"));
+  }
+
+  static Future<List<ProductModel>> getProductsByCategory(
+      String categoryId) async {
+    List<CategoryModel> categories = await CategoryService.getAllCategories();
+    List<ProductModel> products = [];
+    await db
+        .collection(CollectionConfig.products)
+        .where("category_id", isEqualTo: categoryId)
+        .get()
+        .then((value) {
+      for (var docSnapShot in value.docs) {
+        products.add(ProductModel.fromFirestore(docSnapShot, categories));
+      }
+    });
+    return products;
   }
 }

@@ -35,7 +35,9 @@ class _CartPageState extends State<CartPage> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
           return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.background,
             appBar: AppBar(
+              backgroundColor: Colors.transparent,
               title: const Text("Cart"),
               centerTitle: true,
               automaticallyImplyLeading: false,

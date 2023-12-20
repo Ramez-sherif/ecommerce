@@ -93,6 +93,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
   SafeArea buildBody(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,

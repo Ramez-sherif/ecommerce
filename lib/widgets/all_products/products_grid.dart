@@ -36,11 +36,11 @@ class ProductsGrid extends StatelessWidget {
 
   Widget _buildProductItem(BuildContext context, ProductModel product) {
     var boxDecoration = BoxDecoration(
-      color: Colors.grey[200],
+      color: Theme.of(context).colorScheme.primary,
       borderRadius: BorderRadius.circular(15),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.5),
+          color: Theme.of(context).colorScheme.secondary,
           spreadRadius: 1,
           blurRadius: 3,
         ),

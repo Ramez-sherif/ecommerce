@@ -1,4 +1,3 @@
-
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: non_constant_identifier_names
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,9 +6,10 @@ import 'package:ecommerce/models/category.dart';
 
 class ProductModel {
   final String id, name, description, image_URL;
-  final double price, rating;
+  final double price;
   final int quantity;
   final CategoryModel category;
+  double rating;
 
   ProductModel({
     required this.id,
@@ -32,7 +32,7 @@ class ProductModel {
     CategoryModel product_category = categories.firstWhere(
       (element) => element.id == product_category_id,
       orElse: () =>
-          CategoryModel(id: '', name: 'Unknown Category', description: ''),
+          CategoryModel(id: '', name: 'Unknown Category', description: '',iconName: "Icons.do_not_disturb"),
     );
 
     return ProductModel(
@@ -51,7 +51,6 @@ class ProductModel {
   String toString() {
     return 'ProductModel(image_URL: $image_URL, rating: $rating, quantity: $quantity, category: ${category.toString()})';
   }
-
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

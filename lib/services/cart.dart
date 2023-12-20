@@ -8,9 +8,9 @@ import 'package:ecommerce/services/collections_config.dart';
 class CartService {
   static var db = FirebaseFirestore.instance;
 
-  static double getTotalPrice(CartModel model) {
+  static double getTotalPrice(Map<ProductModel,int> model) {
     double totalPrice = 0.0;
-    for (var entry in model.products.entries) {
+    for (var entry in model.entries) {
       totalPrice = totalPrice + (entry.key.price * entry.value);
     }
     return totalPrice;
@@ -62,12 +62,11 @@ class CartService {
         .onError((e, _) => print("Error writing document: $e"));
   }
 
-  static Future removeProductFromCart(
-      ProductModel product, String userId) async {
+  static Future removeProductFromCart(String productId, String userId) async {
     var querySnapshot = await db
         .collection(CollectionConfig.cartItems)
         .where("user_id", isEqualTo: userId)
-        .where("product_id", isEqualTo: product.id)
+        .where("product_id", isEqualTo: productId)
         .limit(1)
         .get();
 
