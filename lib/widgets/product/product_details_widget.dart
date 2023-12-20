@@ -67,8 +67,7 @@ class _productDetailsWidgetState extends State<ProductDetailsWidget> {
                 ),
                 const SizedBox(width: 4.0),
                 Text(
-                  widget.product.rating
-                      .toString(), //! 11111111111111111111111111111111111111
+                  widget.product.rating.toString(),
                   style: const TextStyle(fontSize: 20.0),
                 ),
               ],
