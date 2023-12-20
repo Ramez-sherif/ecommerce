@@ -14,15 +14,15 @@ class AllProductsPage extends StatefulWidget {
   @override
   State<AllProductsPage> createState() => _AllProductsPageState();
 }
-class _AllProductsPageState extends State<AllProductsPage> {
 
+class _AllProductsPageState extends State<AllProductsPage> {
   Future getAllProducts({required String categoryId}) async {
     if (context.read<HomeProvider>().homeAllProducts.isEmpty) {
-      await context.read<HomeProvider>().setHomeAllProducts(categoryId: categoryId);
+      await context
+          .read<HomeProvider>()
+          .setHomeAllProducts(categoryId: categoryId);
     }
   }
-
-  
 
   Future getAllfavorites() async {
     if (context.read<FavoriteProvider>().favoriteItems.isEmpty) {
@@ -33,6 +33,13 @@ class _AllProductsPageState extends State<AllProductsPage> {
     }
   }
 
+  Future getCart() async {
+    String userId = context.read<UserProvider>().user.uid;
+
+    if (context.read<HomeProvider>().cartProducts == null) {
+      await context.read<HomeProvider>().setCartProducts(userId);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +53,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
             );
           } else {
             getAllfavorites();
+            getCart();
             return buildBody();
           }
         } else {
