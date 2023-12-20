@@ -2,8 +2,6 @@ import 'dart:developer';
 import 'package:ecommerce/models/response.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ecommerce/models/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignInService {
   static final GoogleSignIn _googleSignIn = GoogleSignIn();

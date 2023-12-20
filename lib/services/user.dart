@@ -37,7 +37,7 @@ class UserService {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
+      
       return UserModel.fromFirestore(snapshot);
     } catch (e) {
       log('Error getting current user details: $e');

@@ -8,7 +8,6 @@ class UserModel {
   String number;
   String location;
   final String role;
-  List<OrderModel>? orders;
 
   UserModel({
     required this.email,
@@ -17,7 +16,6 @@ class UserModel {
     required this.number,
     required this.location,
     required this.role,
-    this.orders,
   });
 
   String? get phoneNumber => number;
@@ -48,17 +46,9 @@ class UserModel {
   ) {
     final data = snapshot.data()!;
 
-    List<OrderModel> orders = [];
+   
 
-    // check if there collection orders exists
-    if (data['orders'] != null) {
-      final List<Map<String, dynamic>> ordersData =
-          List<Map<String, dynamic>>.from(data['orders']);
 
-      orders = ordersData.map((orderData) {
-        return OrderModel.fromMap(orderData);
-      }).toList();
-    }
 
     return UserModel(
       uid: data['uid'],
@@ -67,7 +57,6 @@ class UserModel {
       number: data['number'],
       location: data['location'],
       role: data['role'],
-      orders: orders,
     );
   }
 }

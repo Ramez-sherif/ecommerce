@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/services/collections_config.dart';
-import 'package:flutter/material.dart';
 
 class ProfileService {
   static Future<void> updatePhoneNumber(String userId, String newPhoneNumber,) async {

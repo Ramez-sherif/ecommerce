@@ -7,5 +7,6 @@ class CollectionConfig {
   static const String reviews = 'review';
   static const String orderItems = 'order_item';
   static const String orders = 'orders';
+  static const String status = 'status';
 }
 

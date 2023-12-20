@@ -5,6 +5,7 @@ import 'package:ecommerce/widgets/profile/location.dart';
 import 'package:ecommerce/widgets/profile/phone.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ecommerce/pages/orders.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -97,16 +98,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 // _buildSectionTitle("Orders Tracking"),
 
-                // _buildFullWidthButton(
-                //   "Your Orders",
-                //   () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const OrderPage()),
-                //     );
-                //   },
-                // ),
+                _buildFullWidthButton(
+                  "Your Orders",
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const OrderPage()),
+                    );
+                  },
+                ),
 
                 // _buildSectionDivider(),
               ],

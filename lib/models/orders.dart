@@ -1,8 +1,12 @@
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/models/user.dart';
 
 class OrdersModel{
-  const OrdersModel({required this.userId, required this.products,required this.orderTime});
-  final String userId; //should be from object from class user
+  const OrdersModel({required this.user, required this.products,required this.date,required this.orderId,required this.status});
+  final String orderId;
+  final UserModel user; //should be from object from class user
   final Map<ProductModel, int> products;
-  final DateTime orderTime;
+  final DateTime date;
+  final int status;
+
 }

@@ -1,4 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
@@ -38,14 +40,14 @@ class ProductService {
         .onError((error, stackTrace) => print("Failed to add product: $error"));
   }
 
-  static Future updateProduct(Map<String,dynamic> product) async {
+  static Future updateProduct(Map<String, dynamic> product, String id) async {
     await db
         .collection(CollectionConfig.products)
-        .doc()
-        .update(product)
+        .doc(id)
+        .set(product, SetOptions(merge: true))
         .then((value) => print("Product Updated"))
         .onError(
-            (error, stackTrace) => print("Failed to Update product: $error"));
+            (error, stackTrace) => log("Failed to Update product: $error"));
   }
 
   static Future<List<ProductModel>> getProductsByCategory(
