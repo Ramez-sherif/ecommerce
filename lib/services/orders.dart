@@ -27,7 +27,7 @@ class OrdersService {
     await doc.set({
       "date": timestamp,
       "user_id": userId,
-      "statusId": await getStatusIdByName(status),
+      "status_id": await getStatusIdByName(status),
     });
     return doc.id;
   }
@@ -69,7 +69,7 @@ class OrdersService {
             products: await getProductsInOrder(doc.id, allProducts),
             date: date,
             orderId: doc.id,
-            status: int.parse(doc["status_id"]));
+            status: doc["status_id"]);
         allOrders.add(currentOrder);
       }
     });

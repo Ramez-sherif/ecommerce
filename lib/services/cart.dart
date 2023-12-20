@@ -8,9 +8,9 @@ import 'package:ecommerce/services/collections_config.dart';
 class CartService {
   static var db = FirebaseFirestore.instance;
 
-  static double getTotalPrice(CartModel model) {
+  static double getTotalPrice(Map<ProductModel,int> model) {
     double totalPrice = 0.0;
-    for (var entry in model.products.entries) {
+    for (var entry in model.entries) {
       totalPrice = totalPrice + (entry.key.price * entry.value);
     }
     return totalPrice;

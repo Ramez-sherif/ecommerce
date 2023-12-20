@@ -1,4 +1,5 @@
 import 'package:ecommerce/models/orders.dart';
+import 'package:ecommerce/pages/order_details.dart';
 import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/orders.dart';
@@ -26,7 +27,8 @@ Future getAllOrders() async {
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          title: Text('Order List'),
+          title: const Text('Order List'),
+          centerTitle: true,
           backgroundColor: Colors.transparent,
         ),
         body: FutureBuilder(
@@ -57,11 +59,7 @@ Future getAllOrders() async {
                           color: Theme.of(context).colorScheme.primary),
                       child: InkWell(
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('go to products details'),
-                            ),
-                          );
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => OrderDetailsPage(allProducts:allOrders[index].products)));
                         },
                         child: ListTile(
                           leading: const CircleAvatar(

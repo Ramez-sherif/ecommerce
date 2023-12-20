@@ -7,6 +7,6 @@ class OrdersModel{
   final UserModel user; //should be from object from class user
   final Map<ProductModel, int> products;
   final DateTime date;
-  final int status;
+  final String status;
 
 }
