@@ -1,13 +1,18 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/models/review.dart';
+import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/review.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:ecommerce/services/user.dart';
 
 class ProductReviewPage extends StatefulWidget {
   final ProductModel product;
-  const ProductReviewPage({super.key, required this.product});
+
+  const ProductReviewPage({Key? key, required this.product}) : super(key: key);
+
   @override
   _ProductReviewPageState createState() => _ProductReviewPageState();
 }
@@ -15,9 +20,11 @@ class ProductReviewPage extends StatefulWidget {
 class _ProductReviewPageState extends State<ProductReviewPage> {
   final TextEditingController _ratingController = TextEditingController();
   String rating2 = "";
+
   @override
   Widget build(BuildContext context) {
     String userId = context.read<UserProvider>().user.uid;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Reviews'),
@@ -35,13 +42,19 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () async {
-                int rating = int.parse(rating2);
+                int rating = int.tryParse(rating2) ?? 0;
+
                 if (rating > 0 && rating <= 5) {
                   await ReviewService.addReview(
-                      rating, userId, widget.product.id);
+                    rating,
+                    userId,
+                    widget.product.id,
+                  );
                   double newRating = (widget.product.rating + rating) / 2;
                   await ReviewService.updateReview(
-                      widget.product.id, newRating);
+                    widget.product.id,
+                    newRating,
+                  );
                   context
                       .read<HomeProvider>()
                       .allProducts
@@ -56,23 +69,64 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                   Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please enter a valid rating'),
+                    SnackBar(
+                      content: Text(
+                        'Please enter a valid rating',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
                     ),
                   );
                 }
               },
               child: const Text('Submit Rating'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Colors.green), // Change button background color to green
+              ),
             ),
-            // ListView.builder(
-            //   itemCount: items.length,
-            //   itemBuilder: (BuildContext context, int index) {
-            //     return ListTile(
-            //       title:
-            //           Text(items[index]),
-            //     );
-            //   },
-            // ),
+            FutureBuilder<List<Review>>(
+              future: ReviewService.getAllReviews(widget.product.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  List<Review> reviews = snapshot.data as List<Review>;
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: reviews.length,
+                      itemBuilder: (context, index) {
+                        Review review = reviews[index];
+                        return FutureBuilder<UserModel>(
+                          future: UserService.getUserDetails(review.userid),
+                          builder: (context, userSnapshot) {
+                            if (userSnapshot.hasData) {
+                              UserModel user = userSnapshot.data!;
+                              return ListTile(
+                                title: Text('User Name: ${user.username}'),
+                                subtitle:
+                                    Text('Rate: ${review.rating.toString()}'),
+                              );
+                            } else {
+                              return ListTile(
+                                title: Text('User ID: Not Found'),
+                                subtitle:
+                                    Text('Rate: ${review.rating.toString()}'),
+                              );
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return Center(child: Text('No reviews available.'));
+                }
+              },
+            ),
           ],
         ),
       ),
