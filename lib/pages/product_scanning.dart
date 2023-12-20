@@ -27,9 +27,9 @@ class _ProductScanningState extends State<ProductScanning> {
   final ImagePicker _imagePicker = ImagePicker();
   String text = "";
 
-  Future<void> pickImageFromCamera(List<ProductModel> homeAllProducts) async {
-    final XFile? image =
-        await _imagePicker.pickImage(source: ImageSource.camera);
+  Future<void> pickImageFromCamera(
+      List<ProductModel> homeAllProducts, ImageSource source) async {
+    final XFile? image = await _imagePicker.pickImage(source: source);
     if (image == null) {
       return;
     }
@@ -93,8 +93,46 @@ class _ProductScanningState extends State<ProductScanning> {
                   style: TextStyle(color: Colors.green),
                 ),
                 onPressed: () {
-                  pickImageFromCamera(
-                      context.read<HomeProvider>().homeAllProducts);
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Choose photo source'),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: const Icon(Icons.image),
+                              title: const Text('Gallery'),
+                              onTap: () => pickImageFromCamera(
+                                context.read<HomeProvider>().homeAllProducts,
+                                ImageSource.gallery,
+                              ),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.camera_alt),
+                              title: const Text('Camera'),
+                              onTap: () => pickImageFromCamera(
+                                context.read<HomeProvider>().homeAllProducts,
+                                ImageSource.camera,
+                              ),
+                            ),
+                            // make exist button
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
                 },
               ),
             )
