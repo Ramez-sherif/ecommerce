@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';

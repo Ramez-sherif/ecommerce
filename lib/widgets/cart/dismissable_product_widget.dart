@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import "package:ecommerce/models/product.dart";
 import "package:ecommerce/providers/home.dart";
 import "package:ecommerce/providers/user.dart";

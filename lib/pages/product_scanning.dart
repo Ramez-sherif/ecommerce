@@ -47,7 +47,7 @@ class _ProductScanningState extends State<ProductScanning> {
         title: const Text("Image Labeling"),
         backgroundColor: Colors.transparent,
       ),
-      body: Container(
+      body: SizedBox(
         height: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

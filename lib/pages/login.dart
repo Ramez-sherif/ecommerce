@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 import 'package:ecommerce/models/response.dart';
 import 'package:ecommerce/pages/admin/home.dart';
 import 'package:ecommerce/pages/home.dart';
@@ -103,7 +103,6 @@ class _LoginPageState extends State<LoginPage> {
               );
             }
           } catch (e) {
-            // ignore: avoid_print
             print("Error getting user role: $e");
             // Handle the error, you may want to log it or show an appropriate message
           }
@@ -185,11 +184,10 @@ class _LoginPageState extends State<LoginPage> {
             User user = response.data;
             context.read<UserProvider>().setUser(user);
             String role = await UserService.getUserRole(user.uid);
-            // ignore: avoid_print
             print("role: $role");
             print(user.email);
             print(user.uid);
-           
+
             if (role == 'admin') {
               Navigator.push(
                 context,

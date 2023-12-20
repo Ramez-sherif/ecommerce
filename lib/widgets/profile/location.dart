@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:ecommerce/providers/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,7 +11,7 @@ class LocationProfileWidget extends StatefulWidget {
   const LocationProfileWidget({Key? key}) : super(key: key);
 
   @override
-  _LocationProfileWidgetState createState() => _LocationProfileWidgetState();
+  State<LocationProfileWidget> createState() => _LocationProfileWidgetState();
 }
 
 class _LocationProfileWidgetState extends State<LocationProfileWidget> {
@@ -151,54 +153,48 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
                 ),
               ),
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: IconButton(
-                        onPressed: () async {
-                          updateGeoLocation();
-                        },
-                        icon: const Icon(Icons.edit),
-                      ),
-                    ),
-                    Expanded(
-                      child: FutureBuilder<Position>(
-                        future: _getGeoLocationPosition(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return IconButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Error getting location'),
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.my_location),
-                              );
-                            } else {
-                              return IconButton(
-                                onPressed: () async {
-                                  await getCurrentLocation(snapshot.data!);
-                                },
-                                icon: const Icon(Icons.my_location),
-                              );
-                            }
-                          } else {
-                            // Loading state
-                            return Center(child: CircularProgressIndicator());
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+                child: IconButton(
+                  onPressed: () async {
+                    updateGeoLocation();
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
+              ),
+              Expanded(
+                child: FutureBuilder<Position>(
+                  future: _getGeoLocationPosition(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return IconButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Error getting location'),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.my_location),
+                        );
+                      } else {
+                        return IconButton(
+                          onPressed: () async {
+                            await getCurrentLocation(snapshot.data!);
+                          },
+                          icon: const Icon(Icons.my_location),
+                        );
+                      }
+                    } else {
+                      // Loading state
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
                 ),
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(height: 8),
+          const SizedBox(
             height: 200,
             child: GoogleMap(
               initialCameraPosition: CameraPosition(

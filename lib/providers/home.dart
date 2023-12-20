@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_conditional_assignment
+
 import 'package:ecommerce/models/cart.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/cart.dart';

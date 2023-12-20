@@ -14,7 +14,7 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   // Sample order data
-Future getAllOrders() async {
+  Future getAllOrders() async {
     if (context.read<ProfileProvider>().allOrders.isEmpty) {
       String userId = context.read<UserProvider>().user.uid;
       await context.read<ProfileProvider>().setAllOrders(userId);
@@ -40,39 +40,48 @@ Future getAllOrders() async {
               // Display an error message if the Future fails
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
-              List<OrdersModel> allOrders = context.watch<ProfileProvider>().allOrders;
+              List<OrdersModel> allOrders =
+                  context.watch<ProfileProvider>().allOrders;
 
               // Display the data using ListView.builder once the Future completes
               return RefreshIndicator(
                 onRefresh: () async {
-                   await context.read<ProfileProvider>().setAllOrders(context.read<UserProvider>().user.uid);
-                   },
+                  await context
+                      .read<ProfileProvider>()
+                      .setAllOrders(context.read<UserProvider>().user.uid);
+                },
                 child: ListView.builder(
                   itemCount: allOrders.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 13,horizontal: 5),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 13, horizontal: 5),
                       padding: const EdgeInsets.symmetric(vertical: 13),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
+                          borderRadius: BorderRadius.circular(12.0),
                           color: Theme.of(context).colorScheme.primary),
                       child: InkWell(
                         onTap: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => OrderDetailsPage(allProducts:allOrders[index].products)));
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => OrderDetailsPage(
+                                      allProducts: allOrders[index].products)));
                         },
                         child: ListTile(
                           leading: const CircleAvatar(
                             backgroundImage: NetworkImage(
                                 "https://img.freepik.com/premium-vector/people-delivery-products_318923-61.jpg"),
                           ),
-                         
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Order ID: ${allOrders[index].orderId}'),
                               Text(
                                   "Date: ${allOrders[index].date.day}/${allOrders[index].date.month}/${allOrders[index].date.year}"),
-                                  Text("Time:${allOrders[index].date.hour}:${allOrders[index].date.minute}")
+                              Text(
+                                  "Time:${allOrders[index].date.hour}:${allOrders[index].date.minute}"),
+                              Text(
+                                  "Products No: ${allOrders[index].products.length}"),
                             ],
                           ),
                           trailing: _buildStatusIndicator(2),
@@ -94,7 +103,6 @@ Future getAllOrders() async {
         // ),
         );
   }
-
 
   Widget _buildStatusIndicator(int status) {
     Color color;
@@ -124,14 +132,13 @@ Future getAllOrders() async {
         borderRadius:
             BorderRadius.circular(8), // Adjust the border radius as needed
       ),
-      padding: EdgeInsets.all(8), // Adjust the padding as needed
+      padding: const EdgeInsets.all(8), // Adjust the padding as needed
       child: Text(
         statusText,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
-
 }
 
 enum OrderStatus { shipped, delivered, incomplete, all }

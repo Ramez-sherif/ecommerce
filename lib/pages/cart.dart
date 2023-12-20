@@ -68,6 +68,7 @@ class _CartPageState extends State<CartPage> {
                       .products
                       .entries
                       .toList()[index - 1];
+                      
                   final key = entry.key;
                   final value = entry.value;
                   return Padding(
