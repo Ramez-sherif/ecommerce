@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/cart.dart';
 import 'package:ecommerce/models/orders.dart';
@@ -5,6 +7,7 @@ import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/services/cart.dart';
 import 'package:ecommerce/services/collections_config.dart';
+import 'package:ecommerce/services/fcm.dart';
 import 'package:ecommerce/services/product.dart';
 
 class OrdersService {
@@ -45,9 +48,22 @@ class OrdersService {
 
     int newQuantity = productDocument["quantity"] - quantity;
 
+    String productName = productDocument["name"];
+
     await ProductService.updateProduct({"quantity": newQuantity}, productId);
+
+    log("new quantity " + newQuantity.toString());
+    // send notification to admin if quantity is less than 20
     if (newQuantity < 20) {
-      //notify admins
+      List<String> tokens = await FCMService.getAdminFCMTokens();
+      log("admin tokens " + tokens.length.toString());
+      for (var token in tokens) {
+        await FCMService.sendNotification(
+          token,
+          "Low Stock",
+          "Product $productName is low on stock",
+        );
+      }
     }
   }
 
