@@ -151,16 +151,14 @@ class _PaymentPageState extends State<PaymentPage> {
 
   Widget _buildPaymentCard(String title, IconData icon, int index,
       [String number = '']) {
-    Color cardColor = const Color.fromARGB(255, 39, 106, 151); // Default color
+    Color cardColor = Colors.green; // Default color
 
     if (index == -1) {
       // Cash
-      cardColor =
-          const Color.fromARGB(255, 39, 106, 151); // Grey color for cash
+      cardColor = Colors.green; // Grey color for cash
     } else if (index == 0) {
       // Credit Card
-      cardColor = const Color.fromARGB(
-          255, 39, 106, 151); // Light blue-grey color for credit card
+      cardColor = Colors.green; // Light blue-grey color for credit card
     }
 
     return SizedBox(
@@ -174,13 +172,16 @@ class _PaymentPageState extends State<PaymentPage> {
             backgroundColor: Theme.of(context)
                 .colorScheme
                 .secondary, // White circle for the icon
-            child: Icon(
-              icon,
-              color: Colors.green,
-            ), // Green icon
+            child: Icon(icon, color: Colors.white), // Green icon
           ),
-          title: Text(title),
-          subtitle: Text(number),
+          title: Text(
+            title,
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
+          subtitle: Text(
+            number,
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
           trailing: Radio<int>(
             value: index,
             groupValue: selectedCard,
@@ -190,7 +191,7 @@ class _PaymentPageState extends State<PaymentPage> {
               });
             },
             activeColor:
-                Colors.green, // Green color for the active radio button
+                Colors.white, // Green color for the active radio button
           ),
         ),
       ),
@@ -249,13 +250,14 @@ class _PaymentPageState extends State<PaymentPage> {
     showDialog(
       context: context,
       builder: (context) => const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: Colors.green),
       ),
     );
     String uid = context.read<UserProvider>().user.uid;
     await PaymentService.makePayment(uid);
     await context.read<HomeProvider>().setHomeAllProducts();
     await context.read<HomeProvider>().setCartProducts(uid);
+    await context.read<ProfileProvider>().setUserProfile(uid);
     await context.read<ProfileProvider>().setAllOrders(uid);
     Navigator.pop(context);
     Navigator.of(context).pushReplacement(

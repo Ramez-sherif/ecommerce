@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/favorite.dart';
-import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/favorite.dart';
 import 'package:ecommerce/widgets/product/add_to_cart_button_widget.dart';
@@ -25,13 +24,15 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   FavoriteService favoriteService = FavoriteService();
 
-  Future checkIsFavorite() async {
-    List<ProductModel> allProducts =
-        context.watch<HomeProvider>().homeAllProducts;
+  @override
+  void initState() {
+    myCounter = 1;
+    super.initState();
+  }
 
-    bool result = await context
-        .read<FavoriteProvider>()
-        .checkIsFavourite(widget.product, allProducts);
+  Future checkIsFavorite() async {
+    bool result =
+        await context.read<FavoriteProvider>().checkIsFavourite(widget.product);
 
     if (result) {
       isFavorite = true;
@@ -55,9 +56,11 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
   }
 
   void incrementCounter() {
-    setState(() {
-      myCounter++;
-    });
+    if (myCounter < widget.product.quantity) {
+      setState(() {
+        myCounter++;
+      });
+    }
   }
 
   void decrementCounter() {
@@ -83,7 +86,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
           }
         } else {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Colors.green),
           );
         }
       },
@@ -99,7 +102,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onPrimary,
             onPressed: () {
               Navigator.pop(context);
             },

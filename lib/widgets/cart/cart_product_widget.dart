@@ -51,7 +51,7 @@ class _ProductWidgetState extends State<CartProductWidget> {
       imageUrl: imageUrl,
       fit: BoxFit.fill,
       placeholder: (context, url) => const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: Colors.green),
       ),
       errorWidget: (context, url, error) => const Icon(Icons.error),
     );

@@ -81,7 +81,7 @@ class _SendNotificationsToAllPageState
     showDialog(
       context: context,
       builder: (context) => const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: Colors.green),
       ),
     );
     // 4. get all fcm tokens

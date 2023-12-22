@@ -24,7 +24,6 @@ class FavoriteProvider extends ChangeNotifier {
 
   Future<bool> checkIsFavourite(
     ProductModel product,
-    List<ProductModel> allProducts,
   ) async {
     for (ProductModel p in favoriteItems) {
       if (p.id == product.id) {

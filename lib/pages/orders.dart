@@ -35,7 +35,11 @@ class _OrderPageState extends State<OrderPage> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // Display a loading indicator while waiting for the Future
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.green,
+                ),
+              );
             } else if (snapshot.hasError) {
               // Display an error message if the Future fails
               return Center(child: Text('Error: ${snapshot.error}'));

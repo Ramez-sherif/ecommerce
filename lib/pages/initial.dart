@@ -40,7 +40,7 @@ class _InitialPageState extends State<InitialPage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: Colors.green),
             ),
           );
         } else {

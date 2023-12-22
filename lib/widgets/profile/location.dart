@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print, non_constant_identifier_names, prefer_final_fields
+
 import 'dart:async';
 
 import 'package:ecommerce/providers/profile.dart';
@@ -26,7 +28,7 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
   void initState() {
     super.initState();
     locationController.text =
-        context.read<ProfileProvider>().userProfile!.location!;
+        context.read<ProfileProvider>().userProfile!.location;
 
     _getGeoLocationPosition().then((position) {
       _updateCameraPosition(position);
@@ -112,7 +114,9 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
       locationController.text = address;
 
       // Update the user's location in the provider
-      await context.read<ProfileProvider>().updateGeoLocation(locationController.text);
+      await context
+          .read<ProfileProvider>()
+          .updateGeoLocation(locationController.text);
 
       // Update the camera position on the map
       _updateCameraPosition(position);
@@ -132,12 +136,12 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
   }
 
   void _updateCameraPosition(Position position) {
-  _mapController.future.then((controller) {
-    controller.animateCamera(
-      CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
-    );
-  });
-}
+    _mapController.future.then((controller) {
+      controller.animateCamera(
+        CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,48 +178,46 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
                 ),
               ),
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: IconButton(
-                        onPressed: () async {
-                          updateGeoLocation();
-                        },
-                        icon: const Icon(Icons.edit),
-                      ),
-                    ),
-                    Expanded(
-                      child: FutureBuilder<Position>(
-                        future: _getGeoLocationPosition(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return IconButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Error getting location'),
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.my_location),
-                              );
-                            } else {
-                              return IconButton(
-                                onPressed: () async {
-                                  await getCurrentLocation(snapshot.data!);
-                                },
-                                icon: const Icon(Icons.my_location),
-                              );
-                            }
-                          } else {
-                            // Loading state
-                            return Center(child: CircularProgressIndicator());
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+                child: IconButton(
+                  onPressed: () async {
+                    updateGeoLocation();
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
+              ),
+              Expanded(
+                child: FutureBuilder<Position>(
+                  future: _getGeoLocationPosition(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return IconButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Error getting location'),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.my_location),
+                        );
+                      } else {
+                        return IconButton(
+                          onPressed: () async {
+                            await getCurrentLocation(snapshot.data!);
+                          },
+                          icon: const Icon(Icons.my_location),
+                        );
+                      }
+                    } else {
+                      // Loading state
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.green,
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ],

@@ -40,7 +40,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
           }
         } else {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Colors.green,
+            ),
           );
         }
       },

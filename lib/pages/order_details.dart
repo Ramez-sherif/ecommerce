@@ -1,20 +1,16 @@
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/cart.dart';
-import 'package:ecommerce/services/product.dart';
 import 'package:flutter/material.dart';
 
 class OrderDetailsPage extends StatefulWidget {
   const OrderDetailsPage({super.key, required this.allProducts});
   final Map<ProductModel, int> allProducts;
+  
   @override
-  _ProductPageState createState() => _ProductPageState();
+  State<OrderDetailsPage> createState() => _ProductPageState();
 }
 
-
-
 class _ProductPageState extends State<OrderDetailsPage> {
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +23,7 @@ class _ProductPageState extends State<OrderDetailsPage> {
       body: ListView.builder(
         itemCount: widget.allProducts.length,
         itemBuilder: (BuildContext context, int index) {
-         ProductModel product = widget.allProducts.keys.elementAt(index);
+          ProductModel product = widget.allProducts.keys.elementAt(index);
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
             padding: const EdgeInsets.symmetric(vertical: 5),

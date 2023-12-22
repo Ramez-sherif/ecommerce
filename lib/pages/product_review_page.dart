@@ -92,7 +92,9 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
               future: ReviewService.getAllReviews(widget.product.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(
+                    color: Colors.green,
+                  ));
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
