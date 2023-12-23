@@ -1,3 +1,7 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print, non_constant_identifier_names, prefer_final_fields
+
+import 'dart:async';
+
 import 'package:ecommerce/providers/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,19 +13,26 @@ class LocationProfileWidget extends StatefulWidget {
   const LocationProfileWidget({Key? key}) : super(key: key);
 
   @override
-  _LocationProfileWidgetState createState() => _LocationProfileWidgetState();
+  State<LocationProfileWidget> createState() => _LocationProfileWidgetState();
 }
 
 class _LocationProfileWidgetState extends State<LocationProfileWidget> {
   String location = 'Null, Press Button';
+  double Lat = 20.00000000;
+  double Long = 77.00000000;
   String address = 'search';
   TextEditingController locationController = TextEditingController();
+  Completer<GoogleMapController> _mapController = Completer();
 
   @override
   void initState() {
     super.initState();
     locationController.text =
-        context.read<ProfileProvider>().userProfile!.location!;
+        context.read<ProfileProvider>().userProfile!.location;
+
+    _getGeoLocationPosition().then((position) {
+      _updateCameraPosition(position);
+    });
   }
 
   @override
@@ -81,10 +92,15 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
   }
 
   Future<void> getAddressFromLatLong(Position position) async {
+    setState(() {
+      Lat = position.latitude;
+      Long = position.longitude;
+    });
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     print(placemarks);
     Placemark place = placemarks[0];
+
     address =
         '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
     setState(() {});
@@ -102,6 +118,9 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
           .read<ProfileProvider>()
           .updateGeoLocation(locationController.text);
 
+      // Update the camera position on the map
+      _updateCameraPosition(position);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Location updated'),
@@ -114,6 +133,14 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
         ),
       );
     }
+  }
+
+  void _updateCameraPosition(Position position) {
+    _mapController.future.then((controller) {
+      controller.animateCamera(
+        CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
+      );
+    });
   }
 
   @override
@@ -151,49 +178,46 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
                 ),
               ),
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: IconButton(
-                        onPressed: () async {
-                          updateGeoLocation();
-                        },
-                        icon: const Icon(Icons.edit),
-                      ),
-                    ),
-                    Expanded(
-                      child: FutureBuilder<Position>(
-                        future: _getGeoLocationPosition(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return IconButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Error getting location'),
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.my_location),
-                              );
-                            } else {
-                              return IconButton(
-                                onPressed: () async {
-                                  await getCurrentLocation(snapshot.data!);
-                                },
-                                icon: const Icon(Icons.my_location),
-                              );
-                            }
-                          } else {
-                            // Loading state
-                            return Center(child: CircularProgressIndicator());
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+                child: IconButton(
+                  onPressed: () async {
+                    updateGeoLocation();
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
+              ),
+              Expanded(
+                child: FutureBuilder<Position>(
+                  future: _getGeoLocationPosition(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return IconButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Error getting location'),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.my_location),
+                        );
+                      } else {
+                        return IconButton(
+                          onPressed: () async {
+                            await getCurrentLocation(snapshot.data!);
+                          },
+                          icon: const Icon(Icons.my_location),
+                        );
+                      }
+                    } else {
+                      // Loading state
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.green,
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ],
@@ -202,12 +226,12 @@ class _LocationProfileWidgetState extends State<LocationProfileWidget> {
             height: 200,
             child: GoogleMap(
               initialCameraPosition: CameraPosition(
-                target: LatLng(37.7749, -122.4194),
+                target: LatLng(Lat, Long),
                 zoom: 12,
               ),
-              // onMapCreated: (GoogleMapController controller) {
-
-              // },
+              onMapCreated: (GoogleMapController controller) {
+                _mapController.complete(controller);
+              },
             ),
           ),
         ],

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
@@ -44,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
           }
         } else {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Colors.green),
           );
         }
       },
@@ -294,8 +296,8 @@ class _ProfilePageState extends State<ProfilePage> {
           foregroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               return states.contains(MaterialState.pressed)
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.secondary;
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onSecondary;
             },
           ),
         ),

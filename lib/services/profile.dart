@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/services/collections_config.dart';

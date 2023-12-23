@@ -8,7 +8,7 @@ import 'package:ecommerce/services/collections_config.dart';
 class CartService {
   static var db = FirebaseFirestore.instance;
 
-  static double getTotalPrice(Map<ProductModel,int> model) {
+  static double getTotalPrice(Map<ProductModel, int> model) {
     double totalPrice = 0.0;
     for (var entry in model.entries) {
       totalPrice = totalPrice + (entry.key.price * entry.value);
@@ -54,12 +54,33 @@ class CartService {
     String userId,
     int quantity,
   ) async {
-    await db
+    // check if the product is already in the cart
+    var querySnapshot = await db
         .collection(CollectionConfig.cartItems)
-        .doc()
-        .set({'user_id': userId, 'product_id': productId, 'quantity': quantity})
-        .then((value) => print("Done"))
-        .onError((e, _) => print("Error writing document: $e"));
+        .where("product_id", isEqualTo: productId)
+        .where("user_id", isEqualTo: userId)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
+      await db
+          .collection(CollectionConfig.cartItems)
+          .doc()
+          .set({
+            'user_id': userId,
+            'product_id': productId,
+            'quantity': quantity
+          })
+          .then((value) => print("Done"))
+          .onError((e, _) => print("Error writing document: $e"));
+    } else {
+      await db
+          .collection(CollectionConfig.cartItems)
+          .doc(querySnapshot.docs.first.id)
+          .set({'quantity': quantity}, SetOptions(merge: true))
+          .then((value) => print("Done"))
+          .onError((e, _) => print("Error writing document: $e"));
+    }
   }
 
   static Future removeProductFromCart(String productId, String userId) async {

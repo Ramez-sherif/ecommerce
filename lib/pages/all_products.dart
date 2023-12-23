@@ -58,7 +58,9 @@ class _AllProductsPageState extends State<AllProductsPage> {
           }
         } else {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Colors.green
+            ),
           );
         }
       },

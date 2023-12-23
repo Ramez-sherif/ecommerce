@@ -1,5 +1,6 @@
 import 'package:ecommerce/pages/admin/notifications_to_all.dart';
 import 'package:ecommerce/pages/login.dart';
+import 'package:ecommerce/providers/theme.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,10 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
-          title: const Text('Admin Home Page'),
+          title: Text(
+            'Admin Home Page',
+            style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+          ),
           centerTitle: true,
         ),
         drawer: Drawer(
@@ -53,6 +57,13 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                   );
                 },
               ),
+              // change theme
+              ListTile(
+                title: const Text('Change theme'),
+                onTap: () {
+                  context.read<ThemeProvider>().changeTheme();
+                },
+              ),
             ],
           ),
         ),
@@ -70,10 +81,10 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                     ),
                   );
                 },
-                child: const Text(
+                child: Text(
                   'Send notifications to all users',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.onSecondary,
                     fontSize: 16,
                   ),
                 ),

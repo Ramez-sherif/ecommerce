@@ -44,6 +44,7 @@ class _SendNotificationsToAllPageState
                   minLines: 1,
                   maxLines: 2,
                 ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: bodyController,
                   decoration: const InputDecoration(
@@ -52,12 +53,13 @@ class _SendNotificationsToAllPageState
                   minLines: 1,
                   maxLines: 9,
                 ),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: sendNotificationToAll,
-                  child: const Text(
+                  child: Text(
                     'Send',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       fontSize: 16,
                     ),
                   ),
@@ -79,7 +81,7 @@ class _SendNotificationsToAllPageState
     showDialog(
       context: context,
       builder: (context) => const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: Colors.green),
       ),
     );
     // 4. get all fcm tokens

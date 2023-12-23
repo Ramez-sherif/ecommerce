@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types
+// ignore_for_file: non_constant_identifier_names, camel_case_types, prefer_const_constructors
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/product.dart';
@@ -67,7 +67,7 @@ class _productDetailsWidgetState extends State<ProductDetailsWidget> {
                 ),
                 const SizedBox(width: 4.0),
                 Text(
-                  widget.product.rating.toString(),
+                  widget.product.rating.toStringAsFixed(2),
                   style: const TextStyle(fontSize: 20.0),
                 ),
               ],
@@ -93,7 +93,7 @@ class _productDetailsWidgetState extends State<ProductDetailsWidget> {
       imageUrl: image_URL,
       fit: BoxFit.fill,
       placeholder: (context, url) => const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: Colors.green),
       ),
       errorWidget: (context, url, error) => const Icon(Icons.error),
     );

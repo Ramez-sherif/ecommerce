@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/profile.dart';
@@ -45,9 +47,9 @@ class _PaymentPageState extends State<PaymentPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildHeader('Shipping Address', 'Edit'),
-                      _buildInfoRow(shippingAddress),
-                      const SizedBox(height: 16.0),
+                      // _buildHeader('Shipping Address', 'Edit'),
+                      // _buildInfoRow(shippingAddress),
+                      // const SizedBox(height: 16.0),
                       _buildSpacer(), // Spacer for the shipping section
                       // _buildHeader('Payment Method', ''),
                       const Text(
@@ -61,7 +63,8 @@ class _PaymentPageState extends State<PaymentPage> {
                         height:
                             cardHeight, // Set the desired height for the ListView
                         child: ListView.builder(
-                          itemCount: 1, // Set the number of payment cards as needed
+                          itemCount:
+                              1, // Set the number of payment cards as needed
                           itemBuilder: (context, index) {
                             // Replace the hardcoded data with your payment card data
                             return _buildPaymentCard(
@@ -78,7 +81,6 @@ class _PaymentPageState extends State<PaymentPage> {
                       // Spacer between cards and total/checkout section
                       _buildPaymentCard('Cash', Icons.money_off, -1),
                       _buildSpacer(),
-                   
                     ],
                   ),
                 ),
@@ -102,62 +104,61 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Widget _buildHeader(String title, String action) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            // Handle the edit or add action
-            // ignore: avoid_print
-            print('$action button pressed');
-          },
-          child: Text(
-            action,
-            style: const TextStyle(
-              color: Colors.green, // Set the text color to grey
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildHeader(String title, String action) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       Text(
+  //         title,
+  //         style: const TextStyle(
+  //           fontWeight: FontWeight.bold,
+  //           fontSize: 18.0,
+  //         ),
+  //       ),
+  //       TextButton(
+  //         onPressed: () {
+  //           // Handle the edit or add action
+  //           // ignore: avoid_print
+  //           print('$action button pressed');
+  //         },
+  //         child: Text(
+  //           action,
+  //           style: const TextStyle(
+  //             color: Colors.green, // Set the text color to grey
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildInfoRow(String info) {
-    List<String> addressLines = info.split(', ');
+  // Widget _buildInfoRow(String info) {
+  //   List<String> addressLines = info.split(', ');
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: addressLines
-          .map((line) => Text(
-                line,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16.0,
-                ),
-              ))
-          .toList(),
-    );
-  }
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: addressLines
+  //         .map((line) => Text(
+  //               line,
+  //               style: const TextStyle(
+  //                 color: Colors.grey,
+  //                 fontSize: 16.0,
+  //               ),
+  //             ))
+  //         .toList(),
+  //   );
+  // }
 
   Widget _buildPaymentCard(String title, IconData icon, int index,
       [String number = '']) {
-    Color cardColor = Color.fromARGB(255, 39, 106, 151); // Default color
+    Color cardColor = Colors.green; // Default color
 
     if (index == -1) {
       // Cash
-      cardColor = Color.fromARGB(255, 39, 106, 151); // Grey color for cash
+      cardColor = Colors.green; // Grey color for cash
     } else if (index == 0) {
       // Credit Card
-      cardColor = Color.fromARGB(
-          255, 39, 106, 151); // Light blue-grey color for credit card
+      cardColor = Colors.green; // Light blue-grey color for credit card
     }
 
     return SizedBox(
@@ -171,13 +172,16 @@ class _PaymentPageState extends State<PaymentPage> {
             backgroundColor: Theme.of(context)
                 .colorScheme
                 .secondary, // White circle for the icon
-            child: Icon(
-              icon,
-              color: Colors.green,
-            ), // Green icon
+            child: Icon(icon, color: Colors.white), // Green icon
           ),
-          title: Text(title),
-          subtitle: Text(number),
+          title: Text(
+            title,
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
+          subtitle: Text(
+            number,
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
           trailing: Radio<int>(
             value: index,
             groupValue: selectedCard,
@@ -187,7 +191,7 @@ class _PaymentPageState extends State<PaymentPage> {
               });
             },
             activeColor:
-                Colors.green, // Green color for the active radio button
+                Colors.white, // Green color for the active radio button
           ),
         ),
       ),
@@ -217,35 +221,48 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildCheckoutButton() {
-    return SizedBox(
-      width: double.infinity, // Make the button take the full width
-      child: Card(
-        color: Colors.green, // Use a dark color for the card background
-        elevation: 2.0,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-              child: TextButton(
-            onPressed: () async {
-              String uid = context.read<UserProvider>().user.uid;
-               PaymentService.makePayment(uid);
-               context.read<HomeProvider>().cartProducts = null;
-               context.read<ProfileProvider>().allOrders = [];
-               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                builder: (context) => const HomePage(),
-              ));
-              },
-            child: const Text(
-              'Checkout',
-              style: TextStyle(
-                color: Colors.white, // White text color
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
+    return GestureDetector(
+      onTap: makeOrder,
+      child: const SizedBox(
+        width: double.infinity, // Make the button take the full width
+        child: Card(
+          color: Colors.green, // Use a dark color for the card background
+          elevation: 2.0,
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Center(
+              child: Text(
+                'Checkout',
+                style: TextStyle(
+                  color: Colors.white, // White text color
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),
               ),
             ),
-          )),
+          ),
         ),
+      ),
+    );
+  }
+
+  Future<void> makeOrder() async {
+    showDialog(
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(color: Colors.green),
+      ),
+    );
+    String uid = context.read<UserProvider>().user.uid;
+    await PaymentService.makePayment(uid);
+    await context.read<HomeProvider>().setHomeAllProducts();
+    await context.read<HomeProvider>().setCartProducts(uid);
+    await context.read<ProfileProvider>().setUserProfile(uid);
+    await context.read<ProfileProvider>().setAllOrders(uid);
+    Navigator.pop(context);
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => const HomePage(),
       ),
     );
   }

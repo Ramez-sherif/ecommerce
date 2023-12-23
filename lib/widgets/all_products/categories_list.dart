@@ -1,29 +1,36 @@
-
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/services/category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-class CategoriesList extends StatefulWidget{
-const CategoriesList({Key? key}) : super(key: key);
+
+class CategoriesList extends StatefulWidget {
+  const CategoriesList({Key? key}) : super(key: key);
 
   @override
   State<CategoriesList> createState() => _CategoriesListState();
 }
-class _CategoriesListState extends  State<CategoriesList>  {
-  
+
+class _CategoriesListState extends State<CategoriesList> {
   // make a list of categories
   Future<List<Widget>> getBuildCategories() async {
     List<CategoryModel> categories = await CategoryService.getAllCategories();
-    List<Widget> buildCategories = [_buildCategoryItem(CategoryModel(id: "0", name: "All", description: "AllProducts", iconName: "list"))];
+    List<Widget> buildCategories = [
+      _buildCategoryItem(CategoryModel(
+          id: "0", name: "All", description: "AllProducts", iconName: "list"))
+    ];
     for (var category in categories) {
       buildCategories.add(_buildCategoryItem(category));
     }
     return buildCategories;
   }
-  Future setHomeProductsByCategory(String categoryId) async{
-      await context.read<HomeProvider>().setHomeAllProducts(categoryId: categoryId);
+
+  Future setHomeProductsByCategory(String categoryId) async {
+    await context
+        .read<HomeProvider>()
+        .setHomeAllProducts(categoryId: categoryId);
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -49,12 +56,13 @@ class _CategoriesListState extends  State<CategoriesList>  {
           }
         } else {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Colors.green),
           );
         }
       },
     );
   }
+
   Widget _buildCategoryItem(CategoryModel category) {
     return Column(
       children: [
@@ -87,7 +95,7 @@ class _CategoriesListState extends  State<CategoriesList>  {
             ),
           ),
         ),
-         Text(
+        Text(
           category.name,
           style: const TextStyle(
             fontSize: 12,

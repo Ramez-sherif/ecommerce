@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ecommerce/models/product.dart';
@@ -14,7 +16,7 @@ class ProductReviewPage extends StatefulWidget {
   const ProductReviewPage({Key? key, required this.product}) : super(key: key);
 
   @override
-  _ProductReviewPageState createState() => _ProductReviewPageState();
+  State<ProductReviewPage> createState() => _ProductReviewPageState();
 }
 
 class _ProductReviewPageState extends State<ProductReviewPage> {
@@ -80,17 +82,19 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                   );
                 }
               },
-              child: const Text('Submit Rating'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
                     Colors.green), // Change button background color to green
               ),
+              child: const Text('Submit Rating'),
             ),
             FutureBuilder<List<Review>>(
               future: ReviewService.getAllReviews(widget.product.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(
+                    color: Colors.green,
+                  ));
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -112,7 +116,7 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                               );
                             } else {
                               return ListTile(
-                                title: Text('User ID: Not Found'),
+                                title: const Text('User ID: Not Found'),
                                 subtitle:
                                     Text('Rate: ${review.rating.toString()}'),
                               );
@@ -123,7 +127,7 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                     ),
                   );
                 } else {
-                  return Center(child: Text('No reviews available.'));
+                  return const Center(child: Text('No reviews available.'));
                 }
               },
             ),

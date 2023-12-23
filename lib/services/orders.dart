@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,11 +54,11 @@ class OrdersService {
 
     await ProductService.updateProduct({"quantity": newQuantity}, productId);
 
-    log("new quantity " + newQuantity.toString());
+    log("new quantity $newQuantity");
     // send notification to admin if quantity is less than 20
     if (newQuantity < 20) {
       List<String> tokens = await FCMService.getAdminFCMTokens();
-      log("admin tokens " + tokens.length.toString());
+      log("admin tokens ${tokens.length}");
       for (var token in tokens) {
         await FCMService.sendNotification(
           token,

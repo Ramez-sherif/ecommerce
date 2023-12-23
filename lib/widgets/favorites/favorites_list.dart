@@ -114,7 +114,7 @@ class FavoritesList extends StatelessWidget {
       imageUrl: image_URL,
       fit: BoxFit.fitWidth,
       placeholder: (context, url) => const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: Colors.green),
       ),
       errorWidget: (context, url, error) => const Icon(Icons.error),
     );

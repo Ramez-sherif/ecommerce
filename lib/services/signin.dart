@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_nullable_for_final_variable_declarations, non_constant_identifier_names
+
 import 'dart:developer';
 import 'package:ecommerce/models/response.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -55,7 +57,6 @@ class SignInService {
 
 
       // Obtain the auth details from the selected account
-      // ignore: unnecessary_nullable_for_final_variable_declarations
 
       final GoogleSignInAuthentication? googleAuth =
           await selectedAccount.authentication;
