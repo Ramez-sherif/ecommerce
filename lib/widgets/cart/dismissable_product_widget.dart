@@ -69,13 +69,27 @@ class DismissableProductWidget extends StatelessWidget {
                 color: Color.fromARGB(255, 255, 0, 0),
               ),
             ),
+            
             onDismissed: (direction) async {
+              String userId = context.read<UserProvider>().user.uid;
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              final removedProduct = product;
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('${product.name} deleted'),
+                  action: SnackBarAction(
+                  label: 'Undo',
+                  onPressed: (){
+                    context.read<HomeProvider>()
+                    .addProductToCart(removedProduct, userId, quantity);
+                  },
+                  
+                  ),
+                  
                 ),
               );
-              String userId = context.read<UserProvider>().user.uid;
+              
               await context
                   .read<HomeProvider>()
                   .removeProductFromCart(product, userId);
