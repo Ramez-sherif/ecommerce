@@ -5,25 +5,35 @@ import 'package:ecommerce/pages/profile.dart';
 import 'package:ecommerce/pages/settings.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  String? searchWord;
+  HomePage({Key? key, this.searchWord}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+class _HomePageState extends State<HomePage> {
   int currentTab = 2;
   final List<Widget> screens = [
     const ProfilePage(),
     const SettingsPage(),
-    const AllProductsPage(),
+    AllProductsPage(),
     const FavoritesPage(),
     const CartPage(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = const AllProductsPage();
+  Widget currentScreen = AllProductsPage();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.searchWord != null && widget.searchWord!.isNotEmpty) {
+      currentScreen = AllProductsPage(searchWord: widget.searchWord);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +52,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            _updateScreen(2, const AllProductsPage());
+            _updateScreen(2, AllProductsPage());
           },
           child: Icon(
             Icons.home,

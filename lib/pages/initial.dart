@@ -57,7 +57,7 @@ class _InitialPageState extends State<InitialPage> {
               if (context.watch<UserProvider>().user_role == 'admin') {
                 return const HomeAdminPage();
               } else {
-                return const HomePage();
+                return HomePage();
               }
             } else {
               return const LoginPage();

@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
             String role = await UserService.getUserRole(user.uid);
 
             if (role == 'admin') {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const HomeAdminPage(),
@@ -95,10 +95,10 @@ class _LoginPageState extends State<LoginPage> {
               );
             } else {
               // Navigate to the home page
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const HomePage(),
+                  builder: (context) => HomePage(),
                 ),
               );
             }
@@ -189,16 +189,16 @@ class _LoginPageState extends State<LoginPage> {
             print(user.uid);
 
             if (role == 'admin') {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const HomeAdminPage(),
                 ),
               );
             } else {
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const HomePage(),
+                  builder: (context) => HomePage(),
                 ),
               );
             }
