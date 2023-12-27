@@ -22,7 +22,7 @@ class ProductService {
       for (var doc in collection_snapshot.docs) {
         products_list.add(ProductModel.fromFirestore(doc, categories));
       }
-      print("Successfully fetched products");
+      // print("Successfully fetched products");
       return products_list;
     }).onError((error, stackTrace) {
       print("Error deleting document: $error");

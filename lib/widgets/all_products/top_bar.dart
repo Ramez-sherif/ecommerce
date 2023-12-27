@@ -1,9 +1,13 @@
-import 'package:ecommerce/providers/home.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class AllProductsTopBarWidget extends StatefulWidget {
-  const AllProductsTopBarWidget({Key? key}) : super(key: key);
+  final Function(String query) onQueryChanged;
+  final TextEditingController searchController;
+
+  const AllProductsTopBarWidget(
+      {Key? key, required this.onQueryChanged, required this.searchController})
+      : super(key: key);
 
   @override
   State<AllProductsTopBarWidget> createState() =>
@@ -11,15 +15,6 @@ class AllProductsTopBarWidget extends StatefulWidget {
 }
 
 class _AllProductsTopBarWidgetState extends State<AllProductsTopBarWidget> {
-  // ignore: prefer_final_fields
-  TextEditingController _searchController = TextEditingController();
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,13 +29,9 @@ class _AllProductsTopBarWidgetState extends State<AllProductsTopBarWidget> {
     );
   }
 
-  void onQueryChanged(String query) {
-    context.read<HomeProvider>().searchProducts(query);
-  }
-
   void resetSearch() {
-    onQueryChanged('');
-    _searchController.clear();
+    widget.onQueryChanged('');
+    widget.searchController.clear();
     FocusScope.of(context).unfocus();
   }
 
@@ -69,8 +60,8 @@ class _AllProductsTopBarWidgetState extends State<AllProductsTopBarWidget> {
     );
     return TextField(
       decoration: inputDecoration,
-      onChanged: onQueryChanged,
-      controller: _searchController,
+      onChanged: widget.onQueryChanged,
+      controller: widget.searchController,
     );
   }
 

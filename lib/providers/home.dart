@@ -25,7 +25,7 @@ class HomeProvider extends ChangeNotifier {
 
   Future setCartProducts(String userId) async {
     cartProducts = await CartService.getCart(userId, homeAllProducts);
-    if(cartProducts == null){
+    if (cartProducts == null) {
       cartProducts = CartModel(userId: userId, products: {});
     }
     notifyListeners();
@@ -59,6 +59,12 @@ class HomeProvider extends ChangeNotifier {
             (product) =>
                 product.name.toLowerCase().contains(query.toLowerCase()) ||
                 product.category.name
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) ||
+                product.description
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) ||
+                product.category.description
                     .toLowerCase()
                     .contains(query.toLowerCase()),
           )

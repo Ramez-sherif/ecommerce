@@ -1,13 +1,10 @@
 import 'dart:io';
-import 'package:ecommerce/models/product.dart';
-import 'package:ecommerce/pages/item_details_page.dart';
-import 'package:ecommerce/providers/home.dart';
+import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/services/product.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProductScanning extends StatefulWidget {
   const ProductScanning({Key? key}) : super(key: key);
@@ -19,7 +16,6 @@ class ProductScanning extends StatefulWidget {
 class _ProductScanningState extends State<ProductScanning> {
   ProductService productService = ProductService();
 
-  late InputImage _inputImage;
   File? _pickedImage;
   static final ImageLabelerOptions _options =
       ImageLabelerOptions(confidenceThreshold: 0.8);
@@ -28,7 +24,7 @@ class _ProductScanningState extends State<ProductScanning> {
   String text = "";
 
   Future<void> pickImageFromCamera(
-    List<ProductModel> homeAllProducts,
+    // List<ProductModel> homeAllProducts,
     ImageSource source,
   ) async {
     final XFile? image = await _imagePicker.pickImage(source: source);
@@ -38,8 +34,9 @@ class _ProductScanningState extends State<ProductScanning> {
     setState(() {
       _pickedImage = File(image.path);
     });
-    _inputImage = InputImage.fromFilePath(image.path);
-    identifyImage(_inputImage, homeAllProducts);
+    InputImage inputImage = InputImage.fromFilePath(image.path);
+    // identifyImage(inputImage, homeAllProducts);
+    identifyImage(inputImage);
   }
 
   @override
@@ -106,7 +103,7 @@ class _ProductScanningState extends State<ProductScanning> {
                               leading: const Icon(Icons.image),
                               title: const Text('Gallery'),
                               onTap: () => pickImageFromCamera(
-                                context.read<HomeProvider>().homeAllProducts,
+                                // context.read<HomeProvider>().homeAllProducts,
                                 ImageSource.gallery,
                               ),
                             ),
@@ -114,7 +111,7 @@ class _ProductScanningState extends State<ProductScanning> {
                               leading: const Icon(Icons.camera_alt),
                               title: const Text('Camera'),
                               onTap: () => pickImageFromCamera(
-                                context.read<HomeProvider>().homeAllProducts,
+                                // context.read<HomeProvider>().homeAllProducts,
                                 ImageSource.camera,
                               ),
                             ),
@@ -134,7 +131,7 @@ class _ProductScanningState extends State<ProductScanning> {
 
   void identifyImage(
     InputImage inputImage,
-    List<ProductModel> homeAllProducts,
+    // List<ProductModel> homeAllProducts,
   ) async {
     Navigator.of(context).pop();
     final List<ImageLabel> image = await imageLabeler.processImage(inputImage);
@@ -149,19 +146,26 @@ class _ProductScanningState extends State<ProductScanning> {
       setState(() {
         text = "Label:${img.label}\nConfidence :${img.confidence}";
 
-        for (ProductModel product in homeAllProducts) {
-          if (img.label == product.name) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => Scaffold(
-                  body: ItemDetailsPage(
-                    product: product,
-                  ),
-                ),
-              ),
-            );
-          }
-        }
+        // for (ProductModel product in homeAllProducts) {
+        //   if (img.label == product.name) {
+        //     Navigator.of(context).push(
+        //       MaterialPageRoute(
+        //         builder: (context) => Scaffold(
+        //           body: ItemDetailsPage(
+        //             product: product,
+        //           ),
+        //         ),
+        //       ),
+        //     );
+        //   }
+        // }
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => HomePage(
+              searchWord: img.label,
+            ),
+          ),
+        );
       });
     }
     imageLabeler.close();

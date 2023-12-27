@@ -262,7 +262,7 @@ class _PaymentPageState extends State<PaymentPage> {
     Navigator.pop(context);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => const HomePage(),
+        builder: (context) => HomePage(),
       ),
     );
   }

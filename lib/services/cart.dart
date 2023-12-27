@@ -120,7 +120,7 @@ class CartService {
     }).onError((error, stackTrace) {
       print("Error getting document: $error");
     });
-    print(products.toString());
+    // print(products.toString());
     CartModel cartModel = CartModel(userId: userId, products: products);
 
     return cartModel;
