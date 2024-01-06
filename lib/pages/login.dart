@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const HomeAdminPage(),
+                  builder: (context) => const AdminHomePage(),
                 ),
               );
             } else {
@@ -192,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const HomeAdminPage(),
+                  builder: (context) => const AdminHomePage(),
                 ),
               );
             } else {
