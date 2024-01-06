@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:ecommerce/pages/admin/Business.dart';
+import 'package:ecommerce/pages/admin/storage.dart';
 import 'package:ecommerce/pages/admin/settings.dart';
 import 'package:ecommerce/pages/admin/statistics.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const AdminStatisticsPage(),
-    const AdminBusinessPage(),
+    const AdminStoragePage(),
     const AdminSettingsPage(),
   ];
 
@@ -42,8 +42,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
             label: 'Statistics',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Assets',
+            icon: Icon(Icons.storage),
+            label: 'Storage',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
