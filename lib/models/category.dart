@@ -11,7 +11,7 @@ class CategoryModel {
       required this.name,
       required this.description,
       required this.iconName}) {
-    icon = iconsMap[iconName] == null?Icons.error:iconsMap[iconName]!;
+    icon = iconsMap[iconName] == null ? Icons.error : iconsMap[iconName]!;
   }
   factory CategoryModel.fromFirestore(
     QueryDocumentSnapshot<Map<String, dynamic>> document,
@@ -30,6 +30,15 @@ class CategoryModel {
     }
     return "";
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'description': description,
+      
+    };
+  }
+
   @override
   String toString() =>
       'CategoryModel(id: $id, name: $name, description: $description,icon_name:$iconName)';
