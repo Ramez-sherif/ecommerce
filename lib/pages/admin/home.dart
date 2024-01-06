@@ -1,97 +1,55 @@
-import 'package:ecommerce/pages/admin/notifications_to_all.dart';
-import 'package:ecommerce/pages/login.dart';
-import 'package:ecommerce/providers/theme.dart';
-import 'package:ecommerce/providers/user.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// ignore_for_file: prefer_const_constructors
 
-class HomeAdminPage extends StatefulWidget {
-  const HomeAdminPage({Key? key}) : super(key: key);
+import 'package:ecommerce/pages/admin/storage.dart';
+import 'package:ecommerce/pages/admin/settings.dart';
+import 'package:ecommerce/pages/admin/statistics.dart';
+import 'package:flutter/material.dart';
+
+class AdminHomePage extends StatefulWidget {
+  const AdminHomePage({super.key});
 
   @override
-  State<HomeAdminPage> createState() => _HomeAdminPageState();
+  State<AdminHomePage> createState() => _AdminHomePageState();
 }
 
-class _HomeAdminPageState extends State<HomeAdminPage> {
-  @override
-  Widget build(BuildContext context) {
-    return buildBody(context);
+class _AdminHomePageState extends State<AdminHomePage> {
+  int _selectedIndex = 0;
+
+  static final List<Widget> _widgetOptions = <Widget>[
+    const AdminStatisticsPage(),
+    const AdminStoragePage(),
+    const AdminSettingsPage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
-  SafeArea buildBody(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          title: Text(
-            'Admin Home Page',
-            style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(child: _widgetOptions.elementAt(_selectedIndex)),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        selectedItemColor: Theme.of(context).colorScheme.onSecondary,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Statistics',
           ),
-          centerTitle: true,
-        ),
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-                child: Text(
-                  'Admin',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: const Text('Logout'),
-                onTap: () async {
-                  await context.read<UserProvider>().removeUser();
-                  // ignore: use_build_context_synchronously
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
-                  );
-                },
-              ),
-              // change theme
-              ListTile(
-                title: const Text('Change theme'),
-                onTap: () {
-                  context.read<ThemeProvider>().changeTheme();
-                },
-              ),
-            ],
+          BottomNavigationBarItem(
+            icon: Icon(Icons.storage),
+            label: 'Storage',
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SendNotificationsToAllPage(),
-                    ),
-                  );
-                },
-                child: Text(
-                  'Send notifications to all users',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ],
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
-        ),
+        ],
       ),
     );
   }

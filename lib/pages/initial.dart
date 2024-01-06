@@ -55,7 +55,7 @@ class _InitialPageState extends State<InitialPage> {
             print('isLoggedIn: $isLoggedIn');
             if (isLoggedIn) {
               if (context.watch<UserProvider>().user_role == 'admin') {
-                return const HomeAdminPage();
+                return const AdminHomePage();
               } else {
                 return HomePage();
               }
