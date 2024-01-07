@@ -95,6 +95,52 @@ class OrdersService {
     return allOrders;
   }
 
+
+static Future<OrdersModel> getMostRecentOrder(UserModel user) async {
+  List<ProductModel> allProducts = await ProductService.getAllProducts();
+
+      var value = await db
+      
+      .collection(CollectionConfig.orders)
+      .where("user_id", isEqualTo: user.uid)
+      .orderBy("date", descending: true)
+      .limit(1)
+      .get();
+
+      var doc = value.docs.first;
+      print(doc["date"]);
+      Timestamp time = doc["date"];
+      DateTime date = time.toDate();
+      return OrdersModel(
+        user: user,
+        products: await getProductsInOrder(doc.id, allProducts),
+        date: date,
+        orderId: doc.id,
+        status: doc["status_id"],
+      );
+    
+}
+
+
+static Future<String?> getMostRecentOrderID(String userId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('user_id', isEqualTo: userId)
+        .orderBy('date', descending: true)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first.id;
+    } else {
+      return null;
+    }
+  }
+
+
+
+
+
   static Future<Map<ProductModel, int>> getProductsInOrder(
       String orderId, List<ProductModel> allProducts) async {
     Map<ProductModel, int> orderProducts = {};

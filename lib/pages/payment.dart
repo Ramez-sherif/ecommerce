@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:ecommerce/pages/home.dart';
+import 'package:ecommerce/pages/receipt.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
@@ -264,6 +265,10 @@ class _PaymentPageState extends State<PaymentPage> {
       MaterialPageRoute(
         builder: (context) => HomePage(),
       ),
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ReceiptScreen()),
     );
   }
 

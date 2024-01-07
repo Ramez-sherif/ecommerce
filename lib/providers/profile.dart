@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class ProfileProvider extends ChangeNotifier {
   UserModel? userProfile;
+   OrdersModel? mostRecentOrder;
   List<OrdersModel> allOrders = [];
   Future setUserProfile(String uid) async {
     userProfile = await UserService.getUserDetails(uid);
@@ -33,6 +34,15 @@ class ProfileProvider extends ChangeNotifier {
     allOrders = await OrdersService.getAllOrders(uid,userProfile!);
     notifyListeners();
   }
+
+
+ Future<void> getMostRecentOrder(UserModel user) async {
+    mostRecentOrder = await OrdersService.getMostRecentOrder(user);
+    notifyListeners();
+  }
+
+
+
   // void updateGeoLocation(String newGeoLocation) {
   //   _geoLocation = newGeoLocation;
   //   notifyListeners();
