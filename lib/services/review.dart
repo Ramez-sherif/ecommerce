@@ -4,11 +4,13 @@ import 'package:ecommerce/services/collections_config.dart';
 
 class ReviewService {
   static var db = FirebaseFirestore.instance;
-  static Future addReview(int rate, String userId, String prodcutId) async {
+  static Future addReview(
+      int rate, String userId, String prodcutId, String comment) async {
     await db.collection(CollectionConfig.reviews).doc().set({
       "rate": rate,
       "userId": userId,
       "prodcut_id": prodcutId,
+      "comment": comment,
     });
   }
 
@@ -29,6 +31,7 @@ class ReviewService {
       for (var doc in value.docs) {
         Review review = Review(
             userid: doc.data()["userId"],
+            comment: doc.data()["comment"],
             rating: doc.data()["rate"].toDouble());
         reviews.add(review);
       }
