@@ -38,10 +38,10 @@ class ChatRoomService {
     return chatroom;
   }
 
-  static void sendMessage(String chatRoomId,String message,String senderId)  {
+  static Future<void> sendMessage(String chatRoomId,String message,String senderId)  async{
       DocumentReference chatRoomDoc = db.collection(CollectionConfig.chatRoom).doc(chatRoomId);
       CollectionReference messagesCollection = chatRoomDoc.collection(CollectionConfig.messages);
-      var query = messagesCollection.add({
+      await messagesCollection.add({
         "sender_id":senderId,
         "date":Timestamp.now(),
         "message":message

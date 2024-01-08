@@ -124,7 +124,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         // Handle button press
                         if (_textController.text.isNotEmpty && chatRoomId != "") {
                           // Check if text field is not empty
-                          ChatRoomService.sendMessage(
+                          await ChatRoomService.sendMessage(
                               chatRoomId,
                               _textController.text,
                               "gNmhq1PO4mdzm93CrLmqrYsDeMl1"); // Send the message //4uNcJ0L2jrcXJuBD4ightE8P6382
