@@ -9,6 +9,9 @@ class ChatRoomService {
   static final db = FirebaseFirestore.instance;
 
   static Future<ChatRoomModel> createChatRoom(String senderId, String receiverId) async {
+    UserModel Sender = await UserService.getUserDetails(senderId);
+    //UserModel receiver = await UserService.getUserDetails(receiverId);
+
     DocumentReference doc = db.collection(CollectionConfig.chatRoom).doc();
 
     await doc.set(
@@ -21,30 +24,31 @@ class ChatRoomService {
     String messageTemp = "Hi, How can we help?";
 
     await messagesCollection.add(
-        {"message": messageTemp, "date": timestamp, "sender_id": receiverId});
+        {"message": messageTemp, "date": timestamp, "sender_id": receiverId,"username": "Customer Support"});
 
-    UserModel Sender = await UserService.getUserById(senderId);
+    
     List<MessageModel> messages = [];
 
     messages.add(
-        MessageModel(sender: Sender, message: messageTemp, date: timestamp));
+        MessageModel(sender: Sender.uid, message: messageTemp, date: timestamp, name: Sender.username));
 
     ChatRoomModel chatroom = ChatRoomModel(
         sender: Sender,
-        receiver: await UserService.getUserById(receiverId),
+        receiver: await UserService.getUserDetails(receiverId),
         messages: messages,
         id: doc.id);
 
     return chatroom;
   }
 
-  static Future<void> sendMessage(String chatRoomId,String message,String senderId)  async{
+  static Future<void> sendMessage(String chatRoomId,String message,String senderId,String username)  async{
       DocumentReference chatRoomDoc = db.collection(CollectionConfig.chatRoom).doc(chatRoomId);
       CollectionReference messagesCollection = chatRoomDoc.collection(CollectionConfig.messages);
       await messagesCollection.add({
         "sender_id":senderId,
         "date":Timestamp.now(),
-        "message":message
+        "message":message,
+        "username":username
       });
   } 
   static Future<ChatRoomModel> getChatRoombyUserData(
@@ -84,11 +88,12 @@ class ChatRoomService {
     List<MessageModel> messages = [];
 
     for(var snap in querySnapshot.docs){
+      UserModel user = await UserService.getUserById(snap["sender_id"]);
       messages.add(
         MessageModel(
-          sender: await UserService.getUserById(snap["sender_id"]),
+          sender: user.uid,
           message: snap["message"],
-          date: snap["date"]));
+          date: snap["date"], name: user.username));
     }
     return messages;
   }

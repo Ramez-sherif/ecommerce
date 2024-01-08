@@ -1,3 +1,5 @@
+import 'package:ecommerce/models/chat_room.dart';
+import 'package:ecommerce/pages/chatting.dart';
 import 'package:ecommerce/pages/cutomer_support.dart';
 import 'package:ecommerce/pages/login.dart';
 
@@ -151,16 +153,19 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
+             const SizedBox(
+              height: 20,
+            ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                 ChatRoomService.createChatRoom(context.read<UserProvider>().user.uid, "faHsfVagU1hq1IHooMJMgKRqCFJ2");
+                 ChatRoomModel room = await ChatRoomService.getChatRoombyUserData(context.read<UserProvider>().user.uid, "faHsfVagU1hq1IHooMJMgKRqCFJ2");
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const LoginPage(),//page of our cusstomer support chat
+                      builder: (context) =>  ChatScreen(chatRoomId: room.id,),//page of our cusstomer support chat
                     ),
                   );
                 },

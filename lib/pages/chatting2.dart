@@ -48,9 +48,10 @@ class _ChatScreenState extends State<ChatScreen2> {
               // StreamBuilder for real-time data
               stream:
                   _firestore // Stream messages from Firestore collection 'messages'
-                      .collection('messages')
-                      // .where('sender', whereIn: ["Ramez", 'Fady']) //!
-                      .orderBy('timestamp')
+                      .collection('chat_room')
+                      .doc("3rt2gAFm5f7ENexIurdT")
+                      .collection("messages")
+                      .orderBy('date')
                       .snapshots(),
               builder: (context, snapshot) {
                 // Builder function to handle snapshot data

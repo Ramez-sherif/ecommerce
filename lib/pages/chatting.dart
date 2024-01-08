@@ -1,15 +1,23 @@
 import 'package:ecommerce/models/chat_room.dart';
+import 'package:ecommerce/models/message.dart';
+import 'package:ecommerce/models/user.dart';
+import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/chat_room.dart';
+import 'package:ecommerce/services/user.dart';
 import 'package:flutter/material.dart'; // Import Flutter material package
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:provider/provider.dart'; // Import Cloud Firestore package
 
 class ChatScreen extends StatefulWidget {
+  ChatScreen({super.key,required this.chatRoomId});
+
   // Define a StatefulWidget named ChatScreen
   @override
   _ChatScreenState createState() =>
       _ChatScreenState(); // Create state for ChatScreen
+      final String chatRoomId;
 }
 
 class _ChatScreenState extends State<ChatScreen> {
@@ -18,7 +26,11 @@ class _ChatScreenState extends State<ChatScreen> {
       TextEditingController(); // Text editing controller for input
   final FirebaseFirestore _firestore =
       FirebaseFirestore.instance; // Firestore instance for database operations
-  String chatRoomId = "";
+  
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +47,19 @@ class _ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           Expanded(
             // Expanded widget to take remaining space
-            child: StreamBuilder<ChatRoomModel>(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               // StreamBuilder for real-time data
-              stream: Stream.fromFuture(ChatRoomService.getChatRoombyUserData(
-                  "gNmhq1PO4mdzm93CrLmqrYsDeMl1",
-                  "4uNcJ0L2jrcXJuBD4ightE8P6382"),) ,
+              stream: FirebaseFirestore
+                  .instance // Stream messages from Firestore collection 'messages'
+                  .collection('chat_room')
+                  .doc(widget.chatRoomId)
+                  .collection("messages")
+                  .orderBy('date',descending: true)
+                  .snapshots(),
+              // Stream.fromFuture(ChatRoomService.getChatRoombyUserData(
+              //     "gNmhq1PO4mdzm93CrLmqrYsDeMl1",
+              //     "4uNcJ0L2jrcXJuBD4ightE8P6382"),)
+
               builder: (context, snapshot) {
                 // Builder function to handle snapshot data
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -50,19 +70,23 @@ class _ChatScreenState extends State<ChatScreen> {
                   );
                 }
 
-                if (!snapshot.hasData ||
-                    snapshot.data == null ||
-                    snapshot.data!.messages == []) {
+                if (!snapshot.hasData || snapshot.data == null) {
                   // Check if there's no data
                   return const Center(
                     // Show 'No messages yet' if no data available
                     child: Text('No messages yet'),
                   );
                 }
+                List<MessageModel> messages = [];
+                for (var item in snapshot.data!.docs) {
+                  messages.add(MessageModel(
+                      message: item["message"],
+                      sender: item["sender_id"],
+                      date: item["date"],
+                      name: item["username"]));
+                }
                 final chatRoom = snapshot.data!;
-                chatRoomId = chatRoom.id;
-                final messages =
-                    chatRoom.messages; // Reverse order of retrieved messages
+                // Reverse order of retrieved messages
                 //print(messages[0].message);
                 // /print(messages[0].message);
                 List<Widget> messageWidgets =
@@ -71,14 +95,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   // Loop through each message
                   final messageText = message.message; // Get message text
                   final messageSenderId =
-                      message.sender.uid; // Get message sender
-                  final messageSender = message.sender.username;
+                      message.sender; // Get message sender
+                  final messageSender = message.name;
                   final messageWidget = MessageBubble(
                     // Create a message bubble widget
                     sender: messageSender, // Pass sender to the widget
                     text: messageText, // Pass text to the widget
                     isMe: messageSenderId ==
-                        "gNmhq1PO4mdzm93CrLmqrYsDeMl1", // Check if the message is from the current user
+                        context.read<UserProvider>().user.uid, // Check if the message is from the current user
                   );
                   messageWidgets
                       .add(messageWidget); // Add the message widget to the list
@@ -120,17 +144,17 @@ class _ChatScreenState extends State<ChatScreen> {
                     // Icon button for sending messages
                     icon: const Icon(Icons.send), // Send icon
                     onPressed: () async {
-                    
-                        // Handle button press
-                        if (_textController.text.isNotEmpty && chatRoomId != "") {
-                          // Check if text field is not empty
-                          await ChatRoomService.sendMessage(
-                              chatRoomId,
-                              _textController.text,
-                              "gNmhq1PO4mdzm93CrLmqrYsDeMl1"); // Send the message //4uNcJ0L2jrcXJuBD4ightE8P6382
-            
-                          _textController.clear();
-                        }
+                      // Handle button press
+                      if (_textController.text.isNotEmpty && widget.chatRoomId != "") {
+                        // Check if text field is not empty
+                        UserModel user = await UserService.getUserDetails(context.read<UserProvider>().user.uid);
+                        await ChatRoomService.sendMessage(
+                            widget.chatRoomId,
+                            _textController.text,
+                            user.uid,user.username); // Send the message //4uNcJ0L2jrcXJuBD4ightE8P6382
+
+                        _textController.clear();
+                      }
                     },
                   ),
                 ],
