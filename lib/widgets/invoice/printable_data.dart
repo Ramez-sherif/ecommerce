@@ -5,6 +5,14 @@ import 'package:ecommerce/pages/payment.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+double calculateTotal(OrdersModel order) {
+  double total = 0.0;
+  for (var entry in order.products.entries) {
+    total += entry.key.price * entry.value;
+  }
+  return total;
+}
+
 pw.Widget buildPrintableData(
   int i, 
   image,
@@ -13,7 +21,6 @@ double cartTotalPrice,
   String name,
   String phoneNumber,
   String shippingAddress,
-  List<String> itemss,
 ) => pw.Padding(
   padding: const pw.EdgeInsets.all(25.00),
   child: pw.Column(children: [
@@ -85,14 +92,7 @@ double cartTotalPrice,
               child: pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  i == 2
-                      ? pw.Text(
-                          "Tax",
-                          style: pw.TextStyle(
-                              fontSize: 18.00,
-                              fontWeight: pw.FontWeight.bold),
-                        )
-                      : pw.Text(
+                pw.Text(
                           "${item.key.name} ",
                           style: pw.TextStyle(
                               fontSize: 18.00,
@@ -125,13 +125,15 @@ double cartTotalPrice,
             child: pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.end,
               children: [
-                pw.Text(cartTotalPrice.toString(),
-                  style: pw.TextStyle(
-                    fontSize: 22.00,
-                    fontWeight: pw.FontWeight.bold,
-                    color: const PdfColor(0.2, 0.6, 0.2, 0.7),
-                  ),
-                ),
+         pw.Text(
+  "\$ ${calculateTotal(order)}",
+  style: pw.TextStyle(
+    fontSize: 22.00,
+    fontWeight: pw.FontWeight.bold,
+    color: const PdfColor(0.2, 0.6, 0.2, 0.7),
+  ),
+),
+
               ],
             ),
           ),

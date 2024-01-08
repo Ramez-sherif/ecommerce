@@ -21,83 +21,88 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   @override
   Widget build(BuildContext context) {
     UserModel user = context.read<ProfileProvider>().userProfile!;
-    // String username = context.watch<ProfileProvider>().userProfile!.username;
-    // String? phone = context.watch<ProfileProvider>().userProfile!.phoneNumber;
-    // String location = context.watch<ProfileProvider>().userProfile!.location;
-    // user order items
-    // user order id
-    // user order total
-    // end
+
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(25.00),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  "EgyZona",
-                  style:
-                      TextStyle(fontSize: 25.00, fontWeight: FontWeight.bold),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(25.00),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                "EgyZona",
+                style: TextStyle(fontSize: 25.00, fontWeight: FontWeight.bold),
+              ),
+              HeightSpacer(myHeight: 10.00),
+              Divider(),
+              Align(
+                alignment: Alignment.topRight,
+                child: ImageBuilder(
+                  imagePath: "assets/girl.png",
+                  imgWidth: 250,
+                  imgheight: 250,
                 ),
-                HeightSpacer(myHeight: 10.00),
-                Divider(),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: ImageBuilder(
-                    imagePath: "assets/girl.png",
-                    imgWidth: 250,
-                    imgheight: 250,
+              ),
+              InvoiceBuilder(),
+              SizedBox(height: 100.00), // Add dynamic spacing here
+              Text(
+                "Name:",
+                style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                user.username,
+                style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Phone Number:",
+                      style:
+                          TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                InvoiceBuilder(),
-                HeightSpacer(myHeight: 15.00),
-                Text("Name:",
-                    style: TextStyle(
-                        fontSize: 18.00, fontWeight: FontWeight.bold)),
-                Text(user.username,
-                    style: TextStyle(
-                        fontSize: 18.00, fontWeight: FontWeight.normal)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text("Phone Number:",
-                          style: TextStyle(
-                              fontSize: 18.00, fontWeight: FontWeight.bold)),
+                  Expanded(
+                    child: Text(
+                      user.phoneNumber ?? "N/A",
+                      style:
+                          TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal),
                     ),
-                    Expanded(
-                      child: Text(user.phoneNumber ?? "N/A",
-                          style: TextStyle(
-                              fontSize: 18.00, fontWeight: FontWeight.normal)),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Shipping Address:",
+                      style:
+                          TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold),
                     ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text("Shipping Address:",
-                          style: TextStyle(
-                              fontSize: 18.00, fontWeight: FontWeight.bold)),
+                  ),
+                  Expanded(
+                    child: Text(
+                      user.location,
+                      style:
+                          TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal),
                     ),
-                    Expanded(
-                      child: Text(user.location,
-                          style: TextStyle(
-                              fontSize: 18.00, fontWeight: FontWeight.normal)),
-                    ),
-                  ],
-                ),
-                Text("Thanks for choosing our service!",
-                    style: TextStyle(color: Colors.grey, fontSize: 15.00)),
-                HeightSpacer(myHeight: 5.00),
-                Text("Contact the branch for any clarifications.",
-                    style: TextStyle(color: Colors.grey, fontSize: 15.00)),
-                HeightSpacer(myHeight: 15.00),
-                SaveBtnBuilder(),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              Text(
+                "Thanks for choosing our service!",
+                style: TextStyle(color: Colors.grey, fontSize: 15.00),
+              ),
+              HeightSpacer(myHeight: 5.00),
+              Text(
+                "Contact the branch for any clarifications.",
+                style: TextStyle(color: Colors.grey, fontSize: 15.00),
+              ),
+              HeightSpacer(myHeight: 15.00),
+              SaveBtnBuilder(),
+            ],
           ),
         ),
       ),

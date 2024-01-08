@@ -1,25 +1,47 @@
+import 'package:ecommerce/models/orders.dart';
+import 'package:ecommerce/models/user.dart';
+import 'package:ecommerce/providers/profile.dart';
+import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/widgets/invoice/spacer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class InvoiceBuilder extends StatelessWidget {
   const InvoiceBuilder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    UserModel? user = context.read<ProfileProvider>().userProfile;
+    if (user == null) {
+      context.read<ProfileProvider>().setUserProfile(context.read<UserProvider>().user.uid);
+      user = context.read<ProfileProvider>().userProfile;
+    }
+
+    OrdersModel order = context.read<ProfileProvider>().mostRecentOrder!;
+
     return Column(
       children: [
+        SizedBox(height: 10.00), // Added SizedBox
+        Container(
+          color: const Color.fromARGB(179, 0, 255, 127), // Using RgbColor instead of PdfColor
+          width: double.infinity,
+          height: 36.00,
+          child: Center(
+            child: Text(
+              "Order ID: ${order.orderId}\n",
+              style: TextStyle(
+                color: Color.fromARGB(122, 0, 0, 0), // Using RgbColor instead of PdfColor
+                fontSize: 20.00,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
         header(),
         const HeightSpacer(myHeight: 10.00),
         tableHeader(),
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              for (var i = 0; i < 100; i++) buildTableData(i),
-            ],
-          ),
-        ),
-        buildTotal(),
+        buildTableData(context, order),
+        buildTotal(order),
       ],
     );
   }
@@ -36,7 +58,7 @@ class InvoiceBuilder extends StatelessWidget {
           Text(
             "Invoice",
             style: TextStyle(fontSize: 23.00, fontWeight: FontWeight.bold),
-          )
+          ),
         ],
       );
 
@@ -48,70 +70,78 @@ class InvoiceBuilder extends StatelessWidget {
           child: Text(
             "Approvals",
             style: TextStyle(
-                color: Color.fromARGB(255, 0, 107, 4),
-                fontSize: 20.00,
-                fontWeight: FontWeight.bold),
+              color: Color.fromARGB(255, 0, 107, 4),
+              fontSize: 20.00,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       );
 
-  Widget buildTableData(int i) => Container(
-        color: i % 2 != 0
-            ? const Color.fromARGB(255, 236, 236, 236)
-            : const Color.fromARGB(255, 255, 251, 251),
-        width: double.infinity,
-        height: 36.00,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              i == 6
-                  ? const Text(
-                      "Tax",
-                      style: TextStyle(
-                          fontSize: 18.00, fontWeight: FontWeight.bold),
-                    )
-                  : Text(
-                      "Item ${i + 1}",
-                      style: const TextStyle(
-                          fontSize: 18.00, fontWeight: FontWeight.bold),
-                    ),
-              i == 6
-                  ? const Text(
-                      "\$ 2.50",
-                      style: TextStyle(
-                          fontSize: 18.00, fontWeight: FontWeight.normal),
-                    )
-                  : Text(
-                      "\$ ${(i + 1) * 7}.00",
-                      style: const TextStyle(
-                          fontSize: 18.00, fontWeight: FontWeight.normal),
-                    ),
-            ],
-          ),
-        ),
-      );
-
-  Widget buildTotal() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Container(
-          color: const Color.fromARGB(255, 255, 251, 251),
-          width: double.infinity,
-          height: 36.00,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              Text(
-                "\$ 23.50",
-                style: TextStyle(
-                  fontSize: 22.00,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 0, 107, 4),
+  Widget buildTableData(BuildContext context, OrdersModel order) {
+    return Container(
+      color: const Color.fromARGB(255, 236, 236, 236),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: order.products.entries.length,
+        itemBuilder: (context, index) {
+          var item = order.products.entries.elementAt(index);
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${item.key.name}",
+                  style: TextStyle(
+                    fontSize: 18.00,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+                Text(
+                  "\$ ${item.key.price * item.value}",
+                  style: TextStyle(
+                    fontSize: 18.00,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // Add this function to your class
+double calculateTotal(OrdersModel order) {
+  double total = 0.0;
+  for (var entry in order.products.entries) {
+    total += entry.key.price * entry.value;
+  }
+  return total;
+}
+
+Widget buildTotal(OrdersModel order) => Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+  child: Container(
+    color: const Color.fromARGB(255, 255, 251, 251),
+    width: double.infinity,
+    height: 36.00,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          "\$ ${calculateTotal(order)}", // Removed const from here
+          style: TextStyle(
+            fontSize: 22.00,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 0, 107, 4),
           ),
         ),
-      );
+      ],
+    ),
+  ),
+);
+
 }
