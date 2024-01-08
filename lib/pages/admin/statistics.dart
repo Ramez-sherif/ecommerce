@@ -1,93 +1,99 @@
+import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/services/product.dart';
+import 'package:ecommerce/widgets/chart/chart_bar.dart';
+import 'package:ecommerce/widgets/chart/pie_chart.dart';
 import 'package:flutter/material.dart';
 
 class AdminStatisticsPage extends StatefulWidget {
   const AdminStatisticsPage({super.key});
 
+  // Your widget implementation
   @override
   State<AdminStatisticsPage> createState() => _AdminStatisticsPageState();
 }
 
 class _AdminStatisticsPageState extends State<AdminStatisticsPage> {
+  Map<String, dynamic> statistics = {"Product": 12};
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // Fetch and calculate statistics when the widget initializes
+  //   fetchAndCalculateStatistics();
+  // }
+
+  // Future<void> fetchAndCalculateStatistics() async {
+  //   Map<String, dynamic> calculatedStatistics =
+  //       await calculateProductStatistics();
+  //   setState(() {
+  //     statistics = calculatedStatistics;
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    List<ProductModel> allProducts = [];
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Statistics'),
+      ),
+      body: Column(
         children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.green[400],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Total Users',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+          FutureBuilder<List<ProductModel>>(
+              future: ProductService.getAllProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No Data Available'));
+                }
+                allProducts= snapshot.data!;
+                return Column(
+                  children: [
+                    Container(
+                      
+                      child:Text("smth smth"),),
+                    //   child: ListView.builder(
+                    //       itemCount: snapshot.data!.length,
+                    //       itemBuilder: (context, index) {
+                    //         return Column(
+                    //           children: [
+                    //             // Display statistics using Text widgets, charts, or any other visualization methods
+                    //             // Example:
+                    //             ListTile(
+                    //               title: Text(
+                    //                   'Product Name: ${snapshot.data![index].name}'),
+                    //             ),
+                    //             ListTile(
+                    //               title: Text(
+                    //                   'Total Products Sold: ${snapshot.data![index].soldProducts}'),
+                    //             ),
+                    //             ListTile(
+                    //               title: Text(
+                    //                   'Total Products Left: ${snapshot.data![index].quantity}'),
+                    //             ),
+                               
+                    //             // Add more ListTile widgets for other statistics
+                    //           ],
+                    //           // You can add more configurations or widgets here for each list item
+                    //         );
+                    //       }),
+                    // ),
+                   Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        '100',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.cyan,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Total Products',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        '100',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: StockPieChart(allProducts: allProducts)),
+                  ],
+                );
+              }),
+       
+           
+       
         ],
       ),
     );
