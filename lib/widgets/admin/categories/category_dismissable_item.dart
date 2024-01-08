@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/providers/admin.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:provider/provider.dart';
 
 class CategoryDismissableItem extends StatefulWidget {
@@ -17,6 +18,18 @@ class CategoryDismissableItem extends StatefulWidget {
 }
 
 class _CategoryDismissableItemState extends State<CategoryDismissableItem> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  int _selectedIconCode = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.category.name;
+    _descriptionController.text = widget.category.description;
+    _selectedIconCode = widget.category.iconCode;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -99,7 +112,112 @@ class _CategoryDismissableItemState extends State<CategoryDismissableItem> {
           ),
           size: 24,
         ),
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Edit Category'),
+                contentPadding: const EdgeInsets.all(16.0),
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(labelText: 'Name'),
+                    ),
+                    TextField(
+                      controller: _descriptionController,
+                      decoration:
+                          const InputDecoration(labelText: 'Description'),
+                    ),
+                    // IconButton(
+                    //   icon: Icon(
+                    //     IconData(
+                    //       _selectedIconCode,
+                    //       fontFamily: 'MaterialIcons',
+                    //     ),
+                    //     size: 40,
+                    //   ),
+                    //   onPressed: () async {
+                    //     await _showIconPickerDialog(context);
+                    //   },
+                    // ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      if (context.mounted) {
+                        CategoryModel category = CategoryModel(
+                          id: widget.category.id,
+                          name: _nameController.text,
+                          description: _descriptionController.text,
+                          iconCode: _selectedIconCode,
+                        );
+
+                        await context
+                            .read<AdminProvider>()
+                            .updateCategory(category);
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        } else {
+                          log('context not mounted');
+                        }
+                      } else {
+                        log('context not mounted');
+                      }
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
+  }
+
+  Future<void> _showIconPickerDialog(BuildContext context) async {
+    IconData? icon = await FlutterIconPicker.showIconPicker(
+      context,
+      iconPackModes: [IconPack.material],
+      // backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Colors.white,
+      closeChild: Text(
+        'Close',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+      ),
+    );
+
+    // check if icon is not null
+    if (context.mounted) {
+      if (icon != null) {
+        setState(() {
+          _selectedIconCode = icon.codePoint;
+          print("icon changed to $_selectedIconCode");
+        });
+      }
+    }
   }
 }

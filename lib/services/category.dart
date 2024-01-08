@@ -60,4 +60,18 @@ class CategoryService {
   static Future<void> _deleteCategory(String id) async {
     await db.collection(CollectionConfig.categories).doc(id).delete();
   }
+
+  static Future<bool> updateCategory(CategoryModel category) async {
+    try {
+      await db
+          .collection(CollectionConfig.categories)
+          .doc(category.id)
+          .update(category.toMap());
+      print("Category updated");
+      return true;
+    } catch (e) {
+      log("Category Service: $e");
+      return false;
+    }
+  }
 }

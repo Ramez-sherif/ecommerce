@@ -27,4 +27,14 @@ class AdminProvider extends ChangeNotifier {
       allCategories.removeWhere((category) => category.id == id);
     }
   }
+
+  Future updateCategory(CategoryModel category) async {
+    bool isUpdated = await CategoryService.updateCategory(category);
+
+    if (isUpdated) {
+      int index = allCategories.indexWhere((value) => value.id == category.id);
+      allCategories[index] = category;
+      notifyListeners();
+    }
+  }
 }
