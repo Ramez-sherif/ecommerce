@@ -79,14 +79,18 @@ class InvoiceBuilder extends StatelessWidget {
       );
 
   Widget buildTableData(BuildContext context, OrdersModel order) {
-    return Container(
-      color: const Color.fromARGB(255, 236, 236, 236),
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: order.products.entries.length,
-        itemBuilder: (context, index) {
-          var item = order.products.entries.elementAt(index);
-          return Padding(
+  return Container(
+    child: ListView.builder(
+      shrinkWrap: true,
+      itemCount: order.products.entries.length,
+      itemBuilder: (context, index) {
+        var item = order.products.entries.elementAt(index);
+        bool isEvenRow = index % 2 == 0;
+        Color rowColor = isEvenRow ? Colors.white : Colors.grey;
+
+        return Container(
+          color: rowColor,
+          child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,11 +111,13 @@ class InvoiceBuilder extends StatelessWidget {
                 ),
               ],
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        );
+      },
+    ),
+  );
+}
+
 
   // Add this function to your class
 double calculateTotal(OrdersModel order) {
@@ -129,10 +135,17 @@ Widget buildTotal(OrdersModel order) => Padding(
     width: double.infinity,
     height: 36.00,
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, // Adjusted alignment
       children: [
         Text(
-          "\$ ${calculateTotal(order)}", // Removed const from here
+          "Total Price:", // Added text here
+          style: TextStyle(
+            fontSize: 18.00,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          "\$ ${calculateTotal(order)}",
           style: TextStyle(
             fontSize: 22.00,
             fontWeight: FontWeight.bold,

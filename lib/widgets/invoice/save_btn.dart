@@ -48,7 +48,7 @@ class SaveBtnBuilder extends StatelessWidget {
   }
 Future<void> printDoc(String username, String? phone, String location, OrdersModel order) async {
   double totalOrderPrice = calculateTotal(order); 
-  final image = await imageFromAssetBundle("assets/girl.png");
+  // final image = await imageFromAssetBundle("assets/splash.png");
   final doc = pw.Document();
 
   if (order.products.entries.length > 2) {
@@ -76,7 +76,6 @@ Future<void> printDoc(String username, String? phone, String location, OrdersMod
 
       final printableData = buildPrintableData(
         page,
-        image,
         subOrder,
         totalOrderPrice,
         username,
@@ -92,7 +91,6 @@ Future<void> printDoc(String username, String? phone, String location, OrdersMod
     // Single page
     final printableData = buildPrintableData(
       0,
-      image,
       order,
       totalOrderPrice,
       username,

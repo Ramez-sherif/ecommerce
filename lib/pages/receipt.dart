@@ -38,59 +38,16 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
               Align(
                 alignment: Alignment.topRight,
                 child: ImageBuilder(
-                  imagePath: "assets/girl.png",
+                  imagePath: "assets/splash.png",
                   imgWidth: 250,
                   imgheight: 250,
                 ),
               ),
               InvoiceBuilder(),
               SizedBox(height: 100.00), // Add dynamic spacing here
-              Text(
-                "Name:",
-                style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                user.username,
-                style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      "Phone Number:",
-                      style:
-                          TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      user.phoneNumber ?? "N/A",
-                      style:
-                          TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      "Shipping Address:",
-                      style:
-                          TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      user.location,
-                      style:
-                          TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                ],
-              ),
+              _buildUserInfoTile("Name:", user.username),
+              _buildUserInfoTile("Phone Number:", user.phoneNumber ?? "N/A"),
+              _buildUserInfoTile("Shipping Address:", user.location),
               Text(
                 "Thanks for choosing our service!",
                 style: TextStyle(color: Colors.grey, fontSize: 15.00),
@@ -105,6 +62,19 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildUserInfoTile(String label, String value) {
+    return ListTile(
+      title: Text(
+        label,
+        style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        value,
+        style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal),
       ),
     );
   }

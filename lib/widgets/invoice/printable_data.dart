@@ -15,7 +15,7 @@ double calculateTotal(OrdersModel order) {
 
 pw.Widget buildPrintableData(
   int i,
-  image,
+
   final OrdersModel order,
   double totalOrderPrice,
   String name,
@@ -31,11 +31,11 @@ pw.Widget buildPrintableData(
         pw.Divider(),
         pw.Align(
           alignment: pw.Alignment.topRight,
-          child: pw.Image(
-            image,
-            width: 250,
-            height: 250,
-          ),
+          // child: pw.Image(
+          //   image,
+          //   width: 250,
+          //   height: 250,
+          // ),
         ),
         pw.Column(
           children: [
@@ -115,8 +115,15 @@ pw.Widget buildPrintableData(
                 width: double.infinity,
                 height: 36.00,
                 child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.end,
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, // Adjusted alignment
                   children: [
+                    pw.Text(
+                      "Total Price:", // Added text here
+                      style: pw.TextStyle(
+                        fontSize: 18.00,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
                     pw.Text(
                       "\$ ${totalOrderPrice}",
                       style: pw.TextStyle(
@@ -129,66 +136,47 @@ pw.Widget buildPrintableData(
                 ),
               ),
             ),
+          
             pw.SizedBox(height: 15.00),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              children: [
-                pw.Text(
-                  "Name:",
-                  style: pw.TextStyle(
-                      fontSize: 18.00, fontWeight: pw.FontWeight.bold),
-                ),
-                pw.Text(
-                  name,
-                  style: pw.TextStyle(
-                      fontSize: 18.00, fontWeight: pw.FontWeight.normal),
-                ),
-              ],
-            ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              children: [
-                pw.Text(
-                  "Phone Number:",
-                  style: pw.TextStyle(
-                      fontSize: 18.00, fontWeight: pw.FontWeight.bold),
-                ),
-                pw.Text(
-                  phoneNumber,
-                  style: pw.TextStyle(
-                      fontSize: 18.00, fontWeight: pw.FontWeight.normal),
-                ),
-              ],
-            ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              children: [
-                pw.Text(
-                  "Shipping Address:",
-                  style: pw.TextStyle(
-                      fontSize: 18.00, fontWeight: pw.FontWeight.bold),
-                ),
-                pw.Text(
-                  shippingAddress,
-                  style: pw.TextStyle(
-                      fontSize: 18.00, fontWeight: pw.FontWeight.normal),
-                ),
-              ],
-            ),
+            _buildRowWithText("Name:", name),
+            _buildRowWithText("Phone Number:", phoneNumber),
             pw.SizedBox(height: 15.00),
-            pw.Text(
-              "Thanks for choosing our service!",
-              style: const pw.TextStyle(
-                  color: PdfColor(0.5, 0.5, 0.5, 0.5), fontSize: 15.00),
+            
+            // Use FittedBox to handle long text without overflowing
+            pw.FittedBox(
+              child: _buildRowWithText("Shipping Address:", shippingAddress),
             ),
+            
+            pw.SizedBox(height: 15.00),
+            _buildText("Thanks for choosing our service!", color: PdfColor(0.5, 0.5, 0.5, 0.5)),
             pw.SizedBox(height: 5.00),
-            pw.Text(
-              "Contact the branch for any clarifications.",
-              style: const pw.TextStyle(
-                  color: PdfColor(0.5, 0.5, 0.5, 0.5), fontSize: 15.00),
-            ),
+            _buildText("Contact the branch for any clarifications.", color: PdfColor(0.5, 0.5, 0.5, 0.5)),
             pw.SizedBox(height: 15.00),
           ],
-        )
+        ),
       ]),
     );
+
+pw.Row _buildRowWithText(String label, String value) {
+  return pw.Row(
+    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    children: [
+      pw.Text(
+        label,
+        style: pw.TextStyle(fontSize: 18.00, fontWeight: pw.FontWeight.bold),
+      ),
+      pw.Text(
+        value,
+        style: pw.TextStyle(fontSize: 18.00, fontWeight: pw.FontWeight.normal),
+      ),
+    ],
+  );
+}
+
+pw.Text _buildText(String text, {PdfColor? color}) {
+  return pw.Text(
+    text,
+    style: pw.TextStyle(color: color, fontSize: 15.00),
+  );
+}
+
