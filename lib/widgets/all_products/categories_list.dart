@@ -16,8 +16,14 @@ class _CategoriesListState extends State<CategoriesList> {
   Future<List<Widget>> getBuildCategories() async {
     List<CategoryModel> categories = await CategoryService.getAllCategories();
     List<Widget> buildCategories = [
-      _buildCategoryItem(CategoryModel(
-          id: "0", name: "All", description: "AllProducts", iconName: "list"))
+      _buildCategoryItem(
+        CategoryModel(
+          id: "0",
+          name: "All",
+          description: "AllProducts",
+          iconCode: 58244,
+        ),
+      )
     ];
     for (var category in categories) {
       buildCategories.add(_buildCategoryItem(category));
@@ -88,7 +94,7 @@ class _CategoriesListState extends State<CategoriesList> {
                     .setHomeAllProducts(categoryId: category.id);
               },
               icon: Icon(
-                category.icon,
+                IconData(category.iconCode, fontFamily: 'MaterialIcons'),
                 color: Colors.black,
                 size: 40,
               ),

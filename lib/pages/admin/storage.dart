@@ -1,3 +1,5 @@
+import 'package:ecommerce/pages/admin/categories.dart';
+import 'package:ecommerce/pages/admin/products.dart';
 import 'package:flutter/material.dart';
 
 class AdminStoragePage extends StatefulWidget {
@@ -14,7 +16,8 @@ class _AdminStoragePageState extends State<AdminStoragePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          buildItem(context, 'Products', Container()),
+          buildItem(context, 'Products', const AdminProductsPage()),
+          buildItem(context, 'Categories', const AdminCategoriesPage()),
         ],
       ),
     );
@@ -22,7 +25,7 @@ class _AdminStoragePageState extends State<AdminStoragePage> {
 
   Container buildItem(BuildContext context, String title, Widget page) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(10),
