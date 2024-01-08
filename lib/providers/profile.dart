@@ -36,7 +36,7 @@ class ProfileProvider extends ChangeNotifier {
   }
 
 
- Future<void> getMostRecentOrder(UserModel user) async {
+ Future<void> setMostRecentOrder(UserModel user) async {
     mostRecentOrder = await OrdersService.getMostRecentOrder(user);
     notifyListeners();
   }

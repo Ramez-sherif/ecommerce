@@ -1,11 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/pages/receipt.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/payment.dart';
+import 'package:ecommerce/services/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -255,11 +257,13 @@ class _PaymentPageState extends State<PaymentPage> {
       ),
     );
     String uid = context.read<UserProvider>().user.uid;
+    UserModel user = await UserService.getUserDetails(uid);
     await PaymentService.makePayment(uid);
     await context.read<HomeProvider>().setHomeAllProducts();
     await context.read<HomeProvider>().setCartProducts(uid);
     await context.read<ProfileProvider>().setUserProfile(uid);
     await context.read<ProfileProvider>().setAllOrders(uid);
+    await context.read<ProfileProvider>().setMostRecentOrder(user);
     Navigator.pop(context);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(

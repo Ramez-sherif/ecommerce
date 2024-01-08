@@ -20,7 +20,7 @@ class CategoryModel {
         id: document.id,
         name: document['name'],
         description: document['description'],
-        iconName: document['icon_name']);
+        iconName: document['icon_code'].toString());
   }
   String getKeyFromIconData(IconData value) {
     for (var entry in iconsMap.entries) {

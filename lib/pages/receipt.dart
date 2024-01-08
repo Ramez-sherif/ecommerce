@@ -1,5 +1,8 @@
+import 'package:ecommerce/models/orders.dart';
+import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/profile.dart';
+import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/widgets/invoice/image_builder.dart';
 import 'package:ecommerce/widgets/invoice/invoice_table.dart';
 import 'package:ecommerce/widgets/invoice/save_btn.dart';
@@ -15,16 +18,16 @@ class ReceiptScreen extends StatefulWidget {
 }
 
 class _ReceiptScreenState extends State<ReceiptScreen> {
-  
   @override
   Widget build(BuildContext context) {
-    String username = context.watch<ProfileProvider>().userProfile!.username;
-    String? phone = context.watch<ProfileProvider>().userProfile!.phoneNumber; 
-    String location = context.watch<ProfileProvider>().userProfile!.location; 
-    // user order items 
-    // user order id 
-    // user order total 
-    // end 
+    UserModel user = context.read<ProfileProvider>().userProfile!;
+    // String username = context.watch<ProfileProvider>().userProfile!.username;
+    // String? phone = context.watch<ProfileProvider>().userProfile!.phoneNumber;
+    // String location = context.watch<ProfileProvider>().userProfile!.location;
+    // user order items
+    // user order id
+    // user order total
+    // end
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -35,7 +38,8 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
               children: [
                 Text(
                   "EgyZona",
-                  style: TextStyle(fontSize: 25.00, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(fontSize: 25.00, fontWeight: FontWeight.bold),
                 ),
                 HeightSpacer(myHeight: 10.00),
                 Divider(),
@@ -49,16 +53,24 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                 ),
                 InvoiceBuilder(),
                 HeightSpacer(myHeight: 15.00),
-                Text("Name:", style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold)),
-                Text(username, style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal)),
+                Text("Name:",
+                    style: TextStyle(
+                        fontSize: 18.00, fontWeight: FontWeight.bold)),
+                Text(user.username,
+                    style: TextStyle(
+                        fontSize: 18.00, fontWeight: FontWeight.normal)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Text("Phone Number:", style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold)),
+                      child: Text("Phone Number:",
+                          style: TextStyle(
+                              fontSize: 18.00, fontWeight: FontWeight.bold)),
                     ),
                     Expanded(
-                      child: Text(phone ?? "N/A", style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal)),
+                      child: Text(user.phoneNumber ?? "N/A",
+                          style: TextStyle(
+                              fontSize: 18.00, fontWeight: FontWeight.normal)),
                     ),
                   ],
                 ),
@@ -66,16 +78,22 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Text("Shipping Address:", style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.bold)),
+                      child: Text("Shipping Address:",
+                          style: TextStyle(
+                              fontSize: 18.00, fontWeight: FontWeight.bold)),
                     ),
                     Expanded(
-                      child: Text(location, style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal)),
+                      child: Text(user.location,
+                          style: TextStyle(
+                              fontSize: 18.00, fontWeight: FontWeight.normal)),
                     ),
                   ],
                 ),
-                Text("Thanks for choosing our service!", style: TextStyle(color: Colors.grey, fontSize: 15.00)),
+                Text("Thanks for choosing our service!",
+                    style: TextStyle(color: Colors.grey, fontSize: 15.00)),
                 HeightSpacer(myHeight: 5.00),
-                Text("Contact the branch for any clarifications.", style: TextStyle(color: Colors.grey, fontSize: 15.00)),
+                Text("Contact the branch for any clarifications.",
+                    style: TextStyle(color: Colors.grey, fontSize: 15.00)),
                 HeightSpacer(myHeight: 15.00),
                 SaveBtnBuilder(),
               ],

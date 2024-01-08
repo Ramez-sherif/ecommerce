@@ -9,7 +9,7 @@ pw.Widget buildPrintableData(
   int i, 
   image,
   final OrdersModel order,
-String cartTotalPrice,
+double cartTotalPrice,
   String name,
   String phoneNumber,
   String shippingAddress,
@@ -49,7 +49,7 @@ String cartTotalPrice,
           height: 36.00,
           child: pw.Center(
             child: pw.Text(
-              "Order ID: 123456\n",
+              "Order ID: ${order.orderId}\n",
               style: pw.TextStyle(
                   color: const PdfColor(0.2, 0.6, 0.2, 0.7),
                   fontSize: 20.00,
@@ -125,7 +125,7 @@ String cartTotalPrice,
             child: pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.end,
               children: [
-                pw.Text(cartTotalPrice,
+                pw.Text(cartTotalPrice.toString(),
                   style: pw.TextStyle(
                     fontSize: 22.00,
                     fontWeight: pw.FontWeight.bold,
