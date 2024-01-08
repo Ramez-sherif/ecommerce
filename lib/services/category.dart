@@ -22,7 +22,7 @@ class CategoryService {
       }
       return categories;
     }).onError((error, stackTrace) {
-      print("Error getting document: $error");
+      log("Error getAllCategories in Category Service document: $error");
       return categories;
     });
     return categories;

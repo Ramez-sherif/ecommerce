@@ -133,15 +133,14 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
     // close keyboard
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate() && validateIcon()) {
-      // print(_selectedIcon!.icon.toString());
+      // print(_selectedIcon!.icon!.codePoint);
       // return;
 
-      
       CategoryModel category = CategoryModel(
         id: '',
         name: _nameController.text,
         description: _descriptionController.text,
-        iconName: _selectedIcon!.icon.toString(),
+        iconCode: _selectedIcon!.icon!.codePoint,
       );
 
       bool result = await CategoryService.createCategory(category);
