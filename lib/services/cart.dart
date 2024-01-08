@@ -146,4 +146,16 @@ class CartService {
       }
     }
   }
+
+  static Future deleteCartByProductId(String productId) async {
+    await db
+        .collection(CollectionConfig.cartItems)
+        .where("product_id", isEqualTo: productId)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        doc.reference.delete();
+      }
+    });
+  }
 }

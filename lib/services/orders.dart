@@ -119,4 +119,16 @@ class OrdersService {
         .get();
     return doc.docs[0].id;
   }
+
+  static Future deleteOrderItemsByProductId(String productId) async {
+    await db
+        .collection(CollectionConfig.orderItems)
+        .where("product_id", isEqualTo: productId)
+        .get()
+        .then((value) async {
+      for (var doc in value.docs) {
+        await db.collection(CollectionConfig.orderItems).doc(doc.id).delete();
+      }
+    });
+  }
 }

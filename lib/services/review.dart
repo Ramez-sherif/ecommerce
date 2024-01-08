@@ -39,4 +39,16 @@ class ReviewService {
 
     return reviews;
   }
+
+  static Future deleteReviewsByProductId(String id) async {
+    await db
+        .collection(CollectionConfig.reviews)
+        .where("prodcut_id", isEqualTo: id)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        doc.reference.delete();
+      }
+    });
+  }
 }

@@ -1,7 +1,8 @@
 import 'package:ecommerce/models/category.dart';
-import 'package:ecommerce/services/category.dart';
+import 'package:ecommerce/providers/admin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import 'package:provider/provider.dart';
 
 class AdminCreateCategoryPage extends StatefulWidget {
   const AdminCreateCategoryPage({super.key});
@@ -143,7 +144,8 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
         iconCode: _selectedIcon!.icon!.codePoint,
       );
 
-      bool result = await CategoryService.createCategory(category);
+      bool result =
+          await context.read<AdminProvider>().createCategory(category);
       if (context.mounted) {
         if (result) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -158,6 +160,11 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
               backgroundColor: Colors.green,
             ),
           );
+          // clear form
+          _nameController.clear();
+          _descriptionController.clear();
+          _selectedIcon = null;
+          setState(() {});
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -172,6 +179,8 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
             ),
           );
         }
+      } else {
+        print('context not mounted');
       }
     }
   }
