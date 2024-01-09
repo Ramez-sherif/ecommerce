@@ -29,7 +29,7 @@ class _ProductWidgetState extends State<CartProductWidget> {
   }
 
   void decrementQuantity() {
-    if (widget.quantity > 0) {
+    if (widget.quantity > 1) {
       setState(() {
         widget.quantity--;
         changeQuantity();
