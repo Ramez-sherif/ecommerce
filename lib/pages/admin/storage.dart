@@ -2,7 +2,9 @@ import 'package:ecommerce/pages/admin/categories.dart';
 import 'package:ecommerce/pages/admin/notifications_to_all.dart';
 import 'package:ecommerce/pages/admin/orders.dart';
 import 'package:ecommerce/pages/admin/products.dart';
+import 'package:ecommerce/providers/admin.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AdminStoragePage extends StatefulWidget {
   const AdminStoragePage({super.key});
@@ -12,8 +14,40 @@ class AdminStoragePage extends StatefulWidget {
 }
 
 class _AdminStoragePageState extends State<AdminStoragePage> {
+  Future getAllOrders() async {
+    if (mounted) {
+      if (context.read<AdminProvider>().pageOrders.isEmpty) {
+        await context.read<AdminProvider>().getAllOrders();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: getAllOrders(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          } else {
+            return buildBody(context);
+          }
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(color: Colors.green),
+          );
+        }
+      },
+    );
+  }
+
+  SingleChildScrollView buildBody(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

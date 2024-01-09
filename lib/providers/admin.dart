@@ -15,9 +15,16 @@ class AdminProvider extends ChangeNotifier {
   List<ProductModel> allProducts = [];
 
   List<AdminOrders> allOrders = [];
+  List<AdminOrders> pageOrders = [];
+  List<StatusModel> allStatus = [];
 
   Future getAllCategories() async {
     allCategories = await CategoryService.getAllCategories();
+    notifyListeners();
+  }
+
+  Future getAllStatus() async {
+    allStatus = await OrdersService.getAllStatus();
     notifyListeners();
   }
 
@@ -76,6 +83,8 @@ class AdminProvider extends ChangeNotifier {
   //
   Future getAllOrders() async {
     try {
+      pageOrders = [];
+      allOrders = [];
       List<OrdersModel> orders = await OrdersService.getAllOrdersForAdmin();
       List<StatusModel> allStatus = await OrdersService.getAllStatus();
 
@@ -93,10 +102,50 @@ class AdminProvider extends ChangeNotifier {
             totalPrice: totalPrice,
           ),
         );
+        pageOrders = allOrders;
       }
       notifyListeners();
     } catch (e) {
       log("Error in admin provider getAllOrders: $e");
     }
+  }
+
+  // sortOrdersByPrice
+  void sortOrdersByPrice({required bool isAscending}) {
+    if (isAscending) {
+      pageOrders.sort((a, b) => a.totalPrice.compareTo(b.totalPrice));
+    } else {
+      pageOrders.sort((a, b) => b.totalPrice.compareTo(a.totalPrice));
+    }
+    notifyListeners();
+  }
+
+  void filterOrdersByStatus({required String statusId}) {
+    List<AdminOrders> filterd = [];
+
+    for (var order in allOrders) {
+      if (order.status.id == statusId) {
+        filterd.add(order);
+      }
+    }
+    pageOrders = filterd;
+
+    notifyListeners();
+  }
+
+  // resetOrders
+  void resetOrders() {
+    pageOrders = allOrders;
+    notifyListeners();
+  }
+
+  // updateOrderStatus
+  Future updateOrderStatus({
+    required String orderId,
+    required String statusId,
+  }) async {
+    await OrdersService.updateOrderStatus(orderId, statusId);
+    await getAllOrders();
+    notifyListeners();
   }
 }
