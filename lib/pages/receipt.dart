@@ -65,6 +65,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
       ),
     );
   }
+  //
 
   Widget _buildUserInfoTile(String label, String value) {
     return ListTile(
@@ -75,6 +76,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
       subtitle: Text(
         value,
         style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal),
+        //fff
       ),
     );
   }
