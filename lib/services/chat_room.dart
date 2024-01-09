@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/chat_room.dart';
 import 'package:ecommerce/models/message.dart';
@@ -54,8 +56,6 @@ class ChatRoomService {
   static Future<ChatRoomModel> getChatRoomByUserData(
       String senderId, String receiverId) async {
     CollectionReference chatRoomRef = db.collection(CollectionConfig.chatRoom);
-    print(senderId);
-    print(receiverId);
     var doc = await chatRoomRef
         .where("sender_id", isEqualTo: senderId)
         .where("receiver_id", isEqualTo: receiverId)
@@ -68,10 +68,8 @@ class ChatRoomService {
       // Example: Log a message and return null
       return await createChatRoom(senderId, receiverId);
     }
-    print("getting first document");
     QueryDocumentSnapshot<Object?> firstDoc = doc.docs.first;
      List<MessageModel> messages = await getChatRoomMessages(firstDoc.id);
-    print(firstDoc.id);
     ChatRoomModel chatRoom = ChatRoomModel(
         sender: await UserService.getUserById(senderId),
         receiver: await UserService.getUserById(receiverId),

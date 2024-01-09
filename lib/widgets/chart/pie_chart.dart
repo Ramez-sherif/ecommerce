@@ -1,4 +1,3 @@
-import 'package:ecommerce/models/chart_data.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -13,7 +12,6 @@ class PieChart2 extends StatelessWidget {
     if(allProducts.length < 5){
       length = allProducts.length ;
     }
-    print(length);
     allProducts.sort((a, b) => b.soldProducts.compareTo(a.soldProducts));
     Map<String, double> dataMap = {
       for (int i = 0; i<length;i++) allProducts[i].name: allProducts[i].quantity.toDouble(),
@@ -27,7 +25,7 @@ class PieChart2 extends StatelessWidget {
                  animationDuration: const Duration(milliseconds: 800),
                 chartType: ChartType.disc, // You can use ChartType.ring for a ring chart
                 chartRadius: MediaQuery.of(context).size.width / 2.0,
-                colorList: [
+                colorList: const [
                   Colors.blue,
                   Colors.green,
                   Colors.orange,

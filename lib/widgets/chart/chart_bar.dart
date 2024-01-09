@@ -1,4 +1,3 @@
-import 'package:ecommerce/models/chart_data.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -58,7 +57,7 @@ class BarChart extends StatelessWidget {
       children: [
         Text(title),
         SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height * 0.3,
           child: charts.BarChart(
             series,

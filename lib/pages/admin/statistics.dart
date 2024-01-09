@@ -5,7 +5,6 @@ import 'package:ecommerce/services/product.dart';
 import 'package:ecommerce/widgets/chart/chart_bar.dart';
 import 'package:ecommerce/widgets/chart/pie_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:pie_chart/pie_chart.dart';
 
 class AdminStatisticsPage extends StatefulWidget {
   const AdminStatisticsPage({super.key});
@@ -53,16 +52,14 @@ class _AdminStatisticsPageState extends State<AdminStatisticsPage> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No Data Available'));
+                    return const Center(child: Text('No Data Available'));
                   }
                   allProducts= snapshot.data!;
                   CategoryModel mostSoldCategory = CategoryService.getMostSoldCategory(allProducts);
                   
                   return Column(
                     children: [
-                      Container(
-                        
-                        child:Text(""),),
+                      const Text(""),
                       //   child: ListView.builder(
                       //       itemCount: snapshot.data!.length,
                       //       itemBuilder: (context, index) {
@@ -89,7 +86,7 @@ class _AdminStatisticsPageState extends State<AdminStatisticsPage> {
                       //         );
                       //       }),
                       // ),
-                     Container(
+                     SizedBox(
                           height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width ,
                           child: 

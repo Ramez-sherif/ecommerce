@@ -1,9 +1,12 @@
-import 'package:ecommerce/models/orders.dart';
-import 'package:ecommerce/models/status.dart';
-import 'package:ecommerce/providers/admin.dart';
+// ignore_for_file: unnecessary_import
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+
+import 'package:ecommerce/models/orders.dart';
+import 'package:ecommerce/models/status.dart';
+import 'package:ecommerce/providers/admin.dart';
 
 class ChangeOrderStatusModal extends StatelessWidget {
   final List<StatusModel> allStatuses;

@@ -1,18 +1,17 @@
-import 'package:ecommerce/models/cart.dart';
+// ignore_for_file: deprecated_member_use, depend_on_referenced_packages
+
+import 'package:flutter/material.dart';
+import 'package:pdf/Pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:provider/provider.dart';
+
 import 'package:ecommerce/models/orders.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/models/user.dart';
-import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
-import 'package:ecommerce/services/cart.dart';
-import 'package:ecommerce/services/orders.dart';
 import 'package:ecommerce/widgets/invoice/printable_data.dart';
-import 'package:flutter/material.dart';
-import 'package:printing/printing.dart';
-import 'package:pdf/Pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:provider/provider.dart';
 
 class SaveBtnBuilder extends StatelessWidget {
   const SaveBtnBuilder({Key? key}) : super(key: key);
@@ -20,7 +19,6 @@ class SaveBtnBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserModel? user = context.read<ProfileProvider>().userProfile;
-    print(user!.email);
     if (user == null) {
       context.read<ProfileProvider>().setUserProfile(context.read<UserProvider>().user.uid);
       user = context.read<ProfileProvider>().userProfile;
