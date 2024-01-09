@@ -6,11 +6,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/cart.dart';
 import 'package:ecommerce/models/orders.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/models/status.dart';
 import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/services/cart.dart';
 import 'package:ecommerce/services/collections_config.dart';
 import 'package:ecommerce/services/fcm.dart';
 import 'package:ecommerce/services/product.dart';
+import 'package:ecommerce/services/user.dart';
 
 class OrdersService {
   static var db = FirebaseFirestore.instance;
@@ -95,6 +97,36 @@ class OrdersService {
     return allOrders;
   }
 
+  static Future<List<OrdersModel>> getAllOrdersForAdmin() async {
+    try {
+      List<OrdersModel> allOrders = [];
+      print("service: 1");
+      List<UserModel> allUsers = await UserService.getAllUsers();
+      print("service: 2");
+      List<ProductModel> allProducts = await ProductService.getAllProducts();
+
+      await db.collection(CollectionConfig.orders).get().then((value) async {
+        for (var doc in value.docs) {
+          Timestamp time = doc["date"];
+          DateTime date = time.toDate();
+          var currentOrder = OrdersModel(
+            user:
+                allUsers.firstWhere((element) => element.uid == doc["user_id"]),
+            products: await getProductsInOrder(doc.id, allProducts),
+            date: date,
+            orderId: doc.id,
+            status: doc["status_id"],
+          );
+          allOrders.add(currentOrder);
+        }
+      });
+      return allOrders;
+    } catch (e) {
+      log("Error getAllOrdersForAdmin in Order Service : $e");
+      return [];
+    }
+  }
+
   static Future<OrdersModel?> getMostRecentOrder(UserModel user) async {
     List<ProductModel> allProducts = await ProductService.getAllProducts();
 
@@ -172,5 +204,15 @@ class OrdersService {
         await db.collection(CollectionConfig.orderItems).doc(doc.id).delete();
       }
     });
+  }
+
+  static Future<List<StatusModel>> getAllStatus() async {
+    List<StatusModel> allStatus = [];
+    await db.collection(CollectionConfig.status).get().then((value) {
+      for (var doc in value.docs) {
+        allStatus.add(StatusModel.fromFireStore(doc));
+      }
+    });
+    return allStatus;
   }
 }

@@ -15,14 +15,18 @@ class UserService {
   static Future setUser(User user) async {
     UserModel newUser = UserModel.createEmptyUser(user.uid, user.email!);
 
-    await db.collection(CollectionConfig.users).doc(user.uid).get().then((value) => {
-          if (!value.exists)
-            {
-              db.collection(CollectionConfig.users).doc(user.uid).set(
-                    newUser.toMap(),
-                  )
-            }
-        });
+    await db
+        .collection(CollectionConfig.users)
+        .doc(user.uid)
+        .get()
+        .then((value) => {
+              if (!value.exists)
+                {
+                  db.collection(CollectionConfig.users).doc(user.uid).set(
+                        newUser.toMap(),
+                      )
+                }
+            });
   }
 
   /// This method is used to get the user role from the database.
@@ -37,16 +41,35 @@ class UserService {
   static Future<UserModel> getUserDetails(String uid) async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection(CollectionConfig.users).doc(uid).get();
-      
+          await FirebaseFirestore.instance
+              .collection(CollectionConfig.users)
+              .doc(uid)
+              .get();
+
       return UserModel.fromFirestore(snapshot);
     } catch (e) {
       log('Error getting current user details: $e');
       return UserModel.createEmptyUser('', '');
     }
   }
-  static Future<UserModel> getUserById(String userId) async{
-    var doc = await FirebaseFirestore.instance.collection(CollectionConfig.users).doc(userId).get();
+
+  static Future<UserModel> getUserById(String userId) async {
+    var doc = await FirebaseFirestore.instance
+        .collection(CollectionConfig.users)
+        .doc(userId)
+        .get();
     return UserModel.fromFirestore(doc);
+  }
+
+  static Future<List<UserModel>> getAllUsers() async {
+    List<UserModel> users = [];
+
+    var data = await db.collection(CollectionConfig.users).get();
+
+    for (var doc in data.docs) {
+      users.add(UserModel.fromFirestore(doc));
+    }
+
+    return users;
   }
 }

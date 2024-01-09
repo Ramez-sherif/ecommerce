@@ -1,5 +1,6 @@
 import 'package:ecommerce/pages/admin/categories.dart';
 import 'package:ecommerce/pages/admin/notifications_to_all.dart';
+import 'package:ecommerce/pages/admin/orders.dart';
 import 'package:ecommerce/pages/admin/products.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +20,9 @@ class _AdminStoragePageState extends State<AdminStoragePage> {
         children: [
           buildItem(context, 'Products', const AdminProductsPage()),
           buildItem(context, 'Categories', const AdminCategoriesPage()),
+          buildItem(context, 'Orders', const AdminOrdersPage()),
           buildItem(
-              context, 'Send Notification', const SendNotificationsToAllPage())
+              context, 'Send Notification', const SendNotificationsToAllPage()),
         ],
       ),
     );
