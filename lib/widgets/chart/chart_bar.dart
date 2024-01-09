@@ -76,7 +76,7 @@ class BarChart extends StatelessWidget {
                 position:
                     charts.BehaviorPosition.bottom, // Position of the legend
                 desiredMaxRows: 2, // Adjust rows in the legend if needed
-                entryTextStyle: charts.TextStyleSpec(color: charts.ColorUtil.fromDartColor(Colors.white)  )
+                entryTextStyle: charts.TextStyleSpec(color: charts.ColorUtil.fromDartColor(Theme.of(context).colorScheme.inversePrimary)  )
                
                // Use the theme text color here
               ),
