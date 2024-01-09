@@ -96,6 +96,48 @@ class OrdersService {
     return allOrders;
   }
 
+  static Future<OrdersModel?> getMostRecentOrder(UserModel user) async {
+    List<ProductModel> allProducts = await ProductService.getAllProducts();
+
+    var querySnapshot = await db
+        .collection(CollectionConfig.orders)
+        .where("user_id", isEqualTo: user.uid)
+        .get();
+    // Fetch all orders for the user without sorting by date
+    var orders = querySnapshot.docs.map((doc) {
+      Timestamp time = doc["date"];
+      DateTime date = time.toDate();
+      return {
+        "id": doc.id,
+        "date": date,
+        "status": doc["status_id"],
+        // Other necessary data
+      };
+    }).toList();
+    orders.sort((a, b) => b["date"].compareTo(a["date"]));
+    return OrdersModel(
+        user: user,
+        products: await getProductsInOrder(orders[0]["id"], allProducts),
+        date: orders[0]["date"],
+        orderId: orders[0]["id"],
+        status: orders[0]["status"]);
+  }
+
+  static Future<String?> getMostRecentOrderID(String userId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('user_id', isEqualTo: userId)
+        .orderBy('date', descending: true)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first.id;
+    } else {
+      return null;
+    }
+  }
+
   static Future<Map<ProductModel, int>> getProductsInOrder(
       String orderId, List<ProductModel> allProducts) async {
     Map<ProductModel, int> orderProducts = {};
@@ -119,5 +161,17 @@ class OrdersService {
         .where("name", isEqualTo: status)
         .get();
     return doc.docs[0].id;
+  }
+
+  static Future deleteOrderItemsByProductId(String productId) async {
+    await db
+        .collection(CollectionConfig.orderItems)
+        .where("product_id", isEqualTo: productId)
+        .get()
+        .then((value) async {
+      for (var doc in value.docs) {
+        await db.collection(CollectionConfig.orderItems).doc(doc.id).delete();
+      }
+    });
   }
 }

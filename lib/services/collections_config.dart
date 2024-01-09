@@ -8,5 +8,6 @@ class CollectionConfig {
   static const String orderItems = 'order_item';
   static const String orders = 'orders';
   static const String status = 'status';
+  static const String chatRoom = 'chat_room';
+  static const String messages = 'messages';
 }
-

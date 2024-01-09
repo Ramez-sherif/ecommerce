@@ -74,4 +74,16 @@ class FavoriteService {
     );
     return favorite;
   }
+
+  static Future deleteFavoriteByProductId(String id) async {
+    await db
+        .collection(CollectionConfig.userFavorite)
+        .where("product_id", isEqualTo: id)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        doc.reference.delete();
+      }
+    });
+  }
 }

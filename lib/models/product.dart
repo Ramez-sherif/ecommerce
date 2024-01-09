@@ -7,7 +7,7 @@ import 'package:ecommerce/models/category.dart';
 class ProductModel {
   final String id, name, description, image_URL;
   final double price;
-  final int quantity;
+  final int quantity, sold;
   final CategoryModel category;
   final int soldProducts;
   double rating;
@@ -21,7 +21,8 @@ class ProductModel {
     required this.rating,
     required this.quantity,
     required this.category,
-    required this.soldProducts
+    required this.sold,
+
   });
 
   /// Converts a document comes from Firestore databse as [QueryDocumentSnapshot] to a [ProductModel] instance
@@ -33,8 +34,8 @@ class ProductModel {
 
     CategoryModel product_category = categories.firstWhere(
       (element) => element.id == product_category_id,
-      orElse: () =>
-          CategoryModel(id: '', name: 'Unknown Category', description: '',iconCode: 0),
+      orElse: () => CategoryModel(
+          id: '', name: 'Unknown Category', description: '', iconCode: 0),
     );
 
     return ProductModel(
@@ -46,7 +47,8 @@ class ProductModel {
       rating: document['rating'],
       quantity: document['quantity'],
       category: product_category,
-      soldProducts: document['sold']
+      sold: document['sold'],
+
     );
   }
 
@@ -64,7 +66,8 @@ class ProductModel {
       'quantity': quantity,
       'category_id': category.id,
       'price': price,
-      'sold':soldProducts
+      'sold': sold,
+
     };
   }
 }

@@ -1,7 +1,9 @@
 import 'package:ecommerce/models/category.dart';
-import 'package:ecommerce/services/category.dart';
+import 'package:ecommerce/providers/admin.dart';
+import 'package:ecommerce/widgets/admin/shared_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import 'package:provider/provider.dart';
 
 class AdminCreateCategoryPage extends StatefulWidget {
   const AdminCreateCategoryPage({super.key});
@@ -37,9 +39,10 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
           key: _formKey,
           child: Column(
             children: [
-              buildTextForm(_nameController, 'Name'),
+              SharedTextFormField(controller: _nameController, label: 'Name'),
               const SizedBox(height: 20),
-              buildTextForm(_descriptionController, 'Description'),
+              SharedTextFormField(
+                  controller: _descriptionController, label: 'Description'),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,37 +81,6 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
     );
   }
 
-  TextFormField buildTextForm(TextEditingController controller, String label) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-        ),
-        hintText: 'Enter $label',
-        labelStyle: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a $label';
-        }
-        return null;
-      },
-    );
-  }
-
   Future<void> _showIconPickerDialog() async {
     IconData? icon = await FlutterIconPicker.showIconPicker(
       context,
@@ -143,7 +115,8 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
         iconCode: _selectedIcon!.icon!.codePoint,
       );
 
-      bool result = await CategoryService.createCategory(category);
+      bool result =
+          await context.read<AdminProvider>().createCategory(category);
       if (context.mounted) {
         if (result) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -158,6 +131,11 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
               backgroundColor: Colors.green,
             ),
           );
+          // clear form
+          _nameController.clear();
+          _descriptionController.clear();
+          _selectedIcon = null;
+          setState(() {});
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
