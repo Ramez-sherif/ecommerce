@@ -49,6 +49,15 @@ class _productDetailsWidgetState extends State<ProductDetailsWidget> {
                 softWrap: true,
               ),
             ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              widget.product.category.name,
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
             Row(
               children: [
                 IconButton(
