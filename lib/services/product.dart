@@ -10,11 +10,13 @@ import 'package:ecommerce/services/collections_config.dart';
 import 'package:ecommerce/services/favorite.dart';
 import 'package:ecommerce/services/orders.dart';
 import 'package:ecommerce/services/review.dart';
+import 'package:ecommerce/sqldb.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class ProductService {
   static var db = FirebaseFirestore.instance;
   static final storage = FirebaseStorage.instance;
+  static SqlDb sqlDb = SqlDb();
 
   /// Get all products from firestore database
   static Future<List<ProductModel>> getAllProducts() async {
@@ -146,5 +148,21 @@ class ProductService {
       log("Product Service: $e");
       return false;
     }
+  }
+
+  static void insertProductToLocalDatabase(List<ProductModel> allProducts) async {
+    for(var product in allProducts){
+      List<Map> exists = await sqlDb.readData('SELECT * FROM product WHERE onlineProductId = "${product.id}" LIMIT 1');
+      if(exists.isEmpty){
+         int response = await sqlDb.insertData(
+            'insert into product ("onlineProductId","onlineCategoryID","name","price","rate") Values ("${product.id}","${product.category.id}","${product.name}","${product.price.toString()}","${product.rating.toString()}")');
+        print(response);
+        print("product: ${product.name} added to local Database");
+      }else{
+
+      print("item already Exists");
+      }
+    }
+   
   }
 }

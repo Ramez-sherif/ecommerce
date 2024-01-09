@@ -1,17 +1,17 @@
 // ignore_for_file: non_constant_identifier_names
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/pages/item_details_page.dart';
 import 'package:ecommerce/providers/favorite.dart';
-import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/services/favorite.dart';
 import 'package:ecommerce/services/local_database/fav.dart';
 import 'package:ecommerce/sqldb.dart';
 import 'package:ecommerce/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class FavoritesList extends StatelessWidget {
   FavoritesList({Key? key}) : super(key: key);
   SqlDb sqlDb = SqlDb();
@@ -35,16 +35,25 @@ class FavoritesList extends StatelessWidget {
   Widget _buildProductItem(BuildContext context, ProductModel product) {
     return IntrinsicHeight(
       child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => Scaffold(
-                body: ItemDetailsPage(
-                  product: product,
+        onTap: () async {
+          if (await checkInternetConnectivity() == false) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("No internet Connection")));
+            }
+            return;
+          }
+          if (context.mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  body: ItemDetailsPage(
+                    product: product,
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          }
         },
         child: Container(
           padding: const EdgeInsets.all(5),
@@ -85,11 +94,25 @@ class FavoritesList extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
-                        onPressed: () {
-                          String userId = context.read<UserProvider>().user.uid;
-                          context
-                              .read<FavoriteProvider>()
-                              .removeFromFavorites(userId, product);
+                        onPressed: () async {
+                          if (await checkInternetConnectivity() == false) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("No internet Connection")));
+                            }
+                            return;
+                          }
+                          if (context.mounted) {
+                            String userId =
+                                context.read<UserProvider>().user.uid;
+                            context
+                                .read<FavoriteProvider>()
+                                .removeFromFavorites(userId, product);
+                            FavoriteService favoriteService = FavoriteService();
+                            favoriteService.deleteFromLocalFavorites(
+                                userId, product.id);
+                          }
                         },
                         icon: const Icon(
                           Icons.favorite,
@@ -114,7 +137,10 @@ class FavoritesList extends StatelessWidget {
       placeholder: (context, url) => const Center(
         child: CircularProgressIndicator(color: Colors.green),
       ),
-      errorWidget: (context, url, error) => const Icon(Icons.error),
+      errorWidget: (context, url, error) => const Icon(
+        Icons.network_wifi_2_bar_sharp,
+        color: Colors.red,
+      ),
     );
   }
 }

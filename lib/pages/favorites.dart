@@ -23,6 +23,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) {
+   
     return FutureBuilder(
       future: getAlfavorites(context, sqlDb),
       builder: (context, snapshot) {

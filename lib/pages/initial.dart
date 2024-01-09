@@ -64,7 +64,8 @@ class _InitialPageState extends State<InitialPage> {
             print('isLoggedIn: $isLoggedIn');
             if (isLoggedIn) {
               if (isNet == false) {
-                return FavoritesPage();
+
+                return const FavoritesPage();
               } else {
                 if (context.watch<UserProvider>().user_role == 'admin') {
                   return const AdminHomePage();

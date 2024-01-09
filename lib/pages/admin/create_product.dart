@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/product.dart';
+import 'package:ecommerce/sqldb.dart';
 import 'package:ecommerce/widgets/admin/shared_number_form_field.dart';
 import 'package:ecommerce/widgets/admin/shared_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -101,6 +102,7 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
                         soldProducts: 0,
                       );
                       await ProductService.setProduct(product, _pickedImage!);
+                      //ProductService.insertProductToLocalDatabase(product);
                       // hide progress dialog
                       // clear form
                       _nameController.clear();

@@ -2,6 +2,7 @@ import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/favorite.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/services/product.dart';
 import 'package:ecommerce/widgets/all_products/categories_list.dart';
 import 'package:ecommerce/widgets/all_products/products_grid.dart';
 import 'package:ecommerce/widgets/all_products/top_bar.dart';
@@ -21,10 +22,14 @@ class _AllProductsPageState extends State<AllProductsPage> {
   final TextEditingController _searchController = TextEditingController();
 
   Future getAllProducts({required String categoryId}) async {
-    if (context.read<HomeProvider>().homeAllProducts.isEmpty) {
-      await context
-          .read<HomeProvider>()
-          .setHomeAllProducts(categoryId: categoryId);
+    if (context.mounted) {
+      if (context.read<HomeProvider>().homeAllProducts.isEmpty) {
+        await context
+            .read<HomeProvider>()
+            .setHomeAllProducts(categoryId: categoryId);
+        ProductService.insertProductToLocalDatabase(
+            context.read<HomeProvider>().allProducts);
+      }
     }
   }
 

@@ -40,24 +40,28 @@ class _productDetailsWidgetState extends State<ProductDetailsWidget> {
               },
             ),
             Flexible(
-              child: Text(
-                widget.product.name.capitalize(),
-                style: const TextStyle(
-                    fontSize: 35.0, fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                softWrap: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.product.name.capitalize(),
+                    style: const TextStyle(
+                        fontSize: 35.0, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: true,
+                  ),
+                   Text(
+                    "Category: ${widget.product.category.name}",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              widget.product.category.name,
-              style: TextStyle(
-                fontSize: 10,
-              ),
-            ),
+           
             Row(
               children: [
                 IconButton(

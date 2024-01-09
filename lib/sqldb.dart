@@ -16,7 +16,7 @@ class SqlDb {
     //default database Location
     String databasePath = await getDatabasesPath();
     //note when generate DB we should join database name folowed by (.db) with database path
-    String path = join(databasePath, "Egyzonaa.db"); // databasePath/Egyzona.db
+    String path = join(databasePath, "Egyzonaaaaa.db"); // databasePath/Egyzona.db
     Database mydb = await openDatabase(path,
         onCreate: _onCreate, version: 1, onUpgrade: _onUpgrade);
     return mydb;
@@ -33,12 +33,12 @@ class SqlDb {
         'CREATE TABLE favorites ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT , "productId" TEXT,  "userId" TEXT)');
     print("onCreate================================");
 
-    await db.execute(
-        'CREATE TABLE category ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT , "onlineCategoryID" TEXT,  "name" TEXT)');
-    print("onCreate================================");
+    // await db.execute(
+    //     'CREATE TABLE category ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT , "onlineCategoryID" TEXT,  "name" TEXT)');
+    // print("onCreate================================");
 
     await db.execute(
-        'CREATE TABLE product ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT , "onlineProductId" TEXT,  "onlineCategoryID" TEXT,"name" TEXT,"price" DOUBLE,"rate" DOUBLE)');
+        'CREATE TABLE product ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT , "onlineProductId" TEXT,  "onlineCategoryID" TEXT,"name" TEXT,"price" TEXT,"rate" TEXT)');
     print("onCreate================================");
   }
 
@@ -48,7 +48,7 @@ class SqlDb {
     return response;
   }
 
-  insertData(String sql, List<String> list) async {
+  insertData(String sql) async {
     Database? mydb = await db;
     int response = await mydb!
         .rawInsert(sql); //return the number of raw that is added to the table

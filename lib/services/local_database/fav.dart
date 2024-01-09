@@ -4,6 +4,7 @@ import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/favorite.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/services/product.dart';
 import 'package:ecommerce/sqldb.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +20,8 @@ Future getFavorites(BuildContext context, SqlDb sqlDb) async {
     if (isConnected) {
       // Fetch favorites online
       List<ProductModel> allProducts =
-          context.watch<HomeProvider>().homeAllProducts;
-
+          context.read<HomeProvider>().homeAllProducts;
+      
       String userId = context.read<UserProvider>().user.uid;
 
       await context.read<FavoriteProvider>().getFavorites(userId, allProducts);
@@ -32,17 +33,19 @@ Future getFavorites(BuildContext context, SqlDb sqlDb) async {
       List<Map> response = await sqlDb
           .readData("SELECT * FROM favorites WHERE userId = '$userId'");
       List<ProductModel> allFavorites = [];
+      print("here");
+      print(response2[0]);
       for (var item in response2) {
         allProducts.add(ProductModel(
             id: item['onlineProductId'],
             name: item['name'],
             description: "",
             image_URL: "",
-            price: item['price'],
-            rating: item['rate'],
+            price: double.parse(item['price']),
+            rating: double.parse(item['rate']),
             quantity: 0,
             category: CategoryModel(
-                id: "", name: "", description: "", iconName: "")));
+                id: "", name: "", description: "", iconCode: 1), soldProducts: 0));
       }
       for (var item in response) {
         allFavorites.add(allProducts
