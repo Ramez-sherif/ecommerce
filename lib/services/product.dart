@@ -6,6 +6,9 @@ import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/category.dart';
 import 'package:ecommerce/services/collections_config.dart';
+import 'package:ecommerce/services/favorite.dart';
+import 'package:ecommerce/services/orders.dart';
+import 'package:ecommerce/services/review.dart';
 
 class ProductService {
   static var db = FirebaseFirestore.instance;
@@ -64,5 +67,39 @@ class ProductService {
       }
     });
     return products;
+  }
+
+  static Future deleteProductById(String id) async {
+    try {
+      await db.collection(CollectionConfig.products).doc(id).delete();
+      return true;
+    } catch (e) {
+      log("Product Service: $e");
+      return false;
+    }
+  }
+
+  static Future deleteProductsRelatedToCategoryId(String categoryId) async {
+    QuerySnapshot productsQuery = await db
+        .collection(CollectionConfig.products)
+        .where('category_id', isEqualTo: categoryId)
+        .get();
+
+    for (QueryDocumentSnapshot productDoc in productsQuery.docs) {
+      // Delete product document
+      await deleteProductById(productDoc.id);
+
+      // Delete order items related to this product
+      await OrdersService.deleteOrderItemsByProductId(productDoc.id);
+
+      // Delete reviews related to this product
+      await ReviewService.deleteReviewsByProductId(productDoc.id);
+
+      // Delete favorite items related to this product
+      await FavoriteService.deleteFavoriteByProductId(productDoc.id);
+
+      // Delete cart items related to this product
+      await FavoriteService.deleteFavoriteByProductId(productDoc.id);
+    }
   }
 }
