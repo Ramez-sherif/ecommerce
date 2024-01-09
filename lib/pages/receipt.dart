@@ -65,6 +65,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
       ),
     );
   }
+  //
 
   Widget _buildUserInfoTile(String label, String value) {
     return ListTile(
