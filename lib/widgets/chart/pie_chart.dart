@@ -1,48 +1,49 @@
+import 'package:ecommerce/models/chart_data.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:pie_chart/pie_chart.dart';
 
-class StockPieChart extends StatelessWidget {
+class PieChart2 extends StatelessWidget {
+  const PieChart2({Key? key, required this.allProducts,required this.title}) : super(key: key);
   final List<ProductModel> allProducts;
-
-  StockPieChart({required this.allProducts});
-
+  final String title;
   @override
   Widget build(BuildContext context) {
-    List<charts.Series<ProductStat, String>> series = [
-      charts.Series(
-        id: 'Stock',
-        data: allProducts.map((product) {
-          return ProductStat(
-            product.name,
-            0,
-            product.quantity,
-          );
-        }).toList(),
-        domainFn: (ProductStat stat, _) => stat.productName,
-        measureFn: (ProductStat stat, _) => stat.quantityInStock,
-        labelAccessorFn: (ProductStat stat, _) =>
-            '${stat.productName}: ${stat.quantityInStock}', // Labels for each section
-      ),
-    ];
-
-    return charts.PieChart(
-      series,
-      animate: true,
-      defaultRenderer: charts.ArcRendererConfig(
-          arcWidth: 20, // Adjust the width of the pie segments
-          arcRendererDecorators: [
-            charts.ArcLabelDecorator()
-          ] // Display labels inside pie segments
-          ),
+    int length = 5;
+    if(allProducts.length < 5){
+      length = allProducts.length ;
+    }
+    print(length);
+    allProducts.sort((a, b) => b.soldProducts.compareTo(a.soldProducts));
+    Map<String, double> dataMap = {
+      for (int i = 0; i<length;i++) allProducts[i].name: allProducts[i].quantity.toDouble(),
+    };
+    return Column(
+      children: [
+        Text(title),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+        PieChart(
+                dataMap: dataMap,
+                 animationDuration: const Duration(milliseconds: 800),
+                chartType: ChartType.disc, // You can use ChartType.ring for a ring chart
+                chartRadius: MediaQuery.of(context).size.width / 2.0,
+                colorList: [
+                  Colors.blue,
+                  Colors.green,
+                  Colors.orange,
+                  Colors.red,
+                  Colors.purple,
+                ],
+                initialAngleInDegree: 0,
+                chartLegendSpacing: 32,
+                chartValuesOptions: const ChartValuesOptions(
+                  showChartValueBackground: true,
+                ),
+        ),
+      ],
     );
   }
 }
 
-class ProductStat {
-  final String productName;
-  final int quantitySold;
-  final int quantityInStock;
 
-  ProductStat(this.productName, this.quantitySold, this.quantityInStock);
-}
+

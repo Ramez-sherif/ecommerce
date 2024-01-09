@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/category.dart';
+import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/collections_config.dart';
 
 class CategoryService {
@@ -40,5 +41,22 @@ class CategoryService {
       log("Category Service: $e");
       return false;
     }
+  }
+  static CategoryModel getMostSoldCategory(List<ProductModel> allproducts){
+    Map<CategoryModel,int> categoriesSoldStock = {};
+    for(var item in allproducts){
+      if(categoriesSoldStock.containsKey(item.category)){
+        categoriesSoldStock[item.category] = (categoriesSoldStock[item.category]! + item.soldProducts);
+      }else{
+        categoriesSoldStock[item.category] = item.soldProducts;
+      }
+      
+    }
+     // Convert the map entries into a list
+    List<MapEntry<CategoryModel, int>> sortedEntries = categoriesSoldStock.entries.toList();
+
+    // Sort the list by values in descending order
+    sortedEntries.sort((a, b) => b.value.compareTo(a.value));
+    return sortedEntries[0].key;
   }
 }
