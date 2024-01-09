@@ -7,7 +7,7 @@ import 'package:ecommerce/models/category.dart';
 class ProductModel {
   final String id, name, description, image_URL;
   final double price;
-  final int quantity, sold;
+  final int quantity;
   final CategoryModel category;
   final int soldProducts;
   double rating;
@@ -21,7 +21,7 @@ class ProductModel {
     required this.rating,
     required this.quantity,
     required this.category,
-    required this.sold,
+    required this.soldProducts
 
   });
 
@@ -47,7 +47,7 @@ class ProductModel {
       rating: document['rating'],
       quantity: document['quantity'],
       category: product_category,
-      sold: document['sold'],
+      soldProducts: document['sold'],
 
     );
   }
@@ -66,7 +66,7 @@ class ProductModel {
       'quantity': quantity,
       'category_id': category.id,
       'price': price,
-      'sold': sold,
+      'sold': soldProducts,
 
     };
   }

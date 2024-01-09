@@ -99,7 +99,7 @@ class _AdminStatisticsPageState extends State<AdminStatisticsPage> {
                                   PieChart2(allProducts:allProducts,title:"Trending Products Stock"),
                                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                                   BarChart(allProducts: allProducts,
-                             title: "Trending Products Stock"),
+                             title: "Trending Products Stock Vs Sold"),
                               SizedBox(
                             height: MediaQuery.of(context).size.height * 0.02),
                              Container(

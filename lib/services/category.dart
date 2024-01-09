@@ -60,7 +60,7 @@ class CategoryService {
     // Sort the list by values in descending order
     sortedEntries.sort((a, b) => b.value.compareTo(a.value));
     return sortedEntries[0].key;
-
+  }
 
   // delete a category by id
   static Future<bool> deleteCategoryById(String id) async {
