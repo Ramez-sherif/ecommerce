@@ -75,6 +75,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
       subtitle: Text(
         value,
         style: TextStyle(fontSize: 18.00, fontWeight: FontWeight.normal),
+        //fff
       ),
     );
   }
