@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/category.dart';
@@ -9,9 +10,11 @@ import 'package:ecommerce/services/collections_config.dart';
 import 'package:ecommerce/services/favorite.dart';
 import 'package:ecommerce/services/orders.dart';
 import 'package:ecommerce/services/review.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ProductService {
   static var db = FirebaseFirestore.instance;
+  static final storage = FirebaseStorage.instance;
 
   /// Get all products from firestore database
   static Future<List<ProductModel>> getAllProducts() async {
@@ -34,13 +37,17 @@ class ProductService {
     return products_list;
   }
 
-  static Future setProduct(ProductModel product) async {
-    await db
-        .collection(CollectionConfig.products)
-        .doc()
+  static Future setProduct(ProductModel product, File file) async {
+    var documentReference = db.collection(CollectionConfig.products).doc();
+    var productId = documentReference.id;
+
+    await documentReference
         .set(product.toMap())
-        .then((value) => print("Product Added"))
+        .then((value) => print("Product Added with ID: $productId"))
         .onError((error, stackTrace) => print("Failed to add product: $error"));
+
+    String imageUrl = await updloadProductImageToStorage(file);
+    await updateProductImage(productId, imageUrl);
   }
 
   static Future updateProduct(Map<String, dynamic> product, String id) async {
@@ -87,19 +94,57 @@ class ProductService {
 
     for (QueryDocumentSnapshot productDoc in productsQuery.docs) {
       // Delete product document
-      await deleteProductById(productDoc.id);
+      await deleteProductInAllCollection(productDoc.id);
+    }
+  }
 
-      // Delete order items related to this product
-      await OrdersService.deleteOrderItemsByProductId(productDoc.id);
+  static Future deleteProductInAllCollection(String id) async {
+    await deleteProductById(id);
 
-      // Delete reviews related to this product
-      await ReviewService.deleteReviewsByProductId(productDoc.id);
+    // Delete order items related to this product
+    await OrdersService.deleteOrderItemsByProductId(id);
 
-      // Delete favorite items related to this product
-      await FavoriteService.deleteFavoriteByProductId(productDoc.id);
+    // Delete reviews related to this product
+    await ReviewService.deleteReviewsByProductId(id);
 
-      // Delete cart items related to this product
-      await FavoriteService.deleteFavoriteByProductId(productDoc.id);
+    // Delete favorite items related to this product
+    await FavoriteService.deleteFavoriteByProductId(id);
+
+    // Delete cart items related to this product
+    await FavoriteService.deleteFavoriteByProductId(id);
+  }
+
+  static Future<String> updloadProductImageToStorage(File file) async {
+    var reference = storage.ref().child("prdoucts/");
+    UploadTask uploadTask = reference.putFile(file);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String url = await taskSnapshot.ref.getDownloadURL();
+    log(url);
+    return url;
+  }
+
+  static Future updateProductImage(String productId, String imageUrl) async {
+    await db.collection(CollectionConfig.products).doc(productId).update(
+      {"image_URL": imageUrl},
+    );
+  }
+
+  static Future updateProductAndImage(ProductModel product, File file) async {
+    await updateProduct(product.toMap(), product.id);
+    String imageUrl = await updloadProductImageToStorage(file);
+    await updateProductImage(product.id, imageUrl);
+  }
+
+  static Future createProduct(ProductModel product) async {
+    try {
+      await db
+          .collection(CollectionConfig.products)
+          .doc(product.id)
+          .set(product.toMap());
+      return true;
+    } catch (e) {
+      log("Product Service: $e");
+      return false;
     }
   }
 }

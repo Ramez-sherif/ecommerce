@@ -7,36 +7,44 @@ import 'package:ecommerce/widgets/admin/shared_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-// ignore: must_be_immutable
-class AdminCreateProductPage extends StatefulWidget {
-  List<CategoryModel> categoriesList;
-  AdminCreateProductPage({super.key, required this.categoriesList});
+class AdminEditProductPage extends StatefulWidget {
+  final ProductModel product;
+  final List<CategoryModel> categoriesList;
+
+  const AdminEditProductPage({
+    Key? key,
+    required this.product,
+    required this.categoriesList,
+  }) : super(key: key);
 
   @override
-  State<AdminCreateProductPage> createState() => _AdminCreateProductPageState();
+  State<AdminEditProductPage> createState() => _AdminEditProductPageState();
 }
 
-class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
+class _AdminEditProductPageState extends State<AdminEditProductPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   String _selectedCategory = '';
-  final ImagePicker _imagePicker = ImagePicker();
   File? _pickedImage;
 
   @override
   void initState() {
     super.initState();
-    _selectedCategory = widget.categoriesList[0].id;
+    _selectedCategory = widget.product.category.id;
+    _nameController.text = widget.product.name;
+    _descriptionController.text = widget.product.description;
+    _priceController.text = widget.product.price.toString();
+    _quantityController.text = widget.product.quantity.toString();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Category'),
+        title: const Text('Edit Product'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -76,10 +84,8 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    // validate form and image and category
-                    if (_formKey.currentState!.validate() &&
-                        _pickedImage != null &&
-                        _selectedCategory.isNotEmpty) {
+                    // validate form
+                    if (_formKey.currentState!.validate()) {
                       // show progress dialog
                       showDialog(
                         context: context,
@@ -87,43 +93,46 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
                           child: CircularProgressIndicator(color: Colors.green),
                         ),
                       );
-                      // create product
-                      ProductModel product = ProductModel(
-                        id: '',
-                        rating: 0.0,
+                      // update product
+                      ProductModel updatedProduct = ProductModel(
+                        id: widget.product.id,
+                        rating: widget.product.rating,
                         name: _nameController.text,
                         description: _descriptionController.text,
                         price: double.parse(_priceController.text),
                         quantity: int.parse(_quantityController.text),
-                        image_URL: '',
+                        image_URL: widget.product.image_URL,
                         category: widget.categoriesList.firstWhere(
                             (element) => element.id == _selectedCategory),
-                        sold: 0,
+                        sold: widget.product.sold,
                       );
-                      await ProductService.setProduct(product, _pickedImage!);
+                      if (_pickedImage != null) {
+                        await ProductService.updateProductAndImage(
+                          updatedProduct,
+                          _pickedImage!,
+                        );
+                      } else {
+                        await ProductService.updateProduct(
+                          updatedProduct.toMap(),
+                          updatedProduct.id,
+                        );
+                      }
                       // hide progress dialog
-                      // clear form
-                      _nameController.clear();
-                      _descriptionController.clear();
-                      _priceController.clear();
-                      _quantityController.clear();
-                      setState(() {
-                        _pickedImage = null;
-                        _selectedCategory = widget.categoriesList[0].id;
-                      });
+
+                      // show success message
                       if (mounted) {
-                        Navigator.of(context).pop();
-                        // show success message
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Product created successfully'),
+                            content: Text('Product updated successfully'),
                           ),
                         );
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(); // Close the edit page
                       }
                     }
                   },
                   child: Text(
-                    "Submit",
+                    "Update",
                     style: TextStyle(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.onPrimary,
@@ -166,7 +175,7 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
   Widget uploadImage() {
     return Container(
       height: MediaQuery.of(context).size.height * 0.1,
-      width: MediaQuery.of(context).size.width * 8,
+      width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
         border: Border.all(
           color: Theme.of(context).colorScheme.onPrimary,
@@ -222,7 +231,7 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final XFile? image = await _imagePicker.pickImage(source: source);
+    final XFile? image = await ImagePicker().pickImage(source: source);
     if (image == null) {
       return;
     }

@@ -1,5 +1,6 @@
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/providers/admin.dart';
+import 'package:ecommerce/widgets/admin/shared_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:provider/provider.dart';
@@ -38,9 +39,10 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
           key: _formKey,
           child: Column(
             children: [
-              buildTextForm(_nameController, 'Name'),
+              SharedTextFormField(controller: _nameController, label: 'Name'),
               const SizedBox(height: 20),
-              buildTextForm(_descriptionController, 'Description'),
+              SharedTextFormField(
+                  controller: _descriptionController, label: 'Description'),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -76,37 +78,6 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
           ),
         ),
       ),
-    );
-  }
-
-  TextFormField buildTextForm(TextEditingController controller, String label) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-        ),
-        hintText: 'Enter $label',
-        labelStyle: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a $label';
-        }
-        return null;
-      },
     );
   }
 
@@ -179,8 +150,6 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
             ),
           );
         }
-      } else {
-        print('context not mounted');
       }
     }
   }
