@@ -20,10 +20,83 @@ class AdminProductsList extends StatelessWidget {
       child: ListView.builder(
         shrinkWrap: true,
         itemCount: context.watch<AdminProvider>().allProducts.length,
-        itemBuilder: (context, index) => _buildProductItem(
-          context,
-          context.watch<AdminProvider>().allProducts[index],
+        itemBuilder: (context, index) => _buildDismissibleProductItem(
+            context, context.watch<AdminProvider>().allProducts[index]),
+      ),
+    );
+  }
+
+  Dismissible _buildDismissibleProductItem(
+      BuildContext context, ProductModel product) {
+    return Dismissible(
+      key: Key(product.id),
+      // ------------------------------------------------------------
+      onDismissed: (direction) async {
+        // Step 1: hide current snackbar if exists
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+        // Step 2: delete product
+        await context.read<AdminProvider>().deleteProductById(product.id);
+
+        /// Step 3: show snackbar with undo action
+        ///
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: const Duration(seconds: 5),
+              content: Text(
+                '${product.name} deleted',
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              ),
+              action: SnackBarAction(
+                textColor: Theme.of(context).colorScheme.primary,
+                label: 'Undo',
+                onPressed: () async {
+                  if (context.mounted) {
+                    bool result = await context
+                        .read<AdminProvider>()
+                        .createProductWithoutImage(product);
+
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(seconds: 5),
+                          content: Text(
+                            result
+                                ? '${product.name} restored'
+                                : 'Error restoring ${product.name}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                },
+              ),
+            ),
+          );
+
+          await context.read<AdminProvider>().getAllProducts();
+        }
+      },
+      // ------------------------------------------------------------
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 16.0),
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+          size: 36,
         ),
+      ),
+      child: _buildProductItem(
+        context,
+        product,
       ),
     );
   }

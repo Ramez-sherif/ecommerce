@@ -134,4 +134,17 @@ class ProductService {
     String imageUrl = await updloadProductImageToStorage(file);
     await updateProductImage(product.id, imageUrl);
   }
+
+  static Future createProduct(ProductModel product) async {
+    try {
+      await db
+          .collection(CollectionConfig.products)
+          .doc(product.id)
+          .set(product.toMap());
+      return true;
+    } catch (e) {
+      log("Product Service: $e");
+      return false;
+    }
+  }
 }

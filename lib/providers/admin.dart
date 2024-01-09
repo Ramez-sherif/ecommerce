@@ -46,4 +46,22 @@ class AdminProvider extends ChangeNotifier {
     allProducts = await ProductService.getAllProducts();
     notifyListeners();
   }
+
+  Future deleteProductById(String id) async {
+    bool isDeleted = await ProductService.deleteProductById(id);
+
+    if (isDeleted) {
+      allProducts.removeWhere((product) => product.id == id);
+    }
+  }
+
+  Future createProductWithoutImage(ProductModel product) async {
+    bool result = await ProductService.createProduct(product);
+    if (result) {
+      allProducts.add(product);
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
 }
