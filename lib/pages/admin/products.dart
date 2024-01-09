@@ -1,5 +1,6 @@
 import 'package:ecommerce/pages/admin/create_product.dart';
 import 'package:ecommerce/providers/admin.dart';
+import 'package:ecommerce/widgets/admin/products/products_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,11 +14,18 @@ class AdminProductsPage extends StatefulWidget {
 class _AdminProductsPageState extends State<AdminProductsPage> {
   Future getAllData() async {
     await getAllCategories();
+    await getAllProducts();
   }
 
-  Future<void> getAllCategories() async {
+  Future getAllCategories() async {
     if (context.mounted) {
       await context.read<AdminProvider>().getAllCategories();
+    }
+  }
+
+  Future getAllProducts() async {
+    if (context.mounted) {
+      await context.read<AdminProvider>().getAllProducts();
     }
   }
 
@@ -48,33 +56,28 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
 
   Scaffold buildBody(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Products'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => AdminCreateProductPage(
-                    categoriesList:
-                        context.watch<AdminProvider>().allCategories,
-                  ),
+      appBar: buildAppBar(context),
+      body: const AdminProductsList(),
+    );
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text('Products'),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AdminCreateProductPage(
+                  categoriesList: context.watch<AdminProvider>().allCategories,
                 ),
-              );
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
-      body: const SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text('Product1'),
-            Text('Product2'),
-          ],
+              ),
+            );
+          },
+          icon: const Icon(Icons.add),
         ),
-      ),
+      ],
     );
   }
 }
