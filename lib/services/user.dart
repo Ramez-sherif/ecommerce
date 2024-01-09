@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/user.dart';
+import 'package:ecommerce/services/collections_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserService {
@@ -14,14 +15,18 @@ class UserService {
   static Future setUser(User user) async {
     UserModel newUser = UserModel.createEmptyUser(user.uid, user.email!);
 
-    await db.collection('users').doc(user.uid).get().then((value) => {
-          if (!value.exists)
-            {
-              db.collection('users').doc(user.uid).set(
-                    newUser.toMap(),
-                  )
-            }
-        });
+    await db
+        .collection(CollectionConfig.users)
+        .doc(user.uid)
+        .get()
+        .then((value) => {
+              if (!value.exists)
+                {
+                  db.collection(CollectionConfig.users).doc(user.uid).set(
+                        newUser.toMap(),
+                      )
+                }
+            });
   }
 
   /// This method is used to get the user role from the database.
@@ -29,19 +34,42 @@ class UserService {
   /// It takes the user id as [String] and returns the role as [String].
   ///
   static Future<String> getUserRole(String uid) async {
-    var data = await db.collection('users').doc(uid).get();
+    var data = await db.collection(CollectionConfig.users).doc(uid).get();
     return data['role'];
   }
 
   static Future<UserModel> getUserDetails(String uid) async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      
+          await FirebaseFirestore.instance
+              .collection(CollectionConfig.users)
+              .doc(uid)
+              .get();
+
       return UserModel.fromFirestore(snapshot);
     } catch (e) {
       log('Error getting current user details: $e');
       return UserModel.createEmptyUser('', '');
     }
+  }
+
+  static Future<UserModel> getUserById(String userId) async {
+    var doc = await FirebaseFirestore.instance
+        .collection(CollectionConfig.users)
+        .doc(userId)
+        .get();
+    return UserModel.fromFirestore(doc);
+  }
+
+  static Future<List<UserModel>> getAllUsers() async {
+    List<UserModel> users = [];
+
+    var data = await db.collection(CollectionConfig.users).get();
+
+    for (var doc in data.docs) {
+      users.add(UserModel.fromFirestore(doc));
+    }
+
+    return users;
   }
 }
