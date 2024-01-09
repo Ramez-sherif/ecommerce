@@ -9,6 +9,7 @@ class ProductModel {
   final double price;
   final int quantity, sold;
   final CategoryModel category;
+  final int soldProducts;
   double rating;
 
   ProductModel({
@@ -21,6 +22,7 @@ class ProductModel {
     required this.quantity,
     required this.category,
     required this.sold,
+
   });
 
   /// Converts a document comes from Firestore databse as [QueryDocumentSnapshot] to a [ProductModel] instance
@@ -46,6 +48,7 @@ class ProductModel {
       quantity: document['quantity'],
       category: product_category,
       sold: document['sold'],
+
     );
   }
 
@@ -64,6 +67,7 @@ class ProductModel {
       'category_id': category.id,
       'price': price,
       'sold': sold,
+
     };
   }
 }
