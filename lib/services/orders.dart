@@ -54,7 +54,8 @@ class OrdersService {
     int newSoldProducts = productDocument["sold"] + quantity;
     String productName = productDocument["name"];
 
-    await ProductService.updateProduct({"quantity": newQuantity,"sold":newSoldProducts}, productId);
+    await ProductService.updateProduct(
+        {"quantity": newQuantity, "sold": newSoldProducts}, productId);
 
     log("new quantity $newQuantity");
     log("new sold items $newSoldProducts");
@@ -101,9 +102,7 @@ class OrdersService {
   static Future<List<OrdersModel>> getAllOrdersForAdmin() async {
     try {
       List<OrdersModel> allOrders = [];
-      print("service: 1");
       List<UserModel> allUsers = await UserService.getAllUsers();
-      print("service: 2");
       List<ProductModel> allProducts = await ProductService.getAllProducts();
 
       await db.collection(CollectionConfig.orders).get().then((value) async {
@@ -215,5 +214,12 @@ class OrdersService {
       }
     });
     return allStatus;
+  }
+
+  static Future updateOrderStatus(String orderId, String statusId) async {
+    await db
+        .collection(CollectionConfig.orders)
+        .doc(orderId)
+        .update({"status_id": statusId});
   }
 }
