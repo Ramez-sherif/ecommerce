@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/category.dart';
+import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/services/product.dart';
 import 'package:ecommerce/widgets/admin/shared_number_form_field.dart';
 import 'package:ecommerce/widgets/admin/shared_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -74,8 +77,51 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
+                  onPressed: () async {
+                    // validate form and image and category
+                    if (_formKey.currentState!.validate() &&
+                        _pickedImage != null &&
+                        _selectedCategory.isNotEmpty) {
+                      // show progress dialog
+                      showDialog(
+                        context: context,
+                        builder: (context) => const Center(
+                          child: CircularProgressIndicator(color: Colors.green),
+                        ),
+                      );
+                      // create product
+                      ProductModel product = ProductModel(
+                        id: '',
+                        rating: 0.0,
+                        name: _nameController.text,
+                        description: _descriptionController.text,
+                        price: double.parse(_priceController.text),
+                        quantity: int.parse(_quantityController.text),
+                        image_URL: '',
+                        category: widget.categoriesList.firstWhere(
+                            (element) => element.id == _selectedCategory),
+                      );
+                      await ProductService.setProduct(product, _pickedImage!);
+                      // hide progress dialog
+                      // clear form
+                      _nameController.clear();
+                      _descriptionController.clear();
+                      _priceController.clear();
+                      _quantityController.clear();
+                      setState(() {
+                        _pickedImage = null;
+                        _selectedCategory = widget.categoriesList[0].id;
+                      });
+                      if (mounted) {
+                        Navigator.of(context).pop();
+                        // show success message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Product created successfully'),
+                          ),
+                        );
+                      }
+                    }
                   },
                   child: Text(
                     "Submit",
@@ -85,11 +131,26 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
                     ),
                   ),
                 ),
+                // Center(
+                //   child: getProductImage(
+                //       'https://firebasestorage.googleapis.com/v0/b/egyzona-7cdca.appspot.com/o/prdoucts?alt=media&token=4e75e3d8-00d0-4dc7-b9cf-ba8f4ab83704'),
+                // )
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  CachedNetworkImage getProductImage(String image_URL) {
+    return CachedNetworkImage(
+      imageUrl: image_URL,
+      fit: BoxFit.fill,
+      placeholder: (context, url) => const Center(
+        child: CircularProgressIndicator(color: Colors.green),
+      ),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   }
 
