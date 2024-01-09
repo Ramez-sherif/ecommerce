@@ -104,7 +104,7 @@ class _AdminEditProductPageState extends State<AdminEditProductPage> {
                         image_URL: widget.product.image_URL,
                         category: widget.categoriesList.firstWhere(
                             (element) => element.id == _selectedCategory),
-                        sold: widget.product.sold,
+                        soldProducts: widget.product.soldProducts,
                       );
                       if (_pickedImage != null) {
                         await ProductService.updateProductAndImage(

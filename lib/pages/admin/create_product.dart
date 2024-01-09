@@ -36,7 +36,7 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Category'),
+        title: const Text('Create Product'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -98,7 +98,7 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
                         image_URL: '',
                         category: widget.categoriesList.firstWhere(
                             (element) => element.id == _selectedCategory),
-                        sold: 0,
+                        soldProducts: 0,
                       );
                       await ProductService.setProduct(product, _pickedImage!);
                       // hide progress dialog

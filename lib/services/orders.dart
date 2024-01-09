@@ -51,12 +51,13 @@ class OrdersService {
         await db.collection(CollectionConfig.products).doc(productId).get();
 
     int newQuantity = productDocument["quantity"] - quantity;
-
+    int newSoldProducts = productDocument["sold"] + quantity;
     String productName = productDocument["name"];
 
-    await ProductService.updateProduct({"quantity": newQuantity}, productId);
+    await ProductService.updateProduct({"quantity": newQuantity,"sold":newSoldProducts}, productId);
 
     log("new quantity $newQuantity");
+    log("new sold items $newSoldProducts");
     // send notification to admin if quantity is less than 20
     if (newQuantity < 20) {
       List<String> tokens = await FCMService.getAdminFCMTokens();
