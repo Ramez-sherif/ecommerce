@@ -56,6 +56,15 @@ class _CartPageState extends State<CartPage> {
                         .length +
                     1,
                 itemBuilder: (context, index) {
+                  print(
+                      "index: $index, length: ${context.watch<HomeProvider>().cartProducts!.products.length}");
+                  if (context
+                      .watch<HomeProvider>()
+                      .cartProducts!
+                      .products
+                      .isEmpty) {
+                    return const Text("");
+                  }
                   if (index == 0) {
                     return PaymentBoxWidget(
                       cart: context.watch<HomeProvider>().cartProducts!,

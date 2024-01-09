@@ -8,6 +8,7 @@ import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/payment.dart';
 import 'package:ecommerce/services/user.dart';
+import 'package:ecommerce/widgets/payment/payment_product.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,40 +51,33 @@ class _PaymentPageState extends State<PaymentPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // _buildHeader('Shipping Address', 'Edit'),
-                      // _buildInfoRow(shippingAddress),
-                      // const SizedBox(height: 16.0),
-                      _buildSpacer(), // Spacer for the shipping section
-                      // _buildHeader('Payment Method', ''),
-                      const Text(
-                        'Payment Method',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      SizedBox(
-                        height:
-                            cardHeight, // Set the desired height for the ListView
-                        child: ListView.builder(
-                          itemCount:
-                              1, // Set the number of payment cards as needed
-                          itemBuilder: (context, index) {
-                            // Replace the hardcoded data with your payment card data
-                            return _buildPaymentCard(
-                              'Credit Card',
-                              Icons.credit_card,
-                              0,
-                              creditNumber,
-                            );
-                            //card number will change for eachentry
-                          },
-                        ),
-                      ),
-                      // SizedBox(height: 16.0),
-                      // Spacer between cards and total/checkout section
-                      _buildPaymentCard('Cash', Icons.money_off, -1),
                       _buildSpacer(),
+                      // build cart products
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: context
+                            .watch<HomeProvider>()
+                            .cartProducts!
+                            .products
+                            .length,
+                        itemBuilder: (context, index) {
+                          final entry = context
+                              .watch<HomeProvider>()
+                              .cartProducts!
+                              .products
+                              .entries
+                              .toList()[index];
+                          final key = entry.key;
+                          final value = entry.value;
+                          return Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: PaymentProductWidget(
+                              productModel: key,
+                              quantity: value,
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -91,7 +85,7 @@ class _PaymentPageState extends State<PaymentPage> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
-                child: _buildTotalPrice(totalPrice),
+                child: _buildTotalPrice(),
               ),
               const SizedBox(height: 16.0),
               Padding(
@@ -152,56 +146,60 @@ class _PaymentPageState extends State<PaymentPage> {
   //   );
   // }
 
-  Widget _buildPaymentCard(String title, IconData icon, int index,
-      [String number = '']) {
-    Color cardColor = Colors.green; // Default color
+  // Widget _buildPaymentCard(String title, IconData icon, int index,
+  //     [String number = '']) {
+  //   Color cardColor = Colors.green; // Default color
 
-    if (index == -1) {
-      // Cash
-      cardColor = Colors.green; // Grey color for cash
-    } else if (index == 0) {
-      // Credit Card
-      cardColor = Colors.green; // Light blue-grey color for credit card
-    }
+  //   if (index == -1) {
+  //     // Cash
+  //     cardColor = Colors.green; // Grey color for cash
+  //   } else if (index == 0) {
+  //     // Credit Card
+  //     cardColor = Colors.green; // Light blue-grey color for credit card
+  //   }
 
-    return SizedBox(
-      height: cardHeight, // Set the desired height for each card
-      child: Card(
-        elevation: 2.0,
-        color:
-            cardColor, // Set the background color based on the payment method
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: Theme.of(context)
-                .colorScheme
-                .secondary, // White circle for the icon
-            child: Icon(icon, color: Colors.white), // Green icon
-          ),
-          title: Text(
-            title,
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
-          ),
-          subtitle: Text(
-            number,
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
-          ),
-          trailing: Radio<int>(
-            value: index,
-            groupValue: selectedCard,
-            onChanged: (int? value) {
-              setState(() {
-                selectedCard = value!;
-              });
-            },
-            activeColor:
-                Colors.white, // Green color for the active radio button
-          ),
-        ),
-      ),
-    );
-  }
+  //   return SizedBox(
+  //     height: cardHeight, // Set the desired height for each card
+  //     child: Card(
+  //       elevation: 2.0,
+  //       color:
+  //           cardColor, // Set the background color based on the payment method
+  //       child: ListTile(
+  //         leading: CircleAvatar(
+  //           backgroundColor: Theme.of(context)
+  //               .colorScheme
+  //               .secondary, // White circle for the icon
+  //           child: Icon(icon, color: Colors.white), // Green icon
+  //         ),
+  //         title: Text(
+  //           title,
+  //           style: TextStyle(color: Theme.of(context).colorScheme.primary),
+  //         ),
+  //         subtitle: Text(
+  //           number,
+  //           style: TextStyle(color: Theme.of(context).colorScheme.primary),
+  //         ),
+  //         trailing: Radio<int>(
+  //           value: index,
+  //           groupValue: selectedCard,
+  //           onChanged: (int? value) {
+  //             setState(() {
+  //               selectedCard = value!;
+  //             });
+  //           },
+  //           activeColor:
+  //               Colors.white, // Green color for the active radio button
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildTotalPrice(double price) {
+  Widget _buildTotalPrice() {
+    double totalPprice = 0;
+    context.watch<HomeProvider>().cartProducts!.products.forEach((key, value) {
+      totalPprice += key.price * value;
+    });
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -213,7 +211,7 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
         ),
         Text(
-          '\$$price',
+          '$totalPprice',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
