@@ -6,22 +6,20 @@ import 'package:ecommerce/pages/item_details_page.dart';
 import 'package:ecommerce/providers/favorite.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/services/local_database/fav.dart';
+import 'package:ecommerce/sqldb.dart';
 import 'package:ecommerce/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoritesList extends StatelessWidget {
-  const FavoritesList({Key? key}) : super(key: key);
-
+  FavoritesList({Key? key}) : super(key: key);
+  SqlDb sqlDb = SqlDb();
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        String userId = context.read<UserProvider>().user.uid;
-        await context.read<FavoriteProvider>().getFavorites(
-              userId,
-              context.read<HomeProvider>().homeAllProducts,
-            );
+        await getAlfavorites(context, sqlDb);
       },
       child: ListView.builder(
         shrinkWrap: true,

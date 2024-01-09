@@ -3,9 +3,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/collections_config.dart';
+import 'package:ecommerce/sqldb.dart';
 
 class FavoriteService {
   static var db = FirebaseFirestore.instance;
+  SqlDb sqlDb = SqlDb();
 
   static Future<void> addToFavorites(
       String userId, ProductModel product) async {
@@ -29,6 +31,21 @@ class FavoriteService {
         }
       },
     );
+  }
+
+  Future<void> insertToLocalFavorites(String userId, String productId) async {
+    int response = await sqlDb.insertData(
+      'INSERT INTO favorites (userId, productId) VALUES(?, ?)',
+      [userId, productId],
+    );
+    print(response);
+    print("addddddddddddddddddddddddddddeddddddddddddddddddd");
+  }
+
+  Future<void> deleteFromLocalFavorites(String userId, String productId) async {
+    int response = await sqlDb.deleteData(
+        "DELETE FROM favorites WHERE userId = $userId AND productId = $productId ");
+    print(response);
   }
 
   static Future<void> removeProductFromFavorite(
