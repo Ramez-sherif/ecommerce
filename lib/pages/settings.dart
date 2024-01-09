@@ -1,3 +1,5 @@
+import 'package:ecommerce/models/chat_room.dart';
+import 'package:ecommerce/pages/chatting.dart';
 import 'package:ecommerce/pages/cutomer_support.dart';
 import 'package:ecommerce/pages/login.dart';
 
@@ -7,6 +9,7 @@ import 'package:ecommerce/pages/product_scanning.dart';
 import 'package:ecommerce/providers/theme.dart';
 
 import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/services/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -143,6 +146,39 @@ class SettingsPage extends StatelessWidget {
                 ),
                 child: const Text(
                   'Product Scanning',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+             const SizedBox(
+              height: 20,
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                 ChatRoomModel room = await ChatRoomService.getChatRoomByUserData(context.read<UserProvider>().user.uid, "faHsfVagU1hq1IHooMJMgKRqCFJ2");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>  ChatScreen(chatRoomId: room.id),//page of our cusstomer support chat
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'Customer Support Chat',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
