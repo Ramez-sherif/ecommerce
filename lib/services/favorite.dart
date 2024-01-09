@@ -3,12 +3,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/collections_config.dart';
+import 'package:ecommerce/sqldb.dart';
 
 class FavoriteService {
   static var db = FirebaseFirestore.instance;
+  SqlDb sqlDb = SqlDb();
 
   static Future<void> addToFavorites(
       String userId, ProductModel product) async {
+       
     await db
         .collection(CollectionConfig.userFavorite)
         .where("user_id", isEqualTo: userId)
@@ -18,6 +21,7 @@ class FavoriteService {
         .then(
       (value) {
         if (value.docs.isEmpty) {
+           print("adding product to favs");
           db
               .collection(CollectionConfig.userFavorite)
               .doc()
@@ -29,6 +33,32 @@ class FavoriteService {
         }
       },
     );
+  }
+
+  Future<void> insertToLocalFavorites(String userId, String productId) async {
+    List<Map> exists = await sqlDb.readData(
+        "Select * from favorites Where userId = '${userId}' AND productId = '${productId}' LIMIT 1");
+    if (exists.isEmpty) {
+      int response = await sqlDb.insertData(
+          'INSERT INTO favorites (userId, productId) VALUES("${userId}", "${productId}")');
+      print(response);
+      print("addddddddddddddddddddddddddddeddddddddddddddddddd");
+    } else {
+      print("Already Exists");
+    }
+  }
+
+  Future<void> deleteFromLocalFavorites(String userId, String productId) async {
+    List<Map> exists = await sqlDb.readData(
+        "Select * from favorites Where userId = '${userId}' AND productId = '${productId}' LIMIT 1");
+    if (exists.isNotEmpty) {
+      print("fav Delelted");
+      int response = await sqlDb.deleteData(
+          "DELETE FROM favorites WHERE userId = '$userId' AND productId = '$productId' ");
+      print(response);
+    } else {
+      print("Row Doesnt Exist");
+    }
   }
 
   static Future<void> removeProductFromFavorite(

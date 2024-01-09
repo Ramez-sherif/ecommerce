@@ -1,10 +1,13 @@
 import 'dart:developer';
 
 import 'package:ecommerce/pages/admin/home.dart';
+import 'package:ecommerce/pages/favorites.dart';
 import 'package:ecommerce/pages/home.dart';
 import 'package:ecommerce/pages/login.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/fcm.dart';
+import 'package:ecommerce/services/local_database/fav.dart';
+import 'package:ecommerce/services/shared.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +21,7 @@ class InitialPage extends StatefulWidget {
 
 class _InitialPageState extends State<InitialPage> {
   bool isLoggedIn = false;
+  bool isNet = true;
 
   Future checkLogin() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -27,6 +31,11 @@ class _InitialPageState extends State<InitialPage> {
     } else {
       log('User is signed in!');
       isLoggedIn = true;
+      if (await checkInternetConnectivity() == false) {
+        isNet = false;
+        context.read<UserProvider>().user = user;
+        return;
+      }
       await context.read<UserProvider>().setUser(user);
       await FCMService.setFCMToken(user.uid);
     }
@@ -54,10 +63,15 @@ class _InitialPageState extends State<InitialPage> {
             // ignore: avoid_print
             print('isLoggedIn: $isLoggedIn');
             if (isLoggedIn) {
-              if (context.watch<UserProvider>().user_role == 'admin') {
-                return const AdminHomePage();
+              if (isNet == false) {
+
+                return const FavoritesPage();
               } else {
-                return HomePage();
+                if (context.watch<UserProvider>().user_role == 'admin') {
+                  return const AdminHomePage();
+                } else {
+                  return HomePage();
+                }
               }
             } else {
               return const LoginPage();

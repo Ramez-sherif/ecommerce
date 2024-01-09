@@ -47,10 +47,12 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
       String userId = context.read<UserProvider>().user.uid;
       if (isFavorite) {
         context.read<FavoriteProvider>().addToFavorites(userId, widget.product);
+        favoriteService.insertToLocalFavorites(userId, widget.product.id);
       } else {
         context
             .read<FavoriteProvider>()
             .removeFromFavorites(userId, widget.product);
+        favoriteService.deleteFromLocalFavorites(userId, widget.product.id);
       }
     });
   }

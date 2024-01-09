@@ -23,6 +23,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     final TextEditingController userEmail = TextEditingController();
     final TextEditingController userPassword = TextEditingController();
+    final TextEditingController userConfirmPassword = TextEditingController();
 
     GlobalKey<FormState> formState = GlobalKey<FormState>();
 
@@ -104,6 +105,8 @@ class _SignupPageState extends State<SignupPage> {
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10),
                     child: TextField(
+                      controller:
+                          userConfirmPassword, //!111111111111111111111111111111
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: 'Confirm Password',
@@ -129,12 +132,21 @@ class _SignupPageState extends State<SignupPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        if (formState.currentState!.validate()) {
+                        String password = userPassword.text;
+                        String confirmpassword = userConfirmPassword.text;
+                        if (password != confirmpassword) {
+                          AwesomeDialog(
+                            context: context,
+                            animType: AnimType.rightSlide,
+                            dialogType: DialogType.error,
+                            title: 'Error',
+                            desc: "password does not match",
+                          ).show();
+                          return;
+                        } else if (formState.currentState!.validate()) {
                           // if the form is valid
                           ResponseModel response = await SignupService.signup(
-                            userEmail.text,
-                            userPassword.text
-                          );
+                              userEmail.text, userPassword.text);
 
                           if (response.status) {
                             // if the signup is successful
@@ -144,6 +156,7 @@ class _SignupPageState extends State<SignupPage> {
                             );
 
                             User user = response.data as User;
+
                             context.read<UserProvider>().setUser(user);
 
                             AwesomeDialog(

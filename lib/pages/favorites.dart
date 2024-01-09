@@ -1,10 +1,14 @@
+import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/favorite.dart';
 import 'package:ecommerce/providers/home.dart';
 import 'package:ecommerce/providers/user.dart';
+import 'package:ecommerce/services/local_database/fav.dart';
+import 'package:ecommerce/sqldb.dart';
 import 'package:ecommerce/widgets/favorites/favorites_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({Key? key}) : super(key: key);
@@ -14,21 +18,14 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
-  Future getAlfavorites() async {
-    if (context.read<FavoriteProvider>().favoriteItems.isEmpty) {
-      List<ProductModel> allProducts =
-          context.watch<HomeProvider>().homeAllProducts;
-
-      String userId = context.read<UserProvider>().user.uid;
-
-      await context.read<FavoriteProvider>().getFavorites(userId, allProducts);
-    }
-  }
+  SqlDb sqlDb = SqlDb();
+//check for internet connectivity
 
   @override
   Widget build(BuildContext context) {
+   
     return FutureBuilder(
-      future: getAlfavorites(),
+      future: getAlfavorites(context, sqlDb),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
@@ -56,7 +53,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
           title: const Text('Favorites'),
           centerTitle: true,
           backgroundColor: Colors.transparent),
-      body: const FavoritesList(),
+      body: FavoritesList(),
     );
   }
 }

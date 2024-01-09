@@ -20,6 +20,7 @@ class SignupService {
         message: 'User created successfully',
         data: credential.user,
       );
+      //!----------------------------------------------------------------
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         return ResponseModel(

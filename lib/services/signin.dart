@@ -55,7 +55,6 @@ class SignInService {
         );
       }
 
-
       // Obtain the auth details from the selected account
 
       final GoogleSignInAuthentication? googleAuth =
