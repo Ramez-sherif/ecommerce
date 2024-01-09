@@ -10,7 +10,7 @@ class ChatRoomService {
 
   static Future<ChatRoomModel> createChatRoom(String senderId, String receiverId) async {
     UserModel Sender = await UserService.getUserDetails(senderId);
-    //UserModel receiver = await UserService.getUserDetails(receiverId);
+    UserModel receiver = await UserService.getUserDetails(receiverId);
 
     DocumentReference doc = db.collection(CollectionConfig.chatRoom).doc();
 
@@ -24,7 +24,7 @@ class ChatRoomService {
     String messageTemp = "Hi, How can we help?";
 
     await messagesCollection.add(
-        {"message": messageTemp, "date": timestamp, "sender_id": receiverId,"username": "Customer Support"});
+        {"message": messageTemp, "date": timestamp, "sender_id": receiverId,"username": receiver.username});
 
     
     List<MessageModel> messages = [];
@@ -51,25 +51,27 @@ class ChatRoomService {
         "username":username
       });
   } 
-  static Future<ChatRoomModel> getChatRoombyUserData(
+  static Future<ChatRoomModel> getChatRoomByUserData(
       String senderId, String receiverId) async {
     CollectionReference chatRoomRef = db.collection(CollectionConfig.chatRoom);
+    print(senderId);
+    print(receiverId);
     var doc = await chatRoomRef
         .where("sender_id", isEqualTo: senderId)
         .where("receiver_id", isEqualTo: receiverId)
-        .where("session_status", isEqualTo: true)
+        .where("status", isEqualTo: true)
         .limit(1)
         .get();
+       // print(doc.docs.first.id);
     if (doc.docs.isEmpty) {
       // No chat room found, handle accordingly (e.g., return null or perform an action)
       // Example: Log a message and return null
-
       return await createChatRoom(senderId, receiverId);
     }
-    //print("getting first document");
+    print("getting first document");
     QueryDocumentSnapshot<Object?> firstDoc = doc.docs.first;
      List<MessageModel> messages = await getChatRoomMessages(firstDoc.id);
-    //print(firstDoc.id);
+    print(firstDoc.id);
     ChatRoomModel chatRoom = ChatRoomModel(
         sender: await UserService.getUserById(senderId),
         receiver: await UserService.getUserById(receiverId),

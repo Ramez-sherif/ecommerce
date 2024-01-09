@@ -11,13 +11,13 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:provider/provider.dart'; // Import Cloud Firestore package
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({super.key,required this.chatRoomId});
+  ChatScreen({super.key, required this.chatRoomId});
 
   // Define a StatefulWidget named ChatScreen
   @override
   _ChatScreenState createState() =>
       _ChatScreenState(); // Create state for ChatScreen
-      final String chatRoomId;
+  final String chatRoomId;
 }
 
 class _ChatScreenState extends State<ChatScreen> {
@@ -26,7 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
       TextEditingController(); // Text editing controller for input
   final FirebaseFirestore _firestore =
       FirebaseFirestore.instance; // Firestore instance for database operations
-  
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +40,13 @@ class _ChatScreenState extends State<ChatScreen> {
       // Scaffold widget for app structure
       appBar: AppBar(
         // AppBar at the top
-        title: const Text('Flutter Chat'), // Title of the app
+        title: const Text('Flutter Chat'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ), // Title of the app
       ),
       body: Column(
         // Column to arrange children vertically
@@ -54,7 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   .collection('chat_room')
                   .doc(widget.chatRoomId)
                   .collection("messages")
-                  .orderBy('date',descending: true)
+                  .orderBy('date', descending: true)
                   .snapshots(),
               // Stream.fromFuture(ChatRoomService.getChatRoombyUserData(
               //     "gNmhq1PO4mdzm93CrLmqrYsDeMl1",
@@ -94,15 +100,17 @@ class _ChatScreenState extends State<ChatScreen> {
                 for (var message in messages) {
                   // Loop through each message
                   final messageText = message.message; // Get message text
-                  final messageSenderId =
-                      message.sender; // Get message sender
+                  final messageSenderId = message.sender; // Get message sender
                   final messageSender = message.name;
                   final messageWidget = MessageBubble(
                     // Create a message bubble widget
                     sender: messageSender, // Pass sender to the widget
                     text: messageText, // Pass text to the widget
                     isMe: messageSenderId ==
-                        context.read<UserProvider>().user.uid, // Check if the message is from the current user
+                        context
+                            .read<UserProvider>()
+                            .user
+                            .uid, // Check if the message is from the current user
                   );
                   messageWidgets
                       .add(messageWidget); // Add the message widget to the list
@@ -145,13 +153,16 @@ class _ChatScreenState extends State<ChatScreen> {
                     icon: const Icon(Icons.send), // Send icon
                     onPressed: () async {
                       // Handle button press
-                      if (_textController.text.isNotEmpty && widget.chatRoomId != "") {
+                      if (_textController.text.isNotEmpty &&
+                          widget.chatRoomId != "") {
                         // Check if text field is not empty
-                        UserModel user = await UserService.getUserDetails(context.read<UserProvider>().user.uid);
+                        UserModel user = await UserService.getUserDetails(
+                            context.read<UserProvider>().user.uid);
                         await ChatRoomService.sendMessage(
                             widget.chatRoomId,
                             _textController.text,
-                            user.uid,user.username); // Send the message //4uNcJ0L2jrcXJuBD4ightE8P6382
+                            user.uid,
+                            user.username); // Send the message //4uNcJ0L2jrcXJuBD4ightE8P6382
 
                         _textController.clear();
                       }

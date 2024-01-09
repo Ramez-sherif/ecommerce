@@ -161,11 +161,11 @@ class SettingsPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                 ChatRoomModel room = await ChatRoomService.getChatRoombyUserData(context.read<UserProvider>().user.uid, "faHsfVagU1hq1IHooMJMgKRqCFJ2");
-                  Navigator.pushReplacement(
+                 ChatRoomModel room = await ChatRoomService.getChatRoomByUserData(context.read<UserProvider>().user.uid, "faHsfVagU1hq1IHooMJMgKRqCFJ2");
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>  ChatScreen(chatRoomId: room.id,),//page of our cusstomer support chat
+                      builder: (context) =>  ChatScreen(chatRoomId: room.id),//page of our cusstomer support chat
                     ),
                   );
                 },
