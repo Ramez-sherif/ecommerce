@@ -2,7 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/product.dart';
-import 'package:ecommerce/pages/item_details_page.dart';
+import 'package:ecommerce/pages/admin/edit_product.dart';
 import 'package:ecommerce/providers/admin.dart';
 import 'package:ecommerce/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,16 @@ class AdminProductsList extends StatelessWidget {
   Widget _buildProductItem(BuildContext context, ProductModel product) {
     return IntrinsicHeight(
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AdminEditProductPage(
+                product: product,
+                categoriesList: context.read<AdminProvider>().allCategories,
+              ),
+            ),
+          );
+        },
         child: Container(
           padding: const EdgeInsets.all(5),
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),

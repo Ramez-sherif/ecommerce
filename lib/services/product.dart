@@ -94,20 +94,24 @@ class ProductService {
 
     for (QueryDocumentSnapshot productDoc in productsQuery.docs) {
       // Delete product document
-      await deleteProductById(productDoc.id);
-
-      // Delete order items related to this product
-      await OrdersService.deleteOrderItemsByProductId(productDoc.id);
-
-      // Delete reviews related to this product
-      await ReviewService.deleteReviewsByProductId(productDoc.id);
-
-      // Delete favorite items related to this product
-      await FavoriteService.deleteFavoriteByProductId(productDoc.id);
-
-      // Delete cart items related to this product
-      await FavoriteService.deleteFavoriteByProductId(productDoc.id);
+      await deleteProductInAllCollection(productDoc.id);
     }
+  }
+
+  static Future deleteProductInAllCollection(String id) async {
+    await deleteProductById(id);
+
+    // Delete order items related to this product
+    await OrdersService.deleteOrderItemsByProductId(id);
+
+    // Delete reviews related to this product
+    await ReviewService.deleteReviewsByProductId(id);
+
+    // Delete favorite items related to this product
+    await FavoriteService.deleteFavoriteByProductId(id);
+
+    // Delete cart items related to this product
+    await FavoriteService.deleteFavoriteByProductId(id);
   }
 
   static Future<String> updloadProductImageToStorage(File file) async {
@@ -123,5 +127,11 @@ class ProductService {
     await db.collection(CollectionConfig.products).doc(productId).update(
       {"image_URL": imageUrl},
     );
+  }
+
+  static Future updateProductAndImage(ProductModel product, File file) async {
+    await updateProduct(product.toMap(), product.id);
+    String imageUrl = await updloadProductImageToStorage(file);
+    await updateProductImage(product.id, imageUrl);
   }
 }
