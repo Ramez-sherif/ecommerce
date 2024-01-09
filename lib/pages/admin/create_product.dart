@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/product.dart';
@@ -131,26 +129,11 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
                     ),
                   ),
                 ),
-                // Center(
-                //   child: getProductImage(
-                //       'https://firebasestorage.googleapis.com/v0/b/egyzona-7cdca.appspot.com/o/prdoucts?alt=media&token=4e75e3d8-00d0-4dc7-b9cf-ba8f4ab83704'),
-                // )
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  CachedNetworkImage getProductImage(String image_URL) {
-    return CachedNetworkImage(
-      imageUrl: image_URL,
-      fit: BoxFit.fill,
-      placeholder: (context, url) => const Center(
-        child: CircularProgressIndicator(color: Colors.green),
-      ),
-      errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   }
 
@@ -248,7 +231,6 @@ class _AdminCreateProductPageState extends State<AdminCreateProductPage> {
     if (mounted) {
       Navigator.of(context).pop();
     }
-    print(_pickedImage!.path);
   }
 
   Widget categoryItem(CategoryModel category) {

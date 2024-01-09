@@ -196,6 +196,7 @@ class _CategoryDismissableItemState extends State<CategoryDismissableItem> {
     );
   }
 
+  // ignore: unused_element
   Future<void> _showIconPickerDialog(BuildContext context) async {
     IconData? icon = await FlutterIconPicker.showIconPicker(
       context,
@@ -215,6 +216,7 @@ class _CategoryDismissableItemState extends State<CategoryDismissableItem> {
       if (icon != null) {
         setState(() {
           _selectedIconCode = icon.codePoint;
+          // ignore: avoid_print
           print("icon changed to $_selectedIconCode");
         });
       }

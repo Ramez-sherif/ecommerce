@@ -150,8 +150,6 @@ class _AdminCreateCategoryPageState extends State<AdminCreateCategoryPage> {
             ),
           );
         }
-      } else {
-        print('context not mounted');
       }
     }
   }
