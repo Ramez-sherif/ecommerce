@@ -106,6 +106,8 @@ class ProductService {
     // Delete order items related to this product
     await OrdersService.deleteOrderItemsByProductId(id);
 
+    // Delete empty orders
+
     // Delete reviews related to this product
     await ReviewService.deleteReviewsByProductId(id);
 

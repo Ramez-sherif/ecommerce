@@ -41,63 +41,58 @@ class _PaymentPageState extends State<PaymentPage> {
           'Checkout',
         ),
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Column(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSpacer(),
-                      // build cart products
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: context
-                            .watch<HomeProvider>()
-                            .cartProducts!
-                            .products
-                            .length,
-                        itemBuilder: (context, index) {
-                          final entry = context
-                              .watch<HomeProvider>()
-                              .cartProducts!
-                              .products
-                              .entries
-                              .toList()[index];
-                          final key = entry.key;
-                          final value = entry.value;
-                          return Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: PaymentProductWidget(
-                              productModel: key,
-                              quantity: value,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildProducts(),
+                  ],
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
-                child: _buildTotalPrice(),
-              ),
-              const SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: _buildCheckoutButton(), // Checkout button at the bottom
-              ),
-              const SizedBox(
-                  height: 16.0), // Optional spacer for better visual separation
-            ],
+            ),
           ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
+            child: _buildTotalPrice(),
+          ),
+          const SizedBox(height: 16.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: _buildCheckoutButton(),
+          ),
+          const SizedBox(height: 16.0),
         ],
       ),
+    );
+  }
+
+  Widget buildProducts() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: context.watch<HomeProvider>().cartProducts!.products.length,
+      itemBuilder: (context, index) {
+        final entry = context
+            .watch<HomeProvider>()
+            .cartProducts!
+            .products
+            .entries
+            .toList()[index];
+        final key = entry.key;
+        final value = entry.value;
+        return Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: PaymentProductWidget(
+            productModel: key,
+            quantity: value,
+          ),
+        );
+      },
     );
   }
 
