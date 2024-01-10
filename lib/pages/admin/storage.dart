@@ -1,4 +1,5 @@
 import 'package:ecommerce/pages/admin/categories.dart';
+import 'package:ecommerce/pages/admin/customer_support_page.dart';
 import 'package:ecommerce/pages/admin/notifications_to_all.dart';
 import 'package:ecommerce/pages/admin/orders.dart';
 import 'package:ecommerce/pages/admin/products.dart';
@@ -57,6 +58,8 @@ class _AdminStoragePageState extends State<AdminStoragePage> {
           buildItem(context, 'Orders', const AdminOrdersPage()),
           buildItem(
               context, 'Send Notification', const SendNotificationsToAllPage()),
+              buildItem(
+              context, 'User Customer Support',  CustomerSupportPage()),
         ],
       ),
     );
