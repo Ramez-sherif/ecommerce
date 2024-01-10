@@ -1,6 +1,3 @@
-// Import necessary packages and files
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Provider package for state management
 import 'package:ecommerce/models/product.dart'; // Product model
@@ -132,7 +129,7 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                     );
                     // Calculate new rating for the product based on the added review
                     double newRating = 0;
-                    
+
                     if (widget.product.rating == 0) {
                       newRating = selectedRating.toDouble();
                     } else {
