@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/product.dart';
-import 'package:ecommerce/sqldb.dart';
 import 'package:ecommerce/widgets/admin/shared_number_form_field.dart';
 import 'package:ecommerce/widgets/admin/shared_text_form_field.dart';
 import 'package:flutter/material.dart';
