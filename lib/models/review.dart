@@ -1,5 +1,3 @@
-import 'package:ecommerce/models/user.dart';
-
 class Review {
   double rating;
   String comment;

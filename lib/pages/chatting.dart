@@ -1,21 +1,20 @@
-import 'package:ecommerce/models/chat_room.dart';
+// ignore_for_file: deprecated_member_use
+
 import 'package:ecommerce/models/message.dart';
 import 'package:ecommerce/models/user.dart';
-import 'package:ecommerce/providers/profile.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/chat_room.dart';
 import 'package:ecommerce/services/user.dart';
 import 'package:flutter/material.dart'; // Import Flutter material package
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:provider/provider.dart'; // Import Cloud Firestore package
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({super.key, required this.chatRoomId});
+  const ChatScreen({super.key, required this.chatRoomId});
 
   // Define a StatefulWidget named ChatScreen
   @override
-  _ChatScreenState createState() =>
+  State<ChatScreen> createState() =>
       _ChatScreenState(); // Create state for ChatScreen
   final String chatRoomId;
 }
@@ -24,8 +23,6 @@ class _ChatScreenState extends State<ChatScreen> {
   // Define state for ChatScreen widget
   final TextEditingController _textController =
       TextEditingController(); // Text editing controller for input
-  final FirebaseFirestore _firestore =
-      FirebaseFirestore.instance; // Firestore instance for database operations
 
   @override
   void initState() {
@@ -91,7 +88,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       date: item["date"],
                       name: item["username"]));
                 }
-                final chatRoom = snapshot.data!;
                 // Reverse order of retrieved messages
                 //print(messages[0].message);
                 // /print(messages[0].message);
@@ -184,10 +180,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
 class MessageBubble extends StatelessWidget {
   // Define a StatelessWidget named MessageBubble
-  MessageBubble(
+  const MessageBubble(
       {required this.sender,
       required this.text,
-      required this.isMe}); // Constructor
+      required this.isMe,
+      super.key
+      }); // Constructor
 
   final String sender; // Sender's name or ID
   final String text; // Message text

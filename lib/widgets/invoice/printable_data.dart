@@ -1,9 +1,9 @@
-import 'package:ecommerce/models/orders.dart';
-import 'package:ecommerce/services/cart.dart';
-import 'package:ecommerce/models/cart.dart';
-import 'package:ecommerce/pages/payment.dart';
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+
+import 'package:ecommerce/models/orders.dart';
 
 double calculateTotal(OrdersModel order) {
   double total = 0.0;
@@ -125,7 +125,7 @@ pw.Widget buildPrintableData(
                       ),
                     ),
                     pw.Text(
-                      "\$ ${totalOrderPrice}",
+                      "\$ $totalOrderPrice",
                       style: pw.TextStyle(
                         fontSize: 22.00,
                         fontWeight: pw.FontWeight.bold,
@@ -148,9 +148,9 @@ pw.Widget buildPrintableData(
             ),
             
             pw.SizedBox(height: 15.00),
-            _buildText("Thanks for choosing our service!", color: PdfColor(0.5, 0.5, 0.5, 0.5)),
+            _buildText("Thanks for choosing our service!", color: const PdfColor(0.5, 0.5, 0.5, 0.5)),
             pw.SizedBox(height: 5.00),
-            _buildText("Contact the branch for any clarifications.", color: PdfColor(0.5, 0.5, 0.5, 0.5)),
+            _buildText("Contact the branch for any clarifications.", color: const PdfColor(0.5, 0.5, 0.5, 0.5)),
             pw.SizedBox(height: 15.00),
           ],
         ),

@@ -1,12 +1,14 @@
-import 'package:ecommerce/providers/user.dart';
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart'; // Import Flutter material package
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart'; // Import Cloud Firestore package
 
 class ChatScreen2 extends StatefulWidget {
+  const ChatScreen2({super.key});
+
   // Define a StatefulWidget named ChatScreen
   @override
-  _ChatScreenState createState() =>
+  State<ChatScreen2> createState() =>
       _ChatScreenState(); // Create state for ChatScreen
 }
 
@@ -37,7 +39,7 @@ class _ChatScreenState extends State<ChatScreen2> {
       // Scaffold widget for app structure
       appBar: AppBar(
         // AppBar at the top
-        title: Text('Flutter Chat'), // Title of the app
+        title: const Text('Flutter Chat'), // Title of the app
       ),
       body: Column(
         // Column to arrange children vertically
@@ -57,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen2> {
                 // Builder function to handle snapshot data
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   // Check if data is loading
-                  return Center(
+                  return const Center(
                     // Show loading indicator
                     child: CircularProgressIndicator(),
                   );
@@ -65,7 +67,7 @@ class _ChatScreenState extends State<ChatScreen2> {
 
                 if (!snapshot.hasData || snapshot.data == null) {
                   // Check if there's no data
-                  return Center(
+                  return const Center(
                     // Show 'No messages yet' if no data available
                     child: Text('No messages yet'),
                   );
@@ -95,7 +97,7 @@ class _ChatScreenState extends State<ChatScreen2> {
                 return ListView(
                   // Display messages in a scrollable list view
                   reverse: true, // Start displaying messages from the bottom
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       vertical: 10.0, horizontal: 20.0), // Padding for the list
                   children: messageWidgets, // Show the list of message widgets
                 );
@@ -104,8 +106,8 @@ class _ChatScreenState extends State<ChatScreen2> {
           ),
           Container(
             // Container for text input field and send button
-            margin: EdgeInsets.only(top: 8.0), // Margin from the top
-            padding: EdgeInsets.symmetric(
+            margin: const EdgeInsets.only(top: 8.0), // Margin from the top
+            padding: const EdgeInsets.symmetric(
                 horizontal: 8.0), // Padding for the container
             child: Form(
               child: Row(
@@ -117,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen2> {
                       // Text field for entering messages
                       controller: _textController, // Use the text controller
                       onChanged: (value) {}, // Handle text field changes
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         // Input decoration for the text field
                         hintText:
                             'Enter your message...', // Hint text for the text field
@@ -126,8 +128,8 @@ class _ChatScreenState extends State<ChatScreen2> {
                   ),
                   IconButton(
                     // Icon button for sending messages
-                    icon: Icon(Icons.send), // Send icon
-                    onPressed: () async{
+                    icon: const Icon(Icons.send), // Send icon
+                    onPressed: () async {
                       // Handle button press
                       if (_textController.text.isNotEmpty) {
                         // Check if text field is not empty
@@ -151,8 +153,8 @@ class _ChatScreenState extends State<ChatScreen2> {
 
 class MessageBubble extends StatelessWidget {
   // Define a StatelessWidget named MessageBubble
-  MessageBubble(
-      {required this.sender,
+  const MessageBubble(
+      {super.key, required this.sender,
       required this.text,
       required this.isMe}); // Constructor
 
@@ -165,7 +167,7 @@ class MessageBubble extends StatelessWidget {
     // Build method for MessageBubble
     return Padding(
       // Padding widget to add space around the content
-      padding: EdgeInsets.all(8.0), // Padding for the content
+      padding: const EdgeInsets.all(8.0), // Padding for the content
       child: Column(
         // Column to arrange children vertically
         crossAxisAlignment: // Align based on the sender
@@ -174,7 +176,7 @@ class MessageBubble extends StatelessWidget {
           Text(
             // Text widget to display sender's name
             sender,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12.0,
               color: Colors.black54,
             ),
@@ -189,7 +191,7 @@ class MessageBubble extends StatelessWidget {
                 : Colors.grey[300], // Bubble color based on sender
             child: Padding(
               // Padding for the bubble content
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                   vertical: 10.0, horizontal: 15.0), // Padding for the content
               child: Text(
                 // Text widget to display the message

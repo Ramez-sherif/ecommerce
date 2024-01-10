@@ -270,7 +270,7 @@ class _PaymentPageState extends State<PaymentPage> {
     );
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ReceiptScreen()),
+      MaterialPageRoute(builder: (context) => const ReceiptScreen()),
     );
   }
 

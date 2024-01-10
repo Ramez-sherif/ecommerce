@@ -18,7 +18,7 @@ class ProductReviewPage extends StatefulWidget {
   const ProductReviewPage({Key? key, required this.product}) : super(key: key);
 
   @override
-  _ProductReviewPageState createState() => _ProductReviewPageState();
+  State<ProductReviewPage> createState() => _ProductReviewPageState();
 }
 
 // State class associated with the ProductReviewPage widget
@@ -59,7 +59,7 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                 },
               ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               const Text(
                 'Choose your rating:', // Label for the rating selection
                 style: TextStyle(
@@ -112,11 +112,9 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                   setState(() {
                     selectedRating = rating;
                   });
-                  print(
-                      "Selected rating: $selectedRating"); // For debugging purposes
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // Submit button for submitting the review
               ElevatedButton(
                 onPressed: () async {
@@ -139,26 +137,29 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                       newRating, // Updated rating value
                     );
                     // Update the rating of the product in the HomeProvider
-                    context
-                        .read<HomeProvider>()
-                        .allProducts
-                        .where((element) {
-                          return element.id == widget.product.id;
-                        })
-                        .first
-                        .rating = newRating;
+                    if (context.mounted) {
+                      context
+                          .read<HomeProvider>()
+                          .allProducts
+                          .where((element) {
+                            return element.id == widget.product.id;
+                          })
+                          .first
+                          .rating = newRating;
+                    }
 
                     _ratingController.clear(); // Clear the rating controller
-                    Navigator.pop(context); // Close the current page
-                    Navigator.pop(
-                        context); // Navigate back to the previous page
+                    if (context.mounted) {
+                      Navigator.pop(context); // Close the current page
+                      Navigator.pop(context);
+                    }
                   }
-                },
-                child: const Text('Submit Rating'), // Button text
+                }, // Button text
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
                       Colors.green), // Change button background color to green
                 ),
+                child: const Text('Submit Rating'),
               ),
 
               // FutureBuilder to display reviews for the product
@@ -167,7 +168,7 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                     widget.product.id), // Fetch all reviews for the product
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
+                    return const Center(
                         child:
                             CircularProgressIndicator()); // Display loading indicator while waiting for data
                   } else if (snapshot.hasError) {
@@ -199,7 +200,7 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                               } else {
                                 // If user details are not found, display a placeholder
                                 return ListTile(
-                                  title: Text('User ID: Not Found'),
+                                  title: const Text('User ID: Not Found'),
                                   subtitle:
                                       Text('Rate: ${review.rating.toString()}'),
                                 );
@@ -210,7 +211,7 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                       ),
                     );
                   } else {
-                    return Center(
+                    return const Center(
                         child: Text(
                             'No reviews available.')); // Display a message when there are no reviews
                   }

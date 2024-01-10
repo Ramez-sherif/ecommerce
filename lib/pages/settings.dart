@@ -153,7 +153,7 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
-             const SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Container(
@@ -161,13 +161,20 @@ class SettingsPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                 ChatRoomModel room = await ChatRoomService.getChatRoomByUserData(context.read<UserProvider>().user.uid, "faHsfVagU1hq1IHooMJMgKRqCFJ2");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>  ChatScreen(chatRoomId: room.id),//page of our cusstomer support chat
-                    ),
-                  );
+                  ChatRoomModel room =
+                      await ChatRoomService.getChatRoomByUserData(
+                          context.read<UserProvider>().user.uid,
+                          "faHsfVagU1hq1IHooMJMgKRqCFJ2");
+                  if (context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatScreen(
+                            chatRoomId:
+                                room.id), //page of our cusstomer support chat
+                      ),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,

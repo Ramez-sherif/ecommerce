@@ -22,8 +22,8 @@ class _AllProductsTopBarWidgetState extends State<AllProductsTopBarWidget> {
       child: Row(
         children: [
           Expanded(flex: 6, child: _searchBar()),
-          const SizedBox(width: 8),
-          Expanded(flex: 1, child: _notificationButton()),
+          // const SizedBox(width: 8),
+          // Expanded(flex: 1, child: _notificationButton()),
         ],
       ),
     );

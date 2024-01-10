@@ -21,7 +21,7 @@ class InvoiceBuilder extends StatelessWidget {
 
     return Column(
       children: [
-        SizedBox(height: 10.00), // Added SizedBox
+        const SizedBox(height: 10.00), // Added SizedBox
         Container(
           color: const Color.fromARGB(179, 0, 255, 127), // Using RgbColor instead of PdfColor
           width: double.infinity,
@@ -29,7 +29,7 @@ class InvoiceBuilder extends StatelessWidget {
           child: Center(
             child: Text(
               "Order ID: ${order.orderId}\n",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color.fromARGB(122, 0, 0, 0), // Using RgbColor instead of PdfColor
                 fontSize: 20.00,
                 fontWeight: FontWeight.bold,
@@ -46,9 +46,9 @@ class InvoiceBuilder extends StatelessWidget {
     );
   }
 
-  Widget header() => Row(
+  Widget header() => const Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: const [
+        children: [
           Icon(
             Icons.file_open,
             color: Colors.indigo,
@@ -79,42 +79,40 @@ class InvoiceBuilder extends StatelessWidget {
       );
 
   Widget buildTableData(BuildContext context, OrdersModel order) {
-  return Container(
-    child: ListView.builder(
-      shrinkWrap: true,
-      itemCount: order.products.entries.length,
-      itemBuilder: (context, index) {
-        var item = order.products.entries.elementAt(index);
-        bool isEvenRow = index % 2 == 0;
-        Color rowColor = isEvenRow ? Colors.white : Colors.grey;
-
-        return Container(
-          color: rowColor,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${item.key.name}",
-                  style: TextStyle(
-                    fontSize: 18.00,
-                    fontWeight: FontWeight.bold,
-                  ),
+  return ListView.builder(
+    shrinkWrap: true,
+    itemCount: order.products.entries.length,
+    itemBuilder: (context, index) {
+      var item = order.products.entries.elementAt(index);
+      bool isEvenRow = index % 2 == 0;
+      Color rowColor = isEvenRow ? Colors.white : Colors.grey;
+  
+      return Container(
+        color: rowColor,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                item.key.name,
+                style: const TextStyle(
+                  fontSize: 18.00,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  "\$ ${item.key.price * item.value}",
-                  style: TextStyle(
-                    fontSize: 18.00,
-                    fontWeight: FontWeight.normal,
-                  ),
+              ),
+              Text(
+                "\$ ${item.key.price * item.value}",
+                style: const TextStyle(
+                  fontSize: 18.00,
+                  fontWeight: FontWeight.normal,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
-    ),
+        ),
+      );
+    },
   );
 }
 
@@ -137,7 +135,7 @@ Widget buildTotal(OrdersModel order) => Padding(
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween, // Adjusted alignment
       children: [
-        Text(
+        const Text(
           "Total Price:", // Added text here
           style: TextStyle(
             fontSize: 18.00,
@@ -146,7 +144,7 @@ Widget buildTotal(OrdersModel order) => Padding(
         ),
         Text(
           "\$ ${calculateTotal(order)}",
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 22.00,
             fontWeight: FontWeight.bold,
             color: Color.fromARGB(255, 0, 107, 4),
