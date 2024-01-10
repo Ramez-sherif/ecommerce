@@ -20,8 +20,8 @@ class ChatRoomService {
 
     CollectionReference messagesCollection =
         doc.collection(CollectionConfig.messages);
-
-    Timestamp timestamp = Timestamp.now();
+    DateTime globalDate = DateTime.now().toUtc();
+    Timestamp timestamp = Timestamp.fromDate(globalDate);
     String messageTemp = "Hi, How can we help?";
 
     await messagesCollection.add({
