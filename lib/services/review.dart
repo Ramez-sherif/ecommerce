@@ -7,7 +7,7 @@ class ReviewService {
   static Future addReview(
       int rate, String userId, String prodcutId, String comment) async {
     await db.collection(CollectionConfig.reviews).doc().set({
-      "rate": rate,
+      "rate": rate.toDouble(),
       "userId": userId,
       "prodcut_id": prodcutId,
       "comment": comment,
@@ -16,7 +16,7 @@ class ReviewService {
 
   static Future updateReview(String productId, double newRate) async {
     await db.collection(CollectionConfig.products).doc(productId).set({
-      "rating": newRate,
+      "rating": newRate.toDouble(),
     }, SetOptions(merge: true));
   }
 

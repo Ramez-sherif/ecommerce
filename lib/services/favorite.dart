@@ -37,10 +37,10 @@ class FavoriteService {
 
   Future<void> insertToLocalFavorites(String userId, String productId) async {
     List<Map> exists = await sqlDb.readData(
-        "Select * from favorites Where userId = '${userId}' AND productId = '${productId}' LIMIT 1");
+        "Select * from favorites Where userId = '$userId' AND productId = '$productId' LIMIT 1");
     if (exists.isEmpty) {
       int response = await sqlDb.insertData(
-          'INSERT INTO favorites (userId, productId) VALUES("${userId}", "${productId}")');
+          'INSERT INTO favorites (userId, productId) VALUES("$userId", "$productId")');
       print(response);
       print("addddddddddddddddddddddddddddeddddddddddddddddddd");
     } else {
@@ -50,7 +50,7 @@ class FavoriteService {
 
   Future<void> deleteFromLocalFavorites(String userId, String productId) async {
     List<Map> exists = await sqlDb.readData(
-        "Select * from favorites Where userId = '${userId}' AND productId = '${productId}' LIMIT 1");
+        "Select * from favorites Where userId = '$userId' AND productId = '$productId' LIMIT 1");
     if (exists.isNotEmpty) {
       print("fav Delelted");
       int response = await sqlDb.deleteData(

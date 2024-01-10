@@ -1,4 +1,6 @@
 // Import necessary packages and files
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Provider package for state management
 import 'package:ecommerce/models/product.dart'; // Product model
@@ -129,8 +131,13 @@ class _ProductReviewPageState extends State<ProductReviewPage> {
                       comment, // Comment provided by the user
                     );
                     // Calculate new rating for the product based on the added review
-                    double newRating =
-                        (widget.product.rating + selectedRating) / 2;
+                    double newRating = 0;
+                    
+                    if (widget.product.rating == 0) {
+                      newRating = selectedRating.toDouble();
+                    } else {
+                      newRating = (widget.product.rating + selectedRating) / 2;
+                    }
                     // Update the product's rating using ReviewService
                     await ReviewService.updateReview(
                       widget.product.id, // ID of the reviewed product

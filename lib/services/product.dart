@@ -117,7 +117,8 @@ class ProductService {
   }
 
   static Future<String> updloadProductImageToStorage(File file) async {
-    var reference = storage.ref().child("prdoucts/");
+    String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+    var reference = storage.ref().child("prdoucts/$imageName");
     UploadTask uploadTask = reference.putFile(file);
     TaskSnapshot taskSnapshot = await uploadTask;
     String url = await taskSnapshot.ref.getDownloadURL();
@@ -150,19 +151,19 @@ class ProductService {
     }
   }
 
-  static void insertProductToLocalDatabase(List<ProductModel> allProducts) async {
-    for(var product in allProducts){
-      List<Map> exists = await sqlDb.readData('SELECT * FROM product WHERE onlineProductId = "${product.id}" LIMIT 1');
-      if(exists.isEmpty){
-         int response = await sqlDb.insertData(
+  static void insertProductToLocalDatabase(
+      List<ProductModel> allProducts) async {
+    for (var product in allProducts) {
+      List<Map> exists = await sqlDb.readData(
+          'SELECT * FROM product WHERE onlineProductId = "${product.id}" LIMIT 1');
+      if (exists.isEmpty) {
+        int response = await sqlDb.insertData(
             'insert into product ("onlineProductId","onlineCategoryID","name","price","rate") Values ("${product.id}","${product.category.id}","${product.name}","${product.price.toString()}","${product.rating.toString()}")');
         print(response);
         print("product: ${product.name} added to local Database");
-      }else{
-
-      print("item already Exists");
+      } else {
+        print("item already Exists");
       }
     }
-   
   }
 }

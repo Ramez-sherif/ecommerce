@@ -65,6 +65,7 @@ class _AllProductsTopBarWidgetState extends State<AllProductsTopBarWidget> {
     );
   }
 
+  // ignore: unused_element
   Widget _notificationButton() {
     return Container(
       decoration: BoxDecoration(
