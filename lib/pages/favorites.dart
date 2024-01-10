@@ -1,14 +1,7 @@
-import 'package:ecommerce/models/category.dart';
-import 'package:ecommerce/models/product.dart';
-import 'package:ecommerce/providers/favorite.dart';
-import 'package:ecommerce/providers/home.dart';
-import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/local_database/fav.dart';
 import 'package:ecommerce/sqldb.dart';
 import 'package:ecommerce/widgets/favorites/favorites_list.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({Key? key}) : super(key: key);
