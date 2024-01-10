@@ -59,7 +59,7 @@ class _AdminStoragePageState extends State<AdminStoragePage> {
           buildItem(
               context, 'Send Notification', const SendNotificationsToAllPage()),
               buildItem(
-              context, 'User Customer Support',  CustomerSupportPage()),
+              context, 'User Customer Support',  const CustomerSupportPage()),
         ],
       ),
     );

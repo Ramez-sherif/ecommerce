@@ -7,7 +7,6 @@ import 'package:ecommerce/pages/login.dart';
 import 'package:ecommerce/providers/user.dart';
 import 'package:ecommerce/services/fcm.dart';
 import 'package:ecommerce/services/local_database/fav.dart';
-import 'package:ecommerce/services/shared.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,10 +32,14 @@ class _InitialPageState extends State<InitialPage> {
       isLoggedIn = true;
       if (await checkInternetConnectivity() == false) {
         isNet = false;
-        context.read<UserProvider>().user = user;
+        if (context.mounted) {
+          context.read<UserProvider>().user = user;
+        }
         return;
       }
-      await context.read<UserProvider>().setUser(user);
+      if (context.mounted) {
+        await context.read<UserProvider>().setUser(user);
+      }
       await FCMService.setFCMToken(user.uid);
     }
   }
@@ -64,7 +67,6 @@ class _InitialPageState extends State<InitialPage> {
             print('isLoggedIn: $isLoggedIn');
             if (isLoggedIn) {
               if (isNet == false) {
-
                 return const FavoritesPage();
               } else {
                 if (context.watch<UserProvider>().user_role == 'admin') {

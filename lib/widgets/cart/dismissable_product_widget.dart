@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import "dart:developer";
 
 import "package:ecommerce/models/product.dart";
 import "package:ecommerce/providers/home.dart";
@@ -7,7 +8,7 @@ import "package:ecommerce/widgets/cart/cart_product_widget.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
-class DismissableProductWidget extends StatelessWidget {
+class DismissableProductWidget extends StatefulWidget {
   const DismissableProductWidget({
     super.key,
     required this.product,
@@ -15,6 +16,13 @@ class DismissableProductWidget extends StatelessWidget {
   });
   final ProductModel product;
   final int quantity;
+
+  @override
+  State<DismissableProductWidget> createState() =>
+      _DismissableProductWidgetState();
+}
+
+class _DismissableProductWidgetState extends State<DismissableProductWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,7 +41,7 @@ class DismissableProductWidget extends StatelessWidget {
       child: Column(
         children: [
           Dismissible(
-            key: Key(product.description),
+            key: Key(widget.product.id),
             direction: DismissDirection.horizontal,
             background: Container(
               margin: const EdgeInsets.symmetric(vertical: 9),
@@ -69,34 +77,52 @@ class DismissableProductWidget extends StatelessWidget {
                 color: Color.fromARGB(255, 255, 0, 0),
               ),
             ),
-            
             onDismissed: (direction) async {
               String userId = context.read<UserProvider>().user.uid;
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              final removedProduct = product;
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${product.name} deleted'),
-                  action: SnackBarAction(
-                  label: 'Undo',
-                  onPressed: (){
-                    context.read<HomeProvider>()
-                    .addProductToCart(removedProduct, userId, quantity);
-                  },
-                  
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+              final removedProduct = widget.product;
+              int productQuantity = widget.quantity;
+
+              if (context.mounted) {
+                await context
+                    .read<HomeProvider>()
+                    .removeProductFromCart(widget.product, userId);
+
+                print("removed");
+              }
+
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      '${widget.product.name} deleted',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
+                    // action: SnackBarAction(
+                    //   label: 'Undo',
+                    //   textColor: Theme.of(context).colorScheme.primary,
+                    //   onPressed: () {
+                    //     log("undo");
+                    //     // if (context.mounted) {
+
+                    //     if (context.mounted) {
+                    //       log('casdnlsiddhfkwhef');
+
+                    //       context.read<HomeProvider>().addProductToCart(
+                    //           removedProduct, userId, productQuantity);
+                    //     }
+                    //   },
+                    // ),
                   ),
-                  
-                ),
-              );
-              
-              await context
-                  .read<HomeProvider>()
-                  .removeProductFromCart(product, userId);
+                );
+              }
             },
             child: CartProductWidget(
-              productModel: product,
-              quantity: quantity,
+              productModel: widget.product,
+              quantity: widget.quantity,
             ),
           ),
         ],

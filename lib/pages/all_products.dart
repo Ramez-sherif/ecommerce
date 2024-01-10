@@ -27,8 +27,10 @@ class _AllProductsPageState extends State<AllProductsPage> {
         await context
             .read<HomeProvider>()
             .setHomeAllProducts(categoryId: categoryId);
-        ProductService.insertProductToLocalDatabase(
-            context.read<HomeProvider>().allProducts);
+        if (context.mounted) {
+          ProductService.insertProductToLocalDatabase(
+              context.read<HomeProvider>().allProducts);
+        }
       }
     }
   }
@@ -38,6 +40,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
       List<ProductModel> allProducts =
           context.read<HomeProvider>().homeAllProducts;
       String userId = context.read<UserProvider>().user.uid;
+      
       await context.read<FavoriteProvider>().getFavorites(userId, allProducts);
     }
   }

@@ -1,5 +1,7 @@
-import 'package:sqflite/sqflite.dart';
+// ignore_for_file: avoid_print, depend_on_referenced_packages
+
 import 'package:path/path.dart'; //contains join func
+import 'package:sqflite/sqflite.dart';
 
 class SqlDb {
   static Database? _db;

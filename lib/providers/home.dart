@@ -34,7 +34,7 @@ class HomeProvider extends ChangeNotifier {
   Future addProductToCart(
       ProductModel product, String userId, int quantity) async {
     await CartService.addProductToCart(product.id, userId, quantity);
-    cartProducts!.products[product] = 1;
+    cartProducts!.products[product] = quantity;
     notifyListeners();
   }
 

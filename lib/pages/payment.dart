@@ -269,7 +269,7 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Widget _buildSpacer() {
-    return const SizedBox(height: 8.0);
-  }
+  // Widget _buildSpacer() {
+  //   return const SizedBox(height: 8.0);
+  // }
 }
